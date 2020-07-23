@@ -1,0 +1,26 @@
+h1 {
+    color: white;
+    margin: 100px;
+    text-align: center;
+    font-size: 100px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.card {
+    box-shadow: 1px 2px 0px 4px black;
+}
+
+.homeImg {
+    display: block;
+    margin: 50px auto;
+}
+
+.btnRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.btn {
+    width: 40%;
+}
