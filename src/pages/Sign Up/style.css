@@ -1,0 +1,17 @@
+#signUpCard {
+    margin: 70px auto;
+    width: 50%;
+}
+
+#signUpButton {
+    display: block;
+    margin: 0 auto 50px auto;
+    animation-delay: 1s;
+    animation-duration: 1s;
+}
+
+@media (max-width: 640px) {
+    #signUpCard {
+        width: 90%;
+    }
+}
