@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 import Container from '../../components/Container/index';
 
@@ -35,20 +36,20 @@ class SignUp extends Component {
                     <form>
                         <div className='form-group'>
                             <label htmlFor='userInputUsername'>Username</label>
-                            <input 
+                            <input
                                 type='username'
                                 name='username'
-                                id='username' 
+                                id='username'
                                 className='form-control'
-                                placeholder='Enter a username' 
-                                onChange={this.inputFunc} 
+                                placeholder='Enter a username'
+                                onChange={this.inputFunc}
                                 value={this.state.username}
                             />
                         </div>
 
                         <div className='form-group'>
                             <label htmlFor='userInputEmail'>Email address</label>
-                            <input 
+                            <input
                                 type='email'
                                 name='email'
                                 id='email'
@@ -61,7 +62,7 @@ class SignUp extends Component {
 
                         <div className='form-group'>
                             <label htmlFor='userInputPassword'>Password</label>
-                            <input 
+                            <input
                                 type='password'
                                 name='password'
                                 id='password'
@@ -74,11 +75,11 @@ class SignUp extends Component {
 
                         <div className='form-group'>
                             <label htmlFor='userInputPassword'>Re-enter Password</label>
-                            <input 
-                                type='password' 
+                            <input
+                                type='password'
                                 name='secondPassword'
                                 className='form-control'
-                                id='secondPassword' 
+                                id='secondPassword'
                                 placeholder='Re-enter your password'
                                 onChange={this.inputFunc}
                                 value={this.state.secondPassword}
@@ -91,6 +92,8 @@ class SignUp extends Component {
                 <button type='submit' className='btn btn-primary animate__animated animate__bounceIn' id='signUpButton' onSubmit={this.submitFunc}>
                     Sign Up!
                 </button>
+
+                <p id='alreadyHave'>Already have an account? <Link id='clickHere' to='/Signin'>Click here to sign in!</Link></p>
             </Container>
         )
     }
