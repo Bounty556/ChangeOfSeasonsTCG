@@ -1,4 +1,4 @@
 module.exports = {
-    Creatures: require("./creatures"),
+    Creature: require("./creature"),
     Deck: require("./deck")
   };
