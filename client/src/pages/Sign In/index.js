@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import Container from '../../components/Container/index';
 import Card from '../../components/Card/index';
+import Navbar from '../../components/Navbar/index';
 
 import './signIn.css';
 
@@ -23,52 +24,56 @@ class SignIn extends Component {
 
     render() {
         return (
-            <Container className='animate__animated animate__zoomIn'>
+            <div>
+                <Navbar />
 
-                <Card id='signInCard'>
-                    <h2 className='signInTitle'>Sign In to Change of Seasons!</h2>
+                <Container className='animate__animated animate__zoomIn'>
 
-                    <hr />
+                    <Card id='signInCard'>
+                        <h2 className='signInTitle'>Sign In to Change of Seasons!</h2>
 
-                    <form>
-                        {/* Enter Email */}
-                        <div className='form-group'>
-                            <label htmlFor='userInputEmail'>Email address</label>
-                            <input
-                                type='email'
-                                name='email'
-                                id='email'
-                                className='form-control'
-                                placeholder='Enter your email'
-                                onChange={this.inputFunc}
-                                value={this.state.email}
-                            />
-                        </div>
+                        <hr />
 
-                        {/* Enter Password */}
-                        <div className='form-group'>
-                            <label htmlFor='userInputPassword'>Password</label>
-                            <input
-                                type='password'
-                                name='password'
-                                id='password'
-                                className='form-control'
-                                placeholder='Enter a password'
-                                onChange={this.inputFunc}
-                                value={this.state.password}
-                            />
-                        </div>
-                    </form>
-                </Card>
+                        <form>
+                            {/* Enter Email */}
+                            <div className='form-group'>
+                                <label htmlFor='userInputEmail'>Email address</label>
+                                <input
+                                    type='email'
+                                    name='email'
+                                    id='email'
+                                    className='form-control'
+                                    placeholder='Enter your email'
+                                    onChange={this.inputFunc}
+                                    value={this.state.email}
+                                />
+                            </div>
 
-                <button type='submit' className='btn btn-primary animate__animated animate__bounceIn' id='signUpButton' onSubmit={this.submitFunc}>
-                    Sign In!
-                </button>
+                            {/* Enter Password */}
+                            <div className='form-group'>
+                                <label htmlFor='userInputPassword'>Password</label>
+                                <input
+                                    type='password'
+                                    name='password'
+                                    id='password'
+                                    className='form-control'
+                                    placeholder='Enter a password'
+                                    onChange={this.inputFunc}
+                                    value={this.state.password}
+                                />
+                            </div>
+                        </form>
+                    </Card>
 
-                <p id='dontHave' className='animate__animated animate__fadeIn animate__delay-2s'>Don't have an account yet? <Link className='clickHere' to='/Signup'>Click here to sign up!</Link></p>
+                    <button type='submit' className='btn btn-primary animate__animated animate__bounceIn' id='signUpButton' onSubmit={this.submitFunc}>
+                        Sign In!
+                    </button>
 
-                <p id='forgot' className='animate__animated animate__fadeIn animate__delay-2s'>Forgot your password? <Link to='Forgot' className='clickHere'>Click here to reset it!</Link></p>
-            </Container>
+                    <p id='dontHave' className='animate__animated animate__fadeIn animate__delay-2s'>Don't have an account yet? <Link className='clickHere' to='/Signup'>Click here to sign up!</Link></p>
+
+                    <p id='forgot' className='animate__animated animate__fadeIn animate__delay-2s'>Forgot your password? <Link to='Forgot' className='clickHere'>Click here to reset it!</Link></p>
+                </Container>
+            </div>
         )
     }
 }
