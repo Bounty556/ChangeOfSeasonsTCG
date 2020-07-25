@@ -67,7 +67,7 @@ class SignIn extends Component {
 
                 <p id='dontHave' className='animate__animated animate__fadeIn animate__delay-2s'>Don't have an account yet? <Link className='clickHere' to='/Signup'>Click here to sign up!</Link></p>
 
-                <p id='forgot'>Forgot your password? <Link className='clickHere'>Click here to reset it!</Link></p>
+                <p id='forgot' className='animate__animated animate__fadeIn animate__delay-2s'>Forgot your password? <Link className='clickHere'>Click here to reset it!</Link></p>
             </Container>
         )
     }
