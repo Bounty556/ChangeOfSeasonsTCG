@@ -3,7 +3,8 @@ const Schema = mongoose.Schema;
 
 const creature = new Schema({
     season: {type: String, required: true},
-    id: {type: Number , required: true},
+    cardId: {type: Number , required: true},
+    cardType: {type: Number, required: true},
     resource: {type: Number, required: true},
     Attack: {type: Number, required: true},
     Heath: {type: Number, required: true},
@@ -14,4 +15,4 @@ const creature = new Schema({
 
 const Book = mongoose.model("Creature", creature);
 
-module.exports = Book
+module.exports = creatures
