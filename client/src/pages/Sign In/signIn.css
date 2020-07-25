@@ -10,9 +10,16 @@
     animation-duration: 1s;
 }
 
-#dontHave, #clickHere {
+#dontHave, .clickHere, #forgot {
     color: white;
     text-align: center;
+    transition: ease-out 0.1s;
+}
+
+.clickHere:hover {
+    color: rgb(228, 228, 228);
+    text-decoration: none;
+    transition: ease-in 0.1s;
 }
 
 @media (max-width: 640px) {

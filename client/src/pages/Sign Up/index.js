@@ -33,6 +33,7 @@ class SignUp extends Component {
                     <hr />
 
                     <form>
+                        {/* Enter username */}
                         <div className='form-group'>
                             <label htmlFor='userInputUsername'>Username</label>
                             <input
@@ -46,6 +47,7 @@ class SignUp extends Component {
                             />
                         </div>
 
+                        {/* Enter Email */}
                         <div className='form-group'>
                             <label htmlFor='userInputEmail'>Email address</label>
                             <input
@@ -59,6 +61,7 @@ class SignUp extends Component {
                             />
                         </div>
 
+                        {/* Enter Password */}
                         <div className='form-group'>
                             <label htmlFor='userInputPassword'>Password</label>
                             <input
@@ -72,6 +75,7 @@ class SignUp extends Component {
                             />
                         </div>
 
+                        {/* Re-enter Password */}
                         <div className='form-group'>
                             <label htmlFor='userInputPassword'>Re-enter Password</label>
                             <input
@@ -84,7 +88,6 @@ class SignUp extends Component {
                                 value={this.state.secondPassword}
                             />
                         </div>
-
                     </form>
                 </Card>
 
