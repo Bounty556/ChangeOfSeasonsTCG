@@ -5,7 +5,7 @@ const db = require("../models");
 
 mongoose.connect(
   process.env.MONGODB_URI ||
-  "mongodb://????"
+  "mongodb://localhost/changeOfSeasons"
 );
 
 const creatureSeed = [
@@ -55,9 +55,9 @@ const creatureSeed = [
     },
 ]
 
-db.creatures
+db.Creature
 .remove({})
-.then(() => db.creatures.collection.insertMany(creaturesSeed))
+.then(() => db.Creature.collection.insertMany(creatureSeed))
 .then(data => {
   console.log(data.result.n + " records inserted!");
   process.exit(0);
