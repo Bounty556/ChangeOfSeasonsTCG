@@ -4,14 +4,12 @@ import { Link } from 'react-router-dom';
 import Container from '../../components/Container/index';
 import Card from '../../components/Card/index';
 
-import './signUp.css';
+import './signIn.css';
 
-class SignUp extends Component {
+class SignIn extends Component {
     state = {
-        username: '',
         email: '',
-        password: '',
-        secondPassword: ''
+        password: ''
     }
 
     submitFunc = event => {
@@ -27,25 +25,13 @@ class SignUp extends Component {
         return (
             <Container className='animate__animated animate__zoomIn'>
 
-                <Card id='signUpCard'>
-                    <h2 className='signUpTitle'>Sign Up for Change of Seasons!</h2>
+                <Card id='signInCard'>
+                    <h2 className='signInTitle'>Sign In to Change of Seasons!</h2>
 
                     <hr />
 
                     <form>
-                        <div className='form-group'>
-                            <label htmlFor='userInputUsername'>Username</label>
-                            <input
-                                type='username'
-                                name='username'
-                                id='username'
-                                className='form-control'
-                                placeholder='Enter a username'
-                                onChange={this.inputFunc}
-                                value={this.state.username}
-                            />
-                        </div>
-
+                        {/* Enter Email */}
                         <div className='form-group'>
                             <label htmlFor='userInputEmail'>Email address</label>
                             <input
@@ -59,6 +45,7 @@ class SignUp extends Component {
                             />
                         </div>
 
+                        {/* Enter Password */}
                         <div className='form-group'>
                             <label htmlFor='userInputPassword'>Password</label>
                             <input
@@ -71,31 +58,17 @@ class SignUp extends Component {
                                 value={this.state.password}
                             />
                         </div>
-
-                        <div className='form-group'>
-                            <label htmlFor='userInputPassword'>Re-enter Password</label>
-                            <input
-                                type='password'
-                                name='secondPassword'
-                                className='form-control'
-                                id='secondPassword'
-                                placeholder='Re-enter your password'
-                                onChange={this.inputFunc}
-                                value={this.state.secondPassword}
-                            />
-                        </div>
-
                     </form>
                 </Card>
 
                 <button type='submit' className='btn btn-primary animate__animated animate__bounceIn' id='signUpButton' onSubmit={this.submitFunc}>
-                    Sign Up!
+                    Sign In!
                 </button>
 
-                <p id='alreadyHave' className='animate__animated animate__fadeIn animate__delay-2s'>Already have an account? <Link id='clickHere' to='/Signin'>Click here to sign in!</Link></p>
+                <p id='dontHave' className='animate__animated animate__fadeIn animate__delay-2s'>Don't have an account yet? <Link id='clickHere' to='/Signup'>Click here to sign up!</Link></p>
             </Container>
         )
     }
 }
 
-export default SignUp;
+export default SignIn;

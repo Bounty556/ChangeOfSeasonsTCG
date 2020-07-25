@@ -1,0 +1,22 @@
+#signInCard {
+    margin: 70px auto;
+    width: 50%;
+}
+
+#signInButton {
+    display: block;
+    margin: 0 auto 50px auto;
+    animation-delay: 1s;
+    animation-duration: 1s;
+}
+
+#dontHave, #clickHere {
+    color: white;
+    text-align: center;
+}
+
+@media (max-width: 640px) {
+    #signInCard {
+        width: 90%;
+    }
+}
