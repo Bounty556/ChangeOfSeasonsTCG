@@ -10,6 +10,11 @@
     animation-duration: 1s;
 }
 
+#alreadyHave, #clickHere {
+    color: white;
+    text-align: center;
+}
+
 @media (max-width: 640px) {
     #signUpCard {
         width: 90%;

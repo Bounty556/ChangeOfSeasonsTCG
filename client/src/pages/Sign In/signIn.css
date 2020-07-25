@@ -1,0 +1,29 @@
+#signInCard {
+    margin: 70px auto;
+    width: 50%;
+}
+
+#signInButton {
+    display: block;
+    margin: 0 auto 50px auto;
+    animation-delay: 1s;
+    animation-duration: 1s;
+}
+
+#dontHave, .clickHere, #forgot {
+    color: white;
+    text-align: center;
+    transition: ease-out 0.1s;
+}
+
+.clickHere:hover {
+    color: rgb(228, 228, 228);
+    text-decoration: none;
+    transition: ease-in 0.1s;
+}
+
+@media (max-width: 640px) {
+    #signInCard {
+        width: 90%;
+    }
+}

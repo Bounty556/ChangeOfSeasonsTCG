@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import Container from '../../components/Container/index';
 
-import './style.css';
+import './homepage.css';
 
 function Homepage() {
     return (
@@ -17,7 +17,7 @@ function Homepage() {
 
                         <div className='btnRow'>
                             <Link className='btn btn-primary' to='/Signup'>Sign up</Link>
-                            <button className='btn btn-primary'>Sign in</button>
+                            <Link className='btn btn-primary' to='/Signin'>Sign in</Link>
                         </div>
                     </div>
                </div>
