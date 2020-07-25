@@ -2,12 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import Container from '../../components/Container/index';
+import Navbar from '../../components/Navbar/index';
 
 import './homepage.css';
 
 function Homepage() {
     return (
         <div>
+            <Navbar />
             <Container>
                 <h1 className='animate__animated animate__slideInDown'>Change of Seasons</h1>
                 
