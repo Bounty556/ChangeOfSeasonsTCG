@@ -4,10 +4,10 @@ const db = require('../models');
 // from being able to modify anything in this database. This should ever only
 // be able to be updated by us as the developers
 
-const Creatures = {
-  addCreature: (creatureData) => {
+const Spells = {
+  addSpell: (spellData) => {
     return new Promise((resolve, reject) => {
-      db.Creature.create(creatureData, (err, result) => {
+      db.Spell.create(spellData, (err, result) => {
         if (err) reject(err);
         
         resolve(result);
@@ -15,9 +15,9 @@ const Creatures = {
     });
   },
 
-  removeCreatureByCardId: (cardId) => {
+  removeSpellByCardId: (cardId) => {
     return new Promise((resolve, reject) => {
-      db.Creature.deleteOne({ cardId: cardId }, (err, result) => {
+      db.Spell.deleteOne({ cardId: cardId }, (err, result) => {
         if (err) reject(err);
 
         resolve(result);
@@ -25,9 +25,9 @@ const Creatures = {
     });
   },
 
-  getCreatureByCardId: (cardId) => {
+  getSpellByCardId: (cardId) => {
     return new Promise((resolve, reject) => {
-      db.Creature.findOne({ cardId: cardId }, (err, result) => {
+      db.Spell.findOne({ cardId: cardId }, (err, result) => {
         if (err) reject(err);
 
         resolve(result);
@@ -35,9 +35,9 @@ const Creatures = {
     });
   },
 
-  getCreaturesBySeason: (season) => {
+  getSpellsBySeason: (season) => {
     return new Promise((resolve, reject) => {
-      db.Creature.find({ season: season }, (err, result) => {
+      db.Spell.find({ season: season }, (err, result) => {
         if (err) reject(err);
 
         resolve(result);
@@ -46,4 +46,4 @@ const Creatures = {
   }
 };
 
-module.exports = Creatures;
+module.exports = Spells;
