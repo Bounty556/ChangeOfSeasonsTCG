@@ -11,8 +11,7 @@ const creatureSeed = [
   {
     season: 'Spring',
     cardID: '001',
-    cardType: 'Creature',
-    resource: '2',
+    resourceCost: '2',
     attack: '2',
     health: '3',
     effect: '',
@@ -22,8 +21,7 @@ const creatureSeed = [
   {
     season: 'Summer',
     cardID: '002',
-    cardType: 'Creature',
-    resource: '2',
+    resourceCost: '2',
     attack: '3',
     health: '2',
     effect: '',
@@ -33,8 +31,7 @@ const creatureSeed = [
   {
     season: 'Fall',
     cardID: '003',
-    cardType: 'Creature',
-    resource: '2',
+    resourceCost: '2',
     attack: '4',
     health: '1',
     effect: '',
@@ -44,8 +41,7 @@ const creatureSeed = [
   {
     season: 'Winter',
     cardID: '004',
-    cardType: 'Creature',
-    resource: '2',
+    resourceCost: '2',
     attack: '1',
     health: '4',
     effect: '',
