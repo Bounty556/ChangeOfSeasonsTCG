@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const SpellSchema = new Schema({
@@ -11,6 +11,6 @@ const SpellSchema = new Schema({
     img: {type: String, required: true}
 });
 
-const Spell = mongoose.model("Spell", SpellSchema);
+const Spell = mongoose.model('Spell', SpellSchema);
 
 module.exports = Spell;

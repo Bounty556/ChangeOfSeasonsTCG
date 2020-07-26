@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const CreatureSchema = new Schema({
@@ -12,6 +12,6 @@ const CreatureSchema = new Schema({
     img: {type: String, required: true}
 });
 
-const Creature = mongoose.model("Creature", CreatureSchema);
+const Creature = mongoose.model('Creature', CreatureSchema);
 
 module.exports = Creature;
