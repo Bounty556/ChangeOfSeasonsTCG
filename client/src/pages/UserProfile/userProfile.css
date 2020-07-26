@@ -1,0 +1,52 @@
+.card {
+    box-shadow: 1px 2px 0px 4px black;
+    margin-bottom: 50px;
+}
+
+.avatar {
+    background-color: rgba(187, 124, 8, 0.411);
+    display: block;
+    border: 10px solid transparent;
+    border-image-source: url(https://media1.giphy.com/media/5vidmSHUsyoybSYNN0/giphy.gif?cid=ecf05e47ta00vpixh6lraija5cpo2bhvvsif55qgx61zmlkl&rid=giphy.gif);
+    border-image-repeat: stretch;
+    border-image-slice: 30;
+    border-image-width: 10px;       
+    box-shadow: 1px 1px 1px 1px black;
+}
+
+img { 
+ height: 250px;
+ width: 250px;
+}
+
+
+.col-4 {
+justify-content: center;
+}
+
+h2 { 
+justify-content: center;
+text-decoration: underline;
+margin-bottom: 15px;
+}
+
+button { 
+height: 35px;
+width: 300px;
+justify-content: center;
+}
+
+.button-col { 
+    justify-content: center;
+}
+
+.row { 
+justify-content: center;
+}
+
+.user-stats { 
+justify-content: center;
+text-align: center;
+margin: auto;
+
+}

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const creature = new Schema({
+const CreatureSchema = new Schema({
     season: {type: String, required: true},
     cardId: {type: Number , required: true},
     cardType: {type: Number, required: true},
@@ -13,6 +13,6 @@ const creature = new Schema({
     img: {type: String, required: true}
 });
 
-const Book = mongoose.model("Creature", creature);
+const Creature = mongoose.model("Creature", CreatureSchema);
 
-module.exports = creatures
+module.exports = Creature
