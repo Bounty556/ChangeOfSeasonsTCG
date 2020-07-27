@@ -7,47 +7,47 @@ mongoose.connect(
   process.env.MONGODB_URI || 'mongodb://localhost/changeOfSeasons'
 );
 
-const creatureSeed = [
+const cardSeed = [
   {
     season: 'Spring',
-    cardID: '001',
-    cardType: 'Creature',
-    resourceCost: '2',
-    attack: '2',
-    health: '3',
+    cardID: 1,
+    isCreature: true,
+    resourceCost: 2,
+    attack: 2,
+    health: 3,
     effect: '',
     name: 'Gudrun',
     img: 'buddy.png'
   },
   {
     season: 'Summer',
-    cardID: '002',
-    cardType: 'Creature',
-    resourceCost: '2',
-    attack: '3',
-    health: '2',
+    cardID: 2,
+    isCreature: true,
+    resourceCost: 2,
+    attack: 3,
+    health: 2,
     effect: '',
     name: 'Jacinto the masked one',
     img: 'mask_01.png'
   },
   {
     season: 'Fall',
-    cardID: '003',
-    cardType: 'Creature',
-    resourceCost: '2',
-    attack: '4',
-    health: '1',
+    cardID: 3,
+    isCreature: true,
+    resourceCost: 2,
+    attack: 4,
+    health: 1,
     effect: '',
     name: 'Revna',
     img: 'crow_01.png'
   },
   {
     season: 'Winter',
-    cardID: '004',
-    cardType: 'Creature',
-    resourceCost: '2',
-    attack: '1',
-    health: '4',
+    cardID: 4,
+    isCreature: true,
+    resourceCost: 2,
+    attack: 1,
+    health: 4,
     effect: '',
     name: 'Obasi of the Deep',
     img: 'hound.png'
@@ -55,7 +55,7 @@ const creatureSeed = [
 ];
 
 db.Card.remove({})
-  .then(() => db.Card.collection.insertMany(creatureSeed))
+  .then(() => db.Card.collection.insertMany(cardSeed))
   .then(data => {
     console.log(data.result.n + ' records inserted!');
     process.exit(0);
