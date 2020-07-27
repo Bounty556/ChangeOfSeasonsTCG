@@ -11,6 +11,7 @@ const creatureSeed = [
   {
     season: 'Spring',
     cardID: '001',
+    cardType: 'Creature',
     resourceCost: '2',
     attack: '2',
     health: '3',
@@ -21,6 +22,7 @@ const creatureSeed = [
   {
     season: 'Summer',
     cardID: '002',
+    cardType: 'Creature',
     resourceCost: '2',
     attack: '3',
     health: '2',
@@ -31,6 +33,7 @@ const creatureSeed = [
   {
     season: 'Fall',
     cardID: '003',
+    cardType: 'Creature',
     resourceCost: '2',
     attack: '4',
     health: '1',
@@ -41,6 +44,7 @@ const creatureSeed = [
   {
     season: 'Winter',
     cardID: '004',
+    cardType: 'Creature',
     resourceCost: '2',
     attack: '1',
     health: '4',
@@ -50,8 +54,8 @@ const creatureSeed = [
   }
 ];
 
-db.Creature.remove({})
-  .then(() => db.Creature.collection.insertMany(creatureSeed))
+db.Card.remove({})
+  .then(() => db.Card.collection.insertMany(creatureSeed))
   .then(data => {
     console.log(data.result.n + ' records inserted!');
     process.exit(0);
