@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 //Will be used to go to card lists and deck builder ~possibly friends list if implimented
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 import Container from '../../components/Container/index';
 import Navbar from '../../components/Navbar/index';
 
 import './userProfile.css';
 import phImg from './Images/cyclop_01.png';
+import button from './Images/woodsign.png';
 
 class UserProfile extends Component {
 
     state = {
-        username: 'User Name State',
+        username: 'Username State',
         //this will be used to let a palyer chose an avatar at one point
         avatar: '',
         wins: 0,
@@ -24,27 +25,24 @@ class UserProfile extends Component {
             <div>
                 <Navbar />
                 <Container>
-                    <div className='card animate__animated animate__slideInDown'>
+                    <div className='card animate__animated animate__slideInDown profileCard '>
                         <div className='card-body row'>
                             <div className='user-avatar' className="col-4">
                                 <h2>{this.state.username}</h2>
                                 <div>
                                     <img src={phImg} alt='Player`s Chosen Avatar' className='avatar'></img>
                                 </div>
-                                <p>Chose your Avatar (PH)</p>
-                            </div>
-                            <div className='user-stats' className="col-4 my-auto">
-                                <div className='stats-div'>
-                                    <p>Wins: {this.state.wins} </p>
-                                    <p>Losses: {this.state.losses}</p>
+                                <p className='chooseAvatar'>Change Avatar (PH)</p>
+                                <div >
+                                    <p className='stats-div'>Wins: {this.state.wins} Losses: {this.state.losses} </p>
                                 </div>
                             </div>
                             <div className='user-links' className="col-4 my-auto">
                                 <div className='button-col'>
-                               <button>Veiw Card Collection</button>
+                                <button className="wood">Choose Deck</button>
                                <br></br>
                                <br></br>
-                               <button>Edit Deck</button>
+                               <button className="wood">Play Match</button>
                                </div>
                             </div>
                         </div>
