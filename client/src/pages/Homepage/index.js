@@ -13,13 +13,13 @@ function Homepage() {
             <Container>
                 <h1 className='animate__animated animate__slideInDown'>Change of Seasons</h1>
                 
-                <div className='card animate__animated animate__slideInDown'>
+                <div className='card animate__animated animate__slideInDown home-card'>
                     <div className='card-body'>
                         <img src='https://via.placeholder.com/300' alt='placeholder' className='homeImg'></img>
 
                         <div className='btnRow'>
-                            <Link className='btn btn-primary' to='/Signup'>Sign up</Link>
-                            <Link className='btn btn-primary' to='/Signin'>Sign in</Link>
+                            <Link  to='/Signup'> <button className='wood'>Sign up</button></Link>
+                            <Link to='/Signin'><button className='wood'>Sign in</button></Link>
                         </div>
                     </div>
                </div>
