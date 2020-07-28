@@ -38,7 +38,7 @@ class SignUp extends Component {
 
                         <form>
                             {/* Enter username */}
-                            <div className='form-group'>
+                            <div className='form-group input-header'>
                                 <label htmlFor='userInputUsername'>Username</label>
                                 <input
                                     type='username'
@@ -52,7 +52,7 @@ class SignUp extends Component {
                             </div>
 
                             {/* Enter Email */}
-                            <div className='form-group'>
+                            <div className='form-group input-header'>
                                 <label htmlFor='userInputEmail'>Email address</label>
                                 <input
                                     type='email'
@@ -66,7 +66,7 @@ class SignUp extends Component {
                             </div>
 
                             {/* Enter Password */}
-                            <div className='form-group'>
+                            <div className='form-group input-header'>
                                 <label htmlFor='userInputPassword'>Password</label>
                                 <input
                                     type='password'
@@ -80,8 +80,8 @@ class SignUp extends Component {
                             </div>
 
                             {/* Re-enter Password */}
-                            <div className='form-group'>
-                                <label htmlFor='userInputPassword'>Re-enter Password</label>
+                            <div className='form-group input-header'>
+                                <label htmlFor='userInputPassword input-header'>Re-enter Password</label>
                                 <input
                                     type='password'
                                     name='secondPassword'
@@ -92,12 +92,15 @@ class SignUp extends Component {
                                     value={this.state.secondPassword}
                                 />
                             </div>
-                        </form>
-                    </Card>
-
-                    <button type='submit' className='btn btn-primary animate__animated animate__bounceIn' id='signUpButton' onSubmit={this.submitFunc}>
+                            <button type='submit' className='wood animate__animated animate__bounceIn' id='signUpButton' onSubmit={this.submitFunc}>
                         Sign Up!
                     </button>
+                        </form>
+                    </Card>
+                    {/* brought button into the card  */}
+                    {/* <button type='submit' className='btn btn-primary animate__animated animate__bounceIn' id='signUpButton' onSubmit={this.submitFunc}>
+                        Sign Up!
+                    </button> */}
 
                     <p id='alreadyHave' className='animate__animated animate__fadeIn animate__delay-2s'>Already have an account? <Link id='clickHere' to='/Signin'>Click here to sign in!</Link></p>
                 </Container>

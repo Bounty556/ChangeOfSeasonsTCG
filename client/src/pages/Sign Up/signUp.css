@@ -1,6 +1,10 @@
 #signUpCard {
     margin: 70px auto;
     width: 50%;
+    background-image: url(./Images/game-background-1.jpg);
+    background-size: cover;
+    box-shadow: 1px 2px 0px 4px black;
+
 }
 
 #signUpButton {
@@ -14,6 +18,27 @@
     color: white;
     text-align: center;
 }
+
+/* for wood sign button */
+.wood{ 
+    background-image: url(./Images/woodsign.png) !important;
+    width: 300px;
+    height: 150px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color:transparent ;
+    justify-content: center;
+    border: none;
+    font-size: 35px;
+    font-weight: bold;
+    font-family: 'Trade Winds', cursive;
+    color: rgb(255, 246, 217);
+    }
+    
+.input-header { 
+color: white;
+font-weight: bolder;
+    }
 
 @media (max-width: 640px) {
     #signUpCard {

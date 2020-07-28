@@ -1,3 +1,5 @@
+
+
 h1 {
     color: white;
     margin: 50px;
@@ -6,9 +8,12 @@ h1 {
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
-.card {
+.home-card {
     box-shadow: 1px 2px 0px 4px black;
     margin-bottom: 50px;
+    background-image: url(./images/game-background-0.jpg);
+    background-size: cover;
+
 }
 
 .homeImg {
@@ -18,10 +23,29 @@ h1 {
 
 .btnRow {
     display: flex;
-    flex-direction: row;
+    flex-direction: initial;
     justify-content: space-evenly;
+    text-align: center;
+    vertical-align: middle
+    
 }
 
 .btn {
     width: 40%;
 }
+
+.wood{ 
+    background-image: url(./images/woodsign.png) !important;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color:transparent ;
+    /* justify-content: center; */
+    border: none;
+    font-size: 35px;
+    font-weight: bold;
+    font-family: 'Trade Winds', cursive;
+    color: rgb(255, 246, 217);
+    /* width: 300px;
+    height: 150px; */
+
+    }
