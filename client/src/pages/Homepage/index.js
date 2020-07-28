@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Container from '../../components/Container/index';
 import Navbar from '../../components/Navbar/index';
 
+
 import './homepage.css';
 
 function Homepage() {
@@ -15,7 +16,7 @@ function Homepage() {
                 
                 <div className='card animate__animated animate__slideInDown'>
                     <div className='card-body'>
-                        <img src='https://via.placeholder.com/300' alt='placeholder' className='homeImg'></img>
+                        <img src='./images/buddy.png' alt='placeholder' className='homeImg'></img>
 
                         <div className='btnRow'>
                             <Link className='btn btn-primary' to='/Signup'>Sign up</Link>
