@@ -19,6 +19,17 @@
     text-align: center;
 }
 
+label, .signUpTitle, .signInTitle {
+    text-shadow: -1px 3px 6px #000, -1px -1px 0 #000, 1px 2px 0 #000, 1px 2px 0 #000;
+    font-family: 'Trade Winds', cursive;
+    font-size: 25px;
+}
+
+#username, #email, #password, #secondPassword {
+    border: 2px solid black;
+    box-shadow: 0px 2px 10px -1px black;
+}
+
 /* for wood sign button */
 .wood{ 
     background-image: url(./Images/woodsign.png) !important;
@@ -33,12 +44,12 @@
     font-weight: bold;
     font-family: 'Trade Winds', cursive;
     color: rgb(255, 246, 217);
-    }
+}
     
 .input-header { 
-color: white;
-font-weight: bolder;
-    }
+    color: white;
+    font-weight: bolder;
+}
 
 @media (max-width: 640px) {
     #signUpCard {
