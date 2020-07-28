@@ -31,7 +31,7 @@ label, .signUpTitle, .signInTitle {
 }
 
 /* for wood sign button */
-.wood{ 
+.wood { 
     background-image: url(./Images/woodsign.png) !important;
     width: 300px;
     height: 150px;
