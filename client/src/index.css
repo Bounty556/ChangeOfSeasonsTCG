@@ -13,3 +13,6 @@ body {
     background:none;
 }
 
+button:focus {
+    outline: none;
+}
