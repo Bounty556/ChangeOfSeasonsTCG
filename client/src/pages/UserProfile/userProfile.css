@@ -19,54 +19,57 @@
 }
 
 .col-4 {
-justify-content: center;
+    justify-content: center;
 }
 
 h2 { 
-justify-content: center;
-margin-bottom: 5px;
-font-family: 'Trade Winds', cursive;
-font-weight: bolder;
-color: whitesmoke
+    justify-content: center;
+    margin-bottom: 5px;
+    font-family: 'Trade Winds', cursive;
+    font-weight: bolder;
+    color: whitesmoke
 }
 
 p{ 
-font-family: 'Trade Winds', cursive;
-font-weight: bolder;
-color: whitesmoke
+    font-family: 'Trade Winds', cursive;
+    font-weight: bolder;
+    color: whitesmoke
 }
 
 .wood{ 
-background-image: url(./Images/woodsign.png) !important;
-width: 300px;
-height: 150px;
-background-size: contain;
-background-repeat: no-repeat;
-background-color:transparent ;
-justify-content: center;
-border: none;
-font-size: 35px;
-font-weight: bold;
-font-family: 'Trade Winds', cursive;
-color: rgb(255, 246, 217);
+    background-image: url(./Images/woodsign.png) !important;
+    width: 300px;
+    height: 150px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color:transparent ;
+    justify-content: center;
+    border: none;
+    font-size: 35px;
+    font-weight: bold;
+    font-family: 'Trade Winds', cursive;
+    color: rgb(255, 246, 217);
 }
 
-
+.wood:hover {
+    transition: ease-in-out 0.2s !important;
+    transform: scale(1.05) !important;
+}
 
 .row { 
-justify-content: center;
+    justify-content: center;
 }
 
 .user-stats { 
-justify-content: center;
-text-align: center;
-margin: auto;
-font-family: 'Trade Winds', cursive;
+    justify-content: center;
+    text-align: center;
+    margin: auto;
+    font-family: 'Trade Winds', cursive;
 }
 
 
-.chooseAvatar{ 
-margin-top: 5px;
-color: rgba(248, 242, 231, 0.466) ;
-font-size: small;
+.chooseAvatar { 
+    margin-top: 5px;
+    color: rgba(248, 242, 231, 0.466) ;
+    font-size: small;
 }

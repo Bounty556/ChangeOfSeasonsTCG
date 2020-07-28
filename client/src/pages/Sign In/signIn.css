@@ -26,7 +26,7 @@
     transition: ease-in 0.1s;
 }
 
-.wood{ 
+.wood { 
     background-image: url(./Images/woodsign.png) !important;
     background-size: contain;
     background-repeat: no-repeat;
@@ -39,13 +39,12 @@
     color: rgb(255, 246, 217);
     /* width: 300px;
     height: 150px; */
+}
 
-    }
-
-    .input-header { 
-        color: white;
-        font-weight: bolder;
-            }
+.input-header { 
+    color: white;
+    font-weight: bolder;
+}
 
 @media (max-width: 640px) {
     #signInCard {
