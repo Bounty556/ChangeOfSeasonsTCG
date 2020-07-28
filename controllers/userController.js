@@ -1,35 +1,24 @@
 const db = require('../models');
 
-const Users = {
-  getUser: (id) => {
-    return new Promise((resolve, reject) => {
-      db.User.findById(id, (err, result) => {
-        if (err) reject(err);
-        
-        resolve(result);
-      });
-    });
+module.exports = {
+  getUser: (req, res) => {
+    db.User
+    .findById(req.params.id)
+    .then(dbModel => res.json(dbModel))
+    .catch(err => res.status(422).json(err));
   },
 
-  createUser: (userData) => {
-    return new Promise((resolve, reject) => {
-      db.User.create(userData, (err, result) => {
-        if (err) reject(err);
-
-        resolve(result);
-      });
-    });
+  createUser: (req, res) => {
+    db.User
+    .create(req.body)
+    .then(dbModel => res.json(dbModel))
+    .catch(err => res.status(422).json(err));
   },
 
-  setUserAvatar: (id, avatar) => {
-    return new Promise((resolve, reject) => {
-      db.User.updateOne({id: id}, {avatar: avatar}, (err, result) => {
-        if (err) reject(err);
-
-        resolve(result);
-      });
-    });
+  setUserAvatar: (req, res) => {
+    db.User
+    .updateOne({ _id: req.params.id }, { avatar: req.body.avatar })
+    .then(dbModel => res.json(dbModel))
+    .catch(err => res.status(422).json(err));
   }
 };
-
-module.exports = Users;
