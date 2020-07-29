@@ -1,5 +1,6 @@
 var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
+const mongoose = require('mongoose');
 
 var db = require("../models");
 
@@ -7,7 +8,7 @@ var db = require("../models");
 passport.use(new LocalStrategy(
   // Our user will sign in using an email, rather than a "username"
   {
-    usernameField: "email"
+    userID: "email"
   },
   function(email, password, done) {
     // When a user tries to sign in this code runs
