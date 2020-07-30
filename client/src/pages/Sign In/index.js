@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 import Container from '../../components/Container/index';
 import Card from '../../components/Card/index';
@@ -9,12 +10,13 @@ import './signIn.css';
 
 class SignIn extends Component {
     state = {
-        email: '',
+        username: '',
         password: ''
     }
 
     submitFunc = event => {
         event.preventDefault();
+        axios.post ('/login', {username:this.state.username, password: this.state.password})
     }
 
     inputFunc = event => {

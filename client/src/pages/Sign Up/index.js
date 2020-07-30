@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 import Container from '../../components/Container/index';
 import Card from '../../components/Card/index';
@@ -17,6 +18,7 @@ class SignUp extends Component {
 
     submitFunc = event => {
         event.preventDefault();
+        axios.post ('/register', {username:this.state.username, password: this.state.password})
     }
 
     inputFunc = event => {
@@ -36,7 +38,7 @@ class SignUp extends Component {
 
                         <hr />
 
-                        <form>
+                        <form onSubmit={this.submitFunc}>
                             {/* Enter username */}
                             <div className='form-group input-header'>
                                 <label htmlFor='userInputUsername'>Username</label>

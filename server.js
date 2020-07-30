@@ -5,6 +5,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const morgan = require ('morgan');
 const passport = require('passport');
+const bodyParser = require('body-parser');
 // Define middleware here
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -18,11 +19,11 @@ app.use(routes);
 
 // MIDDLEWARE
 app.use(morgan('dev'))
-// app.use(
-// 	bodyParser.urlencoded({
-// 		extended: false
-// 	})
-// )
+app.use(
+	bodyParser.urlencoded({
+		extended: false
+	})
+)
 // app.use(bodyParser.json())
 
 // Sessions
