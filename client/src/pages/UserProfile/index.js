@@ -27,7 +27,8 @@ class UserProfile extends Component {
                 <Container>
                     <div className='card animate__animated animate__slideInDown profileCard '>
                         <div className='card-body row'>
-                            <div className='user-avatar' className="col-4">
+                            
+                            <div className='user-avatar col-4'>
                                 <h2>{this.state.username}</h2>
                                 <div>
                                     <img src={phImg} alt='Player`s Chosen Avatar' className='avatar'></img>
@@ -37,14 +38,16 @@ class UserProfile extends Component {
                                     <p className='stats-div'>Wins: {this.state.wins} Losses: {this.state.losses} </p>
                                 </div>
                             </div>
-                            <div className='user-links' className="col-4 my-auto">
+
+                            <div className='user-links col-4 my-auto'>
                                 <div className='button-col'>
-                                <button className="wood">Choose Deck</button>
-                               <br></br>
-                               <br></br>
-                               <button className="wood">Play Match</button>
+                                    <button className='wood'>Choose Deck</button>
+                                    <br></br>
+                                    <br></br>
+                                    <button className='wood'>Play Match</button>
                                </div>
                             </div>
+
                         </div>
                     </div>
                 </Container>
