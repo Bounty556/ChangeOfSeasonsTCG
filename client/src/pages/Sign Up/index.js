@@ -18,7 +18,7 @@ class SignUp extends Component {
 
     submitFunc = event => {
         event.preventDefault();
-        axios.post ('/register', {username:this.state.username, password: this.state.password})
+        axios.post ('/api/register', {username:this.state.username, password: this.state.password})
     }
 
     inputFunc = event => {
