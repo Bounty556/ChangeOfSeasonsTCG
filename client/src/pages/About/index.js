@@ -11,7 +11,7 @@ function About() {
     return (
         <div>
             <Container>
-                <div className="card">
+                <div className="card gameCard">
                     <p>
                     
                     </p>
