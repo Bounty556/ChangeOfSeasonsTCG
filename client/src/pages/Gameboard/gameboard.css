@@ -1,0 +1,72 @@
+.wrapper {
+    margin: 25px 25px;
+}
+
+hr {
+    border: 1px solid black;
+}
+
+/* Row Styling */
+#opponentRow, #opponentDefRow, #opponentAttRow, #userAttRow, #userDefRow {
+    display: flex;
+    flex-direction: row;
+}
+
+#userRow {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+#opponentDefRow, #opponentAttRow, #userAttRow, #userDefRow {
+    justify-content: center;
+}
+
+#opponentDefRow {
+    margin: 45px 0 0 0;
+}
+
+#userDefRow {
+    margin: 0 0 45px 0;
+}
+
+#opponentAttRow, #userAttRow {
+    height: 150px;
+}
+
+/* Attack Styling */
+#opponentAtt1, #opponentAtt2, #opponentAtt3, #userAtt1, #userAtt2, #userAtt3 {
+    width: 175px;
+}
+
+/* Defense Styling */
+#opponentDef1, #opponentDef2, #userDef1, #userDef2 {
+    height: 150px;
+    width: 170px;
+}
+
+/* Grave Styling */
+#opponentGrave, #userGrave {
+    height: 150px;
+    width: 175px;
+}
+
+#userGrave {
+    margin-left: 2%;
+}
+
+/* Deck Styling */
+#opponentDeck, #userDeck {
+    height: 150px;
+    width: 130px;
+    margin-left: 2%;
+}
+
+/* Play Area Styling */
+#opponentPlayArea {
+    width: 70%;
+    margin-left: 2%;
+}
+
+#userPlayArea {
+    width: 70%;
+}
