@@ -1,4 +1,9 @@
 const db = require('../models');
+const bcrypt = require('bcryptjs');
+
+function hashPassword(password) {
+  return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
+}
 
 module.exports = {
   getUser: (req, res) => {
@@ -9,6 +14,8 @@ module.exports = {
   },
 
   createUser: (req, res) => {
+    req.body.password = hashPassword(req.body.password);
+
     db.User
     .create(req.body)
     .then(dbModel => res.json(dbModel))
