@@ -45,7 +45,7 @@ class SignIn extends Component {
                                     className='form-control'
                                     placeholder='Enter your email'
                                     onChange={this.inputFunc}
-                                    value={this.state.email}
+                                    value={this.state.username}
                                 />
                             </div>
 

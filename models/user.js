@@ -5,6 +5,8 @@ const UserSchema = new Schema({
     username: {type: String, required: true, unique: true},
     password: {type: String, required: true},
     avatar: {type: String, default: 'cyclop_01.png'},
+    wins: {type: Number, default: 0},
+    losses: {type: Number, default: 0},
     cardIds: [{type: Number, required: true}]                // User's deck
 });
 
