@@ -1,13 +1,38 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const routes = require('./routes');
+
 const app = express();
 const PORT = process.env.PORT || 3001;
+
 const morgan = require ('morgan');
 const passport = require('passport');
+
+const server = require('http').createServer(app);
+const cors = require('cors');
+app.use(cors);
+
+const io = require('socket.io')(server, { serveClient: false });
+
+let timer;
+
+io.on('connection', (socket) => {
+  const time = () => {
+    const d = new Date();
+    socket.emit(socket.id, d.toLocaleTimeString());
+  };
+  console.log('A user connected');
+  timer = setInterval(time, 1000);
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
+    clearInterval(timer);
+  });
+});
+
 // Define middleware here
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
 // Serve up static assets (usually on heroku)
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));
@@ -44,7 +69,6 @@ app.use(passport.session()) // calls the deserializeUser
 // app.use('/user', user)
 
 // Start the API server
-app.listen(PORT, function() {
+server.listen(PORT, function() {
   console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`);
 });
-

@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/static/css/main.c78bf950.chunk.css",
+    "main.js": "/static/js/main.c38a7728.chunk.js",
+    "main.js.map": "/static/js/main.c38a7728.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.09b85ec0.js",
+    "runtime-main.js.map": "/static/js/runtime-main.09b85ec0.js.map",
+    "static/js/2.f7628fae.chunk.js": "/static/js/2.f7628fae.chunk.js",
+    "static/js/2.f7628fae.chunk.js.map": "/static/js/2.f7628fae.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.ee85a5db60132a40ee2dd228b7f84423.js": "/precache-manifest.ee85a5db60132a40ee2dd228b7f84423.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.c78bf950.chunk.css.map": "/static/css/main.c78bf950.chunk.css.map",
+    "static/js/2.f7628fae.chunk.js.LICENSE.txt": "/static/js/2.f7628fae.chunk.js.LICENSE.txt",
+    "static/media/cyclop_01.png": "/static/media/cyclop_01.3a12c5a2.png",
+    "static/media/homepage.css": "/static/media/game-background-0.032b812f.jpg",
+    "static/media/signIn.css": "/static/media/game-background-1.5a5abd2e.jpg",
+    "static/media/userProfile.css": "/static/media/game-background.6e5ce78f.jpg",
+    "static/media/woodsign.png": "/static/media/woodsign.d6b98f18.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.09b85ec0.js",
+    "static/js/2.f7628fae.chunk.js",
+    "static/css/main.c78bf950.chunk.css",
+    "static/js/main.c38a7728.chunk.js"
+  ]
+}
