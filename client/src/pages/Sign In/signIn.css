@@ -26,21 +26,6 @@
     transition: ease-in 0.1s;
 }
 
-.wood { 
-    background-image: url(./Images/woodsign.png) !important;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-color:transparent ;
-    /* justify-content: center; */
-    border: none;
-    font-size: 35px;
-    font-weight: bold;
-    font-family: 'Trade Winds', cursive;
-    color: rgb(255, 246, 217);
-    /* width: 300px;
-    height: 150px; */
-}
-
 .input-header { 
     color: white;
     font-weight: bolder;
