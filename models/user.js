@@ -10,28 +10,9 @@ const UserSchema = new Schema({
     cardIds: [{type: Number, required: true}]                // User's deck
 });
 
-// Define schema methods
-UserSchema.methods = {
-	checkPassword: function (inputPassword) {
-		return bcrypt.compareSync(inputPassword, this.password)
-	},
-	hashPassword: plainTextPassword => {
-		return bcrypt.hashSync(plainTextPassword, 10)
-	}
+UserSchema.methods.validPassword = function(password) {
+  return bcrypt.compareSync(password, this.password);
 }
-
-// Define hooks for pre-saving
-UserSchema.pre('save', function (next) {
-	if (!this.password) {
-		console.log('models/user.js =======NO PASSWORD PROVIDED=======')
-		next()
-	} else {
-		console.log('models/user.js hashPassword in pre save');
-		
-		this.password = this.hashPassword(this.password)
-		next()
-	}
-})
 
 const User = mongoose.model('User', UserSchema);
 
