@@ -8,6 +8,10 @@ const UserSchema = new Schema({
     cardIds: [{type: Number, required: true}]                // User's deck
 });
 
+UserSchema.methods.validPassword = function(password) {
+  return bcrypt.compareSync(password, this.password);
+}
+
 const User = mongoose.model('User', UserSchema);
 
 module.exports = User;
