@@ -12,7 +12,7 @@ router.route('/register').post( (req, res) => {
         if (err) {
             console.log('User.js post error: ', err)
         } else if (user) {
-            res.json({
+            return res.status(422).json({
                 error: `Sorry, already a user with the username: ${username}`
             })
         }
@@ -23,7 +23,7 @@ router.route('/register').post( (req, res) => {
             })
             newUser.save((err, savedUser) => {
                 if (err) return res.json(err)
-                res.json(savedUser)
+                return res.json(savedUser)
             })
         }
     })
