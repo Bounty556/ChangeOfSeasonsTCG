@@ -7,11 +7,8 @@ const PORT = process.env.PORT || 3001;
 
 const morgan = require ('morgan');
 const passport = require('passport');
-<<<<<<< HEAD
 
 const server = require('http').createServer(app);
-const cors = require('cors');
-app.use(cors);
 
 const io = require('socket.io')(server, { serveClient: false });
 
@@ -30,9 +27,8 @@ io.on('connection', (socket) => {
   });
 });
 
-=======
 const bodyParser = require('body-parser');
->>>>>>> 09f8930a47d898c18b299e221ee7db12e7fb6538
+
 // Define middleware here
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

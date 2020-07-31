@@ -5,6 +5,10 @@ function hashPassword(password) {
   return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
 }
 
+function validPassword(password, passwordHash) {
+  return bcrypt.compareSync(password, passwordHash);
+}
+
 module.exports = {
   getUser: (req, res) => {
     db.User
