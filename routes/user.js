@@ -1,68 +1,28 @@
-const express = require('express')
-const router = express.Router()
-const User = require('../models/user')
-const passport = require('../passport')
+const express = require('express');
+const router = express.Router();
+const userController = require('../controllers/userController');
+const passport = require('../passport');
 
-router.route('/register').post( (req, res) => {
-    console.log('user signup');
+router.post('/register', userController.createUser);
 
-    const { username, password } = req.body
-    // ADD VALIDATION
-    User.findOne({ username: username }, (err, user) => {
-        if (err) {
-            console.log('User.js post error: ', err)
-        } else if (user) {
-            return res.status(422).json({
-                error: `Sorry, already a user with the username: ${username}`
-            })
-        }
-        else {
-            const newUser = new User({
-                username: username,
-                password: password
-            })
-            newUser.save((err, savedUser) => {
-                if (err) return res.json(err)
-                return res.json(savedUser)
-            })
-        }
-    })
-})
+// TODO: I'm not sure how to validate passwords just yet because we need to save the passwords as hashed strings
 
 router.post(
-    '/login',
-    function (req, res, next) {
-        console.log('routes/user.js, login, req.body: ');
-        console.log(req.body)
-        next()
-    },
-    passport.authenticate('local'),
-    (req, res) => {
-        console.log('logged in', req.user);
-        var userInfo = {
-            username: req.user.username
-        };
-        res.send(userInfo);
-    }
-)
+  '/login',
+  (req, res, next) => next(),
+  passport.authenticate('local'),
+  (req, res) => res.send({ username: req.user.username })
+);
 
-router.get('/', (req, res, next) => {
-    console.log('===== user!!======')
-    console.log(req.user)
-    if (req.user) {
-        res.json({ user: req.user })
-    } else {
-        res.json({ user: null })
-    }
-})
+router.get('/', (req, res, next) => res.json({ user: req.user || null }));
 
 router.post('/logout', (req, res) => {
-    if (req.user) {
-        req.logout()
-        res.send({ msg: 'logging out' })
-    } else {
-        res.send({ msg: 'no user to log out' })
-    }
-})
+  if (req.user) {
+    req.logout();
+    res.send({ msg: 'logging out' });
+  } else {
+    res.send({ msg: 'no user to log out' });
+  }
+});
 
-module.exports = router
+module.exports = router;
