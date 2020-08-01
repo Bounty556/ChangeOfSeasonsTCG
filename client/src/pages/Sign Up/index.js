@@ -21,6 +21,8 @@ class SignUp extends Component {
 
         let anyErrors = false;
 
+        const defaultMessage = '* Cannot be empty';
+
         const username = this.state.username;
         const email = this.state.email;
         const password = this.state.password;
@@ -28,34 +30,34 @@ class SignUp extends Component {
         
         // Username validation
         if (username === '') {
-            this.displayError('username');
+            this.displayError('username', defaultMessage);
             anyErrors = true;
         } else if (username.length < 3 || username.length > 20) {
-            this.displayError('username');
+            this.displayError('username', '* Username must be between 3 and 20 characters');
             anyErrors = true;
         }
 
         // Email validation
         if (email === '') {
-            this.displayError('email');
+            this.displayError('email', defaultMessage);
             anyErrors = true;
         }
 
         // Password validation
         if (password === '') {
-            this.displayError('password');
+            this.displayError('password', defaultMessage);
             anyErrors = true;
-        } else if (password.length < 3 || password.length > 128) {
-            this.displayError('password');
+        } else if (password.length < 6 || password.length > 128) {
+            this.displayError('password', '* Password must be between 6 and 128 characters');
             anyErrors = true;
         }
         
         // secondPassword validation
         if (secondPassword === '') {
-            this.displayError('secondPassword');
+            this.displayError('secondPassword', defaultMessage);
             anyErrors = true;
         } else if (password !== secondPassword) {
-            this.displayError('secondPassword');
+            this.displayError('secondPassword', '* Passwords do not match');
             anyErrors = true;
         }
 
@@ -80,17 +82,31 @@ class SignUp extends Component {
         this.setState({ [name]: value });
     }
 
-    displayError = name => {
+    displayError = (name, errorMessage) => {
+        // This will make the input's border color red and add a horizontal shaking animation
         document.getElementById(name).classList.add('animate__animated', 'animate__shakeX', 'error');
         document.getElementById(name).style.borderColor = 'red';
 
+        // This will display the error message using a fade in animation
+        document.getElementById(name + 'Error').classList.add('animate__animated', 'animate__fadeIn');
+        document.getElementById(name + 'Error').innerHTML = errorMessage;
+
+        // After 600 milliseconds this will remove the shaking animation class from the element 
         setTimeout(() => {
             document.getElementById(name).classList.remove('animate__animated', 'animate__shakeX');
         }, 600)
     }
 
     removeError = name => {
+        // This will reset the input's border color to black and fade out the error message
         document.getElementById(name).style.borderColor = 'black';
+        document.getElementById(name + 'Error').classList.replace('animate__fadeIn', 'animate__fadeOut');
+
+        // After 600 milliseconds this will remove the fade out class from the error message and reset the error message back to blank
+        setTimeout(() => {
+            document.getElementById(name + 'Error').classList.remove('animate__animated', 'animate__fadeOut');
+            document.getElementById(name + 'Error').innerHTML = '';
+        }, 600)
     }
 
     render() {
@@ -109,6 +125,7 @@ class SignUp extends Component {
                             {/* Enter username */}
                             <div className='form-group input-header'>
                                 <label htmlFor='userInputUsername'>Username</label>
+                                <p id='usernameError' className='errorMessage'></p>
                                 <input
                                     type='username'
                                     name='username'
@@ -123,6 +140,7 @@ class SignUp extends Component {
                             {/* Enter Email */}
                             <div className='form-group input-header'>
                                 <label htmlFor='userInputEmail'>Email address</label>
+                                <p id='emailError' className='errorMessage'></p>
                                 <input
                                     type='email'
                                     name='email'
@@ -137,6 +155,7 @@ class SignUp extends Component {
                             {/* Enter Password */}
                             <div className='form-group input-header'>
                                 <label htmlFor='userInputPassword'>Password</label>
+                                <p id='passwordError' className='errorMessage'></p>
                                 <input
                                     type='password'
                                     name='password'
@@ -151,6 +170,7 @@ class SignUp extends Component {
                             {/* Re-enter Password */}
                             <div className='form-group input-header'>
                                 <label htmlFor='userInputPassword input-header'>Re-enter Password</label>
+                                <p id='secondPasswordError' className='errorMessage'></p>
                                 <input
                                     type='password'
                                     name='secondPassword'
@@ -165,10 +185,6 @@ class SignUp extends Component {
                             <button type='submit' className='wood animate__animated animate__bounceIn' id='signUpButton' onClick={this.validateFunc}>Sign Up!</button>
                         </form>
                     </Card>
-                    {/* brought button into the card  */}
-                    {/* <button type='submit' className='btn btn-primary animate__animated animate__bounceIn' id='signUpButton' onSubmit={this.submitFunc}>
-                        Sign Up!
-                    </button> */}
 
                     <p id='alreadyHave' className='animate__animated animate__fadeIn animate__delay-2s'>Already have an account? <Link id='clickHere' to='/Signin'>Click here to sign in!</Link></p>
                 </Container>
