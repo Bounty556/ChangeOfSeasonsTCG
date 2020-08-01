@@ -16,14 +16,81 @@ class SignUp extends Component {
         secondPassword: ''
     }
 
-    submitFunc = event => {
+    validateFunc = event => {
         event.preventDefault();
+
+        let anyErrors = false;
+
+        const username = this.state.username;
+        const email = this.state.email;
+        const password = this.state.password;
+        const secondPassword = this.state.secondPassword;
+        
+        // Username validation
+        if (username === '') {
+            this.displayError('username');
+            anyErrors = true;
+        } else if (username.length < 3 || username.length > 20) {
+            this.displayError('username');
+            anyErrors = true;
+        }
+
+        // Email validation
+        if (email === '') {
+            this.displayError('email');
+            anyErrors = true;
+        }
+
+        // Password validation
+        if (password === '') {
+            this.displayError('password');
+            anyErrors = true;
+        } else if (password.length < 3 || password.length > 128) {
+            this.displayError('password');
+            anyErrors = true;
+        }
+        
+        // secondPassword validation
+        if (secondPassword === '') {
+            this.displayError('secondPassword');
+            anyErrors = true;
+        } else if (password !== secondPassword) {
+            this.displayError('secondPassword');
+            anyErrors = true;
+        }
+
+        // If there are no errors then run the submit function
+        if (!anyErrors) {
+            this.submitFunc();
+        }
+    }
+
+    submitFunc = () => {
         axios.post('/api/register', {username:this.state.username, password: this.state.password, email: this.state.email})
     }
 
     inputFunc = event => {
         const { name, value } = event.target;
+        const errorCheck = document.getElementById(name).classList;
+
+        if (errorCheck.contains('error')) {
+            this.removeError(name);
+        }
+
         this.setState({ [name]: value });
+    }
+
+    displayError = name => {
+        document.getElementById(name).classList.add('animate__animated', 'animate__shakeX', 'error');
+        document.getElementById(name).style.borderColor = 'red';
+
+        setTimeout(() => {
+            document.getElementById(name).classList.remove('animate__animated', 'animate__shakeX');
+        }, 600)
+    }
+
+    removeError = name => {
+        document.getElementById(name).style.borderColor = 'black';
     }
 
     render() {
@@ -38,7 +105,7 @@ class SignUp extends Component {
 
                         <hr />
 
-                        <form onSubmit={this.submitFunc}>
+                        <form onSubmit={this.validateFunc}>
                             {/* Enter username */}
                             <div className='form-group input-header'>
                                 <label htmlFor='userInputUsername'>Username</label>
@@ -94,9 +161,8 @@ class SignUp extends Component {
                                     value={this.state.secondPassword}
                                 />
                             </div>
-                            <button type='submit' className='wood animate__animated animate__bounceIn' id='signUpButton' onSubmit={this.submitFunc}>
-                        Sign Up!
-                    </button>
+
+                            <button type='submit' className='wood animate__animated animate__bounceIn' id='signUpButton' onClick={this.validateFunc}>Sign Up!</button>
                         </form>
                     </Card>
                     {/* brought button into the card  */}
