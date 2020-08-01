@@ -8,7 +8,7 @@ const UserSchema = new Schema({
     avatar: {type: String, default: 'cyclop_01.png'},
     wins: {type: Number, default: 0},
     losses: {type: Number, default: 0},
-    cardIds: [{type: Number, required: true}]                // User's deck
+    cardIds: [{type: Number, required: false}]                // User's deck
 });
 
 const User = mongoose.model('User', UserSchema);

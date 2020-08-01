@@ -48,7 +48,7 @@ app.use(
 		extended: false
 	})
 )
-// app.use(bodyParser.json())
+app.use(bodyParser.json())
 
 // Sessions
 // app.use(
