@@ -41,6 +41,9 @@ class SignUp extends Component {
         if (email === '') {
             this.displayError('email', defaultMessage);
             anyErrors = true;
+        } else if (!email.match(/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/)) {
+            this.displayError('email', '* Not valid email address.');
+            anyErrors = true;
         }
 
         // Password validation
@@ -94,7 +97,7 @@ class SignUp extends Component {
         // After 600 milliseconds this will remove the shaking animation class from the element 
         setTimeout(() => {
             document.getElementById(name).classList.remove('animate__animated', 'animate__shakeX');
-        }, 600)
+        }, 600);
     }
 
     removeError = name => {
@@ -106,7 +109,7 @@ class SignUp extends Component {
         setTimeout(() => {
             document.getElementById(name + 'Error').classList.remove('animate__animated', 'animate__fadeOut');
             document.getElementById(name + 'Error').innerHTML = '';
-        }, 600)
+        }, 600);
     }
 
     render() {
