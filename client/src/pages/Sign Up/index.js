@@ -97,7 +97,7 @@ class SignUp extends Component {
         // After 600 milliseconds this will remove the shaking animation class from the element 
         setTimeout(() => {
             document.getElementById(name).classList.remove('animate__animated', 'animate__shakeX');
-        }, 600);
+        }, 1000);
     }
 
     removeError = name => {
