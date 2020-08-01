@@ -15,10 +15,12 @@ module.exports = {
 
   createUser: (req, res) => {
     req.body.password = hashPassword(req.body.password);
-
+    console.log(req.body);
     db.User
     .create(req.body)
-    .then(dbModel => res.json(dbModel))
+    .then(dbModel => 
+      res.json(dbModel)
+    )
     .catch(err => res.status(422).json(err));
   },
 

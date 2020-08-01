@@ -25,4 +25,8 @@ router.post('/logout', (req, res) => {
   }
 });
 
+router.get('/login/user', (req, res) => {
+  res.json(req.session.passport.user);
+});
+
 module.exports = router;

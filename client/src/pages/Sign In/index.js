@@ -36,16 +36,16 @@ class SignIn extends Component {
 
                         <hr />
 
-                        <form>
-                            {/* Enter Email */}
+                        <form onSubmit={this.submitFunc}>
+                            {/* Enter username */}
                             <div className='form-group input-header'>
-                                <label htmlFor='userInputEmail'>Email address</label>
+                                <label htmlFor='userInputusername'>username address</label>
                                 <input
-                                    type='email'
-                                    name='email'
-                                    id='email'
+                                    type='text'
+                                    name='username'
+                                    id='username'
                                     className='form-control'
-                                    placeholder='Enter your email'
+                                    placeholder='Enter your username'
                                     onChange={this.inputFunc}
                                     value={this.state.username}
                                 />
