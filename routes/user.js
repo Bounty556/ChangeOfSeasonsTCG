@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
-const passport = require('../passport');
+const passport = require('passport');
+
+
 
 router.post('/register', userController.createUser);
 
@@ -11,7 +13,7 @@ router.post(
   '/login',
   (req, res, next) => next(),
   passport.authenticate('local'),
-  (req, res) => res.send({ username: req.user.username })
+  (req, res) => res.send("login")
 );
 
 router.get('/', (req, res, next) => res.json({ user: req.user || null }));
