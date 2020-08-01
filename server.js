@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const routes = require('./routes');
-
+const session = require('express-session')
 const app = express();
 const PORT = process.env.PORT || 3001;
 
@@ -51,14 +51,14 @@ app.use(
 app.use(bodyParser.json())
 
 // Sessions
-// app.use(
-// 	session({
-// 		secret: 'ChangeOfSeasons', //pick a random string to make the hash that is generated secure
-// 		store: new MongoStore({ mongooseConnection: dbConnection }),
-// 		resave: false, //required
-// 		saveUninitialized: false //required
-// 	})
-// )
+app.use(
+	session({
+		secret: 'ChangeOfSeasons', //pick a random string to make the hash that is generated secure
+		// store: new MongoStore({ mongooseConnection: dbConnection }),
+		resave: false, //required
+		saveUninitialized: false //required
+	})
+)
 // Connect to the Mongo DB
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/changeOfSeasons');
 
