@@ -4,10 +4,8 @@ const routes = require('./routes');
 const session = require('express-session')
 const app = express();
 const PORT = process.env.PORT || 3001;
-
 const morgan = require ('morgan');
 const passport = require('passport');
-
 const server = require('http').createServer(app);
 
 const io = require('socket.io')(server, { serveClient: false });
@@ -27,8 +25,7 @@ io.on('connection', (socket) => {
   });
 });
 
-const bodyParser = require('body-parser');
-
+require('./passport')(passport);
 // Define middleware here
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -38,17 +35,15 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));
 }
 // Add routes, both API and view
-app.use(routes);
-
 
 // MIDDLEWARE
 app.use(morgan('dev'))
 app.use(
-	bodyParser.urlencoded({
+	express.urlencoded({
 		extended: false
 	})
 )
-app.use(bodyParser.json())
+app.use(express.json())
 
 // Sessions
 app.use(
@@ -67,7 +62,7 @@ app.use(passport.initialize())
 app.use(passport.session()) // calls the deserializeUser
 // Routes
 // app.use('/user', user)
-
+app.use(routes);
 // Start the API server
 server.listen(PORT, function() {
   console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`);
