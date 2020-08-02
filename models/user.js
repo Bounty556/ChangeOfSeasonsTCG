@@ -4,11 +4,14 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
     username: {type: String, required: true, unique: true},
     password: {type: String, required: true},
+    email: {type: String, required: true, unique: true},
     avatar: {type: String, default: 'cyclop_01.png'},
-    cardIds: [{type: Number, required: true}]                // User's deck
+    wins: {type: Number, default: 0},
+    losses: {type: Number, default: 0},
+    cardIds: [{type: Number, required: false}]                // User's deck
 });
 
-UserSchema.methods.validPassword = function(password) {
+UserSchema.methods.checkPassword = function(password) {
   return bcrypt.compareSync(password, this.password);
 }
 

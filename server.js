@@ -1,30 +1,69 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const routes = require('./routes');
+const session = require('express-session')
 const app = express();
 const PORT = process.env.PORT || 3001;
+const morgan = require ('morgan');
+const passport = require('passport');
+const server = require('http').createServer(app);
 
+const io = require('socket.io')(server, { serveClient: false });
+
+let timer;
+
+io.on('connection', (socket) => {
+  const time = () => {
+    const d = new Date();
+    socket.emit(socket.id, d.toLocaleTimeString());
+  };
+  console.log('A user connected');
+  timer = setInterval(time, 1000);
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
+    clearInterval(timer);
+  });
+});
+
+require('./passport')(passport);
 // Define middleware here
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
 // Serve up static assets (usually on heroku)
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));
 }
 // Add routes, both API and view
-app.use(routes);
 
-// Requiring our routes
-require("./routes/html-routes.js")(app);
-require("./routes/api-routes.js")(app);
+// MIDDLEWARE
+app.use(morgan('dev'))
+app.use(
+	express.urlencoded({
+		extended: false
+	})
+)
+app.use(express.json())
 
+// Sessions
+app.use(
+	session({
+		secret: 'ChangeOfSeasons', //pick a random string to make the hash that is generated secure
+		// store: new MongoStore({ mongooseConnection: dbConnection }),
+		resave: false, //required
+		saveUninitialized: false //required
+	})
+)
 // Connect to the Mongo DB
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/changeOfSeasons');
 
-
-
+// Passport
+app.use(passport.initialize())
+app.use(passport.session()) // calls the deserializeUser
+// Routes
+// app.use('/user', user)
+app.use(routes);
 // Start the API server
-app.listen(PORT, function() {
+server.listen(PORT, function() {
   console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`);
 });
-
