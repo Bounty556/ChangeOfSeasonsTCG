@@ -8,7 +8,7 @@ import SignUp from './pages/Sign Up/index';
 import Signin from './pages/Sign In/index';
 import ForgotPassword from './pages/Forgot-Password/index';
 import UserProfile from './pages/UserProfile/index';
-
+import Lobby from './pages/Lobby/index'
 
 function App() {
     return (
@@ -21,6 +21,8 @@ function App() {
                     <Route exact path='/Signin' component={Signin} />
                     <Route exact path='/Forgot' component={ForgotPassword}/>
                     <Route exact path = '/Profile' component = {UserProfile}/>
+                    <Route exact path = '/Lobby' component = {Lobby}/>
+
                 </Switch>
             </div>
         </Router>
