@@ -50,6 +50,10 @@ p{
     color: whitesmoke
 }
 
+button {
+    margin-right: 25px;
+}
+
 .wood{ 
     background-image: url(./Images/woodsign.png) !important;
     width: 300px;
