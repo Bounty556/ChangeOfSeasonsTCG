@@ -28,7 +28,6 @@ class Lobby extends Component {
         event.preventDefault();
     }
 
-<<<<<<< HEAD
     componentDidMount() {
       const socket = socketIO(ENDPOINT);
 
@@ -44,19 +43,17 @@ class Lobby extends Component {
     handleCreate = () => {
       Connection.createNewGame();
       this.setState({ gameId: Connection.roomId });
-      joinedMatch = Connection.connected;
+      this.setState({ joinedMatch: Connection.connected });
     }
 
     handleJoin = () => {
       Connection.joinRoom(this.state.gameId);
-      joinedMatch = Connection.connected;
+      this.setState({ joinedMatch: Connection.connected });
     }
 
     handleChangeJoinId = (event) => {
       this.setState({ gameId: parseInt(event.target.value) });
     }
-=======
->>>>>>> 8438147f6abb0269bb5e093f7705dfb5dc87ae8f
 
     render() {
         return (
