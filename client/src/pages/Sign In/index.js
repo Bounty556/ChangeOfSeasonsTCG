@@ -39,8 +39,7 @@ class SignIn extends Component {
         }
     }
 
-    submitFunc = event => {
-        event.preventDefault();
+    submitFunc = () => {
         axios.post ('/login', {username:this.state.username, password: this.state.password});
     }
 
