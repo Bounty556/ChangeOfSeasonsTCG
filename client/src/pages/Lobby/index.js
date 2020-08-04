@@ -25,8 +25,7 @@ class Lobby extends Component {
     //  const iD =  Math.floor(Math.random()*90000) + 10000;
     //  this.setState({ [this.state.gameID]: iD });
     //  console.log(iD)
-
-    }
+    // }
 
     render() {
         return (
@@ -37,13 +36,13 @@ class Lobby extends Component {
                         <div className='card-body'>
                             {/* row displaying users */}
                             <div className='players row'>
-                                <div>
+                                <div className='playerOne'>
                                 <h2>{this.state.username_1}</h2>
                                     <img src='https://via.placeholder.com/250
                                     'alt='Player`s Chosen Avatar' className='avatar'></img>
                                 </div>
                                 <h1 className='vs'>VS</h1>
-                                <div>
+                                <div className='playerTwo'>
                                 <h2>{this.state.username_2}</h2>
                                     <img src='https://via.placeholder.com/250
                                     'alt='Player`s Chosen Avatar' className='avatar'></img>
@@ -69,7 +68,6 @@ class Lobby extends Component {
             </div>
         )
     }
-
 }
 
 export default Lobby;
