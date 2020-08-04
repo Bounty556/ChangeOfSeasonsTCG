@@ -4,28 +4,59 @@ import React, { Component } from 'react';
 
 import Container from '../../components/Container/index';
 import Navbar from '../../components/Navbar/index';
+import socketIO from 'socket.io-client';
+import Connection from './connection';
 
 import './lobby.css';
 
-class Lobby extends Component {
+const ENDPOINT = 'http://localhost:3001/';
 
+// TODO: when joinedMatch is true, that means we are currently in a room, and we should disable the ability to edit the gameId
+// TODO: display the info of any users connected to the room
+
+class Lobby extends Component {
     state = {
         username_1: 'User 1',
         username_2: 'User 2',
         avatar1: '',
         avatar2: '',
-        gameID: 0
+        gameId: 0,
+        joinedMatch: false
     }
+
     submitFunc = event => {
         event.preventDefault();
     }
-    //creates a 5 digit game lobby when players choose to create a game
-    //not currently working / do not know if we will be using a randomly generated code for socket.io or assigment a code that we have predefined 
-    // gameIDFunc = event => { 
-    //  const iD =  Math.floor(Math.random()*90000) + 10000;
-    //  this.setState({ [this.state.gameID]: iD });
-    //  console.log(iD)
-    // }
+
+<<<<<<< HEAD
+    componentDidMount() {
+      const socket = socketIO(ENDPOINT);
+
+      socket.on('connected', () => {
+        Connection.init(socket);
+      });
+
+      return () => {
+        socket.disconnect();
+      }
+    }
+
+    handleCreate = () => {
+      Connection.createNewGame();
+      this.setState({ gameId: Connection.roomId });
+      joinedMatch = Connection.connected;
+    }
+
+    handleJoin = () => {
+      Connection.joinRoom(this.state.gameId);
+      joinedMatch = Connection.connected;
+    }
+
+    handleChangeJoinId = (event) => {
+      this.setState({ gameId: parseInt(event.target.value) });
+    }
+=======
+>>>>>>> 8438147f6abb0269bb5e093f7705dfb5dc87ae8f
 
     render() {
         return (
@@ -50,18 +81,17 @@ class Lobby extends Component {
                             </div>
 
                             <div className='row'>
-                                <input className = 'game-input' type= 'number' min = '5' max='5' value = {this.state.gameID}></input>
+                                <input className='game-input' type='number' value={this.state.gameId} onChange={this.handleChangeJoinId}></input>
                             </div>
 
                             <div className='row'>
                                 <div className='button-col'>
                                     <br></br>
                                     <br></br>
-                                    <button className='wood'>Join Match</button>
-                                    <button className='wood' >Create Match</button>
+                                    <button className='wood' onClick={this.handleJoin}>Join Match</button>
+                                    <button className='wood' onClick={this.handleCreate}>Create Match</button>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </Container>
