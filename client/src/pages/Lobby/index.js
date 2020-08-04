@@ -25,7 +25,7 @@ class Lobby extends Component {
     //  const iD =  Math.floor(Math.random()*90000) + 10000;
     //  this.setState({ [this.state.gameID]: iD });
     //  console.log(iD)
-    // }
+
 
     render() {
         return (
