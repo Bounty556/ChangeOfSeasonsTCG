@@ -26,7 +26,7 @@ class Lobby extends Component {
     //  this.setState({ [this.state.gameID]: iD });
     //  console.log(iD)
 
-    }
+    
 
     render() {
         return (
