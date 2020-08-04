@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState} from 'React';
+import React, { createContext, useContext, useState} from 'react';
 
 const AuthContext = createContext();
 const { Provider } = AuthContext;

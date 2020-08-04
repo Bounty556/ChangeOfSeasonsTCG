@@ -13,7 +13,7 @@ router.post(
   '/login',
   (req, res, next) => next(),
   passport.authenticate('local'),
-  (req, res) => res.send("login")
+  (req, res) => res.json(req.session.passport.user)
 );
 
 router.get('/', (req, res, next) => res.json({ user: req.user || null }));

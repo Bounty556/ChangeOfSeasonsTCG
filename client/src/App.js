@@ -1,7 +1,8 @@
-import React from 'react';
-
+import React, {useEffect} from 'react';
+import ProtectedRoute from './components/ProtectedRoute'
+import {logout, getAuthLocally, saveAuthLocally} from './utils/authentication'
+import {useAuthContext} from './utils/GlobalState'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-
 import Homepage from './pages/Homepage/index';
 import About from './pages/About/index';
 import SignUp from './pages/Sign Up/index';
@@ -12,9 +13,17 @@ import Lobby from './pages/Lobby/index'
 import Game from './pages/Gameboard/index';
 
 
-
 function App() {
+    const [auth, setAuth] = useAuthContext()
+    useEffect(() => {
+        let auth = getAuthLocally();
+        console.log(auth);
+        if (auth){
+            setAuth(auth);
+        }
+    }, [])
     return (
+
         <Router>
             <div>
                 <Switch>
@@ -23,7 +32,7 @@ function App() {
                     <Route exact path='/Signup' component={SignUp}/>
                     <Route exact path='/Signin' component={Signin} />
                     <Route exact path='/Forgot' component={ForgotPassword}/>
-                    <Route exact path = '/Profile' component = {UserProfile}/>
+                    <ProtectedRoute exact path = '/Profile' component = {UserProfile}/>
                     <Route exact path = '/Lobby' component = {Lobby}/>
                     <Route exact path='/Game' component={Game} />
                 </Switch>
