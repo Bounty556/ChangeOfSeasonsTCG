@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export default {
   socket: null,
   roomId: null,
@@ -11,19 +13,42 @@ export default {
   
   createNewGame: function() {
     // Create a unique Socket.IO Room
-    this.joinRoom(Math.ceil(Math.random() * 100000));
+    const room = Math.ceil(Math.random() * 100000); 
+
+    axios.post('/api/lobby/' + room.toString() + '/create')
+      .then(() => {
+        this.joinRoom(room);
+      });
   },
   
   joinRoom: function(id) {
     this.roomId = id.toString();
 
-    // Return the Room ID (gameId) and the socket ID (mySocketId) to the browser client
-    this.socket.emit('joinRoom' + this.socket.id.toString(), this.roomId);
+    // Make sure this lobby exists before joining
+    axios.get('/api/lobby/' + this.roomId + '/checkLobby')
+      .then(result => {
+        if (result.found) {
+          // Add the current player to the lobby
+          axios.put('/api/lobby/' + this.roomId + '/addPlayer')
+            .then(() => {
+              // Return the Room ID (gameId) to the browser client to be created
+              this.socket.emit('joinRoom' + this.socket.id.toString(), this.roomId);
+            })
+        }
+        else {
+          this.roomId = null;
+        }
+      });
   },
 
-  updateLobby: function(room) {
+  updateLobby: function() {
     // TODO: Update lobby info?
-    this.connected = true;
-    console.log('Welcome to room ' + room);
+    axios.get('/api/lobby/' + this.roomId + '/getPlayerInfo')
+      .then(info => {
+        console.log(info);
+        this.connected = true;
+        // Let the front end know it needs to update
+        this.socket.to(this.state.gameID.toString()).emit('updateFrontEnd', info);
+      })
   }
 }

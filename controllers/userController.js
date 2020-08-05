@@ -6,11 +6,13 @@ function hashPassword(password) {
 }
 
 module.exports = {
-  getUser: (req, res) => {
-    db.User
-    .findById(req.params.id)
-    .then(dbModel => res.json(dbModel))
-    .catch(err => res.status(422).json(err));
+  getUser: (id) => {
+    return new Promise((resolve, reject) => {
+      db.User
+      .findById(id)
+      .then(dbModel => resolve(dbModel.toJSON()))
+      .catch(err => reject(err));
+    });
   },
 
   createUser: (req, res) => {

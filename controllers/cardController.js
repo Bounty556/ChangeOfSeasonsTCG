@@ -7,29 +7,29 @@ const db = require('../models');
 module.exports = {
   addCard: (req, res) => {
     db.Card
-    .create(req.body)
-    .then(dbModel => res.json(dbModel))
-    .catch(err => res.status(422).json(err));
+      .create(req.body)
+      .then(dbModel => res.json(dbModel))
+      .catch(err => res.status(422).json(err));
   },
 
   removeCardByCardId: (req, res) => {
     db.Card
-    .deleteOne({ cardId: req.params.id })
-    .then(dbModel => res.json(dbModel))
-    .catch(err => res.status(422).json(err));
+      .deleteOne({ cardId: req.params.id })
+      .then(dbModel => res.json(dbModel))
+      .catch(err => res.status(422).json(err));
   },
 
   getCardByCardId: (req, res) => {
     db.Card
-    .findOne({ cardId: req.params.id })
-    .then(dbModel => res.json(dbModel))
-    .catch(err => res.status(422).json(err));
-  },
+      .findOne({ cardId: req.params.id })
+      .then(dbModel => res.json(dbModel))
+      .catch(err => res.status(422).json(err));
+    },
 
   getCardsBySeason: (req, res) => {
     db.Card
-    .find({ season: req.params.season })
-    .then(dbModel => res.json(dbModel))
-    .catch(err => res.status(422).json(err));
+      .find({ season: req.params.season })
+      .then(dbModel => res.json(dbModel))
+      .catch(err => res.status(422).json(err));
   }
 };

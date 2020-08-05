@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import Container from '../../components/Container/index';
 import Navbar from '../../components/Navbar/index';
 import socketIO from 'socket.io-client';
-import Connection from './connection';
+import Connection from './connection'; // The 'backend' for the lobby
 
 import './lobby.css';
 
@@ -35,6 +35,11 @@ class Lobby extends Component {
         Connection.init(socket);
       });
 
+      socket.on('updateFrontEnd', (info) => {
+        this.setState({ gameId: parseInt(Connection.roomId) });
+        this.setState({ joinedMatch: Connection.connected });
+      });
+
       return () => {
         socket.disconnect();
       }
@@ -42,13 +47,10 @@ class Lobby extends Component {
 
     handleCreate = () => {
       Connection.createNewGame();
-      this.setState({ gameId: Connection.roomId });
-      this.setState({ joinedMatch: Connection.connected });
     }
 
     handleJoin = () => {
       Connection.joinRoom(this.state.gameId);
-      this.setState({ joinedMatch: Connection.connected });
     }
 
     handleChangeJoinId = (event) => {
