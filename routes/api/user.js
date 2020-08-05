@@ -1,13 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/userController');
+const userController = require('../../controllers/userController');
 const passport = require('passport');
 
-
-
 router.post('/register', userController.createUser);
-
-// TODO: I'm not sure how to validate passwords just yet because we need to save the passwords as hashed strings
 
 router.post(
   '/login',
