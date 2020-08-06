@@ -18,8 +18,8 @@ class Lobby extends Component {
   constructor() {
     super();
     this.state = {
-      username_1: 'User 1',
-      username_2: 'User 2',
+      username1: 'User 1',
+      username2: 'User 2',
       avatar1: '',
       avatar2: '',
       gameId: 0,
@@ -42,8 +42,25 @@ class Lobby extends Component {
 
     this.socket.on('updateFrontEnd', info => {
       console.log(info);
-      this.setState({ gameId: parseInt(Connection.roomId) });
-      this.setState({ joinedMatch: Connection.connected });
+
+      if (info.data[0]) {
+        this.setState({
+          username1: info.data[0].username,
+          avatar1: info.data[0].avatar
+        });
+      }
+
+      if (info.data[1]) {
+        this.setState({
+          username2: info.data[1].username,
+          avatar2: info.data[1].avatar
+        });
+      }
+
+      this.setState({
+        gameId: parseInt(Connection.roomId),
+        joinedMatch: Connection.connected
+      });
     });
   }
 
@@ -68,25 +85,23 @@ class Lobby extends Component {
       <div>
         <Navbar />
         <Container>
-          <div className='card animate__animated animate__slideInDown profileCard '>
+          <div className='card animate__animated animate__slideInDown profileCard'>
             <div className='card-body'>
               {/* row displaying users */}
               <div className='players row'>
                 <div className='playerOne'>
-                  <h2>{this.state.username_1}</h2>
+                  <h2>{this.state.username1}</h2>
                   <img
-                    src='https://via.placeholder.com/250
-                                    '
+                    src={'./images/cardImg/' + this.state.avatar1}
                     alt='Player`s Chosen Avatar'
                     className='avatar'
                   ></img>
                 </div>
                 <h1 className='vs'>VS</h1>
                 <div className='playerTwo'>
-                  <h2>{this.state.username_2}</h2>
+                  <h2>{this.state.username2}</h2>
                   <img
-                    src='https://via.placeholder.com/250
-                                    '
+                    src={'./images/cardImg/' + this.state.avatar2}
                     alt='Player`s Chosen Avatar'
                     className='avatar'
                   ></img>
