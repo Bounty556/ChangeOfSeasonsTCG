@@ -1,5 +1,5 @@
 import React, { Component, useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import {AuthProvider, useAuthContext} from '../../utils/GlobalState'
 import Container from '../../components/Container/index';
@@ -12,6 +12,7 @@ function SignIn() {
     const [username, setUserName] = useState('');
     const [userpass, setUserPass] = useState('');
     const [auth, setAuth] = useAuthContext();
+    const history = useHistory();
 
     function validateFunc(event) {
         event.preventDefault();
@@ -39,8 +40,10 @@ function SignIn() {
     function submitFunc () {
         axios.post ('/api/login', {username:username, password: userpass})
         .then (res=>{
+            console.log(res);
            setAuth(res.data);
            saveAuthLocally(res.data);
+           history.push('/Profile');
         })
     }
 
