@@ -15,88 +15,126 @@ const ENDPOINT = 'http://localhost:3001/';
 // TODO: display the info of any users connected to the room
 
 class Lobby extends Component {
-    state = {
-        username_1: 'User 1',
-        username_2: 'User 2',
-        avatar1: '',
-        avatar2: '',
-        gameId: 0,
-        joinedMatch: false
-    }
+  constructor() {
+    super();
+    this.state = {
+      username1: 'User 1',
+      username2: 'User 2',
+      avatar1: '',
+      avatar2: '',
+      gameId: 0,
+      joinedMatch: false
+    };
 
-    submitFunc = event => {
-        event.preventDefault();
-    }
+    this.socket = null;
+  }
 
-    componentDidMount() {
-      const socket = socketIO(ENDPOINT);
+  submitFunc = event => {
+    event.preventDefault();
+  };
 
-      socket.on('connected', () => {
-        Connection.init(socket);
-      });
+  componentDidMount() {
+    this.socket = socketIO(ENDPOINT);
 
-      socket.on('updateFrontEnd', (info) => {
-        this.setState({ gameId: parseInt(Connection.roomId) });
-        this.setState({ joinedMatch: Connection.connected });
-      });
+    this.socket.on('connected', () => {
+      Connection.init(this.socket);
+    });
 
-      return () => {
-        socket.disconnect();
+    this.socket.on('updateFrontEnd', info => {
+      console.log(info);
+
+      if (info.data[0]) {
+        this.setState({
+          username1: info.data[0].username,
+          avatar1: info.data[0].avatar
+        });
       }
-    }
 
-    handleCreate = () => {
-      Connection.createNewGame();
-    }
+      if (info.data[1]) {
+        this.setState({
+          username2: info.data[1].username,
+          avatar2: info.data[1].avatar
+        });
+      }
 
-    handleJoin = () => {
-      Connection.joinRoom(this.state.gameId);
-    }
+      this.setState({
+        gameId: parseInt(Connection.roomId),
+        joinedMatch: Connection.connected
+      });
+    });
+  }
 
-    handleChangeJoinId = (event) => {
-      this.setState({ gameId: parseInt(event.target.value) });
-    }
+  componentWillUnmount() {
+    this.socket.disconnect();
+  }
 
-    render() {
-        return (
-            <div>
-                <Navbar />
-                <Container>
-                    <div className='card animate__animated animate__slideInDown profileCard '>
-                        <div className='card-body'>
-                            {/* row displaying users */}
-                            <div className='players row'>
-                                <div className='playerOne'>
-                                <h2>{this.state.username_1}</h2>
-                                    <img src='https://via.placeholder.com/250
-                                    'alt='Player`s Chosen Avatar' className='avatar'></img>
-                                </div>
-                                <h1 className='vs'>VS</h1>
-                                <div className='playerTwo'>
-                                <h2>{this.state.username_2}</h2>
-                                    <img src='https://via.placeholder.com/250
-                                    'alt='Player`s Chosen Avatar' className='avatar'></img>
-                                </div>
-                            </div>
+  handleCreate = () => {
+    Connection.createNewGame();
+  };
 
-                            <div className='row'>
-                                <input className='game-input' type='number' value={this.state.gameId} onChange={this.handleChangeJoinId}></input>
-                            </div>
+  handleJoin = () => {
+    Connection.joinRoom(this.state.gameId);
+  };
 
-                            <div className='row'>
-                                <div className='button-col'>
-                                    <br></br>
-                                    <br></br>
-                                    <button className='wood' onClick={this.handleJoin}>Join Match</button>
-                                    <button className='wood' onClick={this.handleCreate}>Create Match</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </Container>
+  handleChangeJoinId = event => {
+    this.setState({ gameId: parseInt(event.target.value || 0) });
+  };
+
+  render() {
+    return (
+      <div>
+        <Navbar />
+        <Container>
+          <div className='card animate__animated animate__slideInDown profileCard'>
+            <div className='card-body'>
+              {/* row displaying users */}
+              <div className='players row'>
+                <div className='playerOne'>
+                  <h2>{this.state.username1}</h2>
+                  <img
+                    src={'./images/cardImg/' + this.state.avatar1}
+                    alt='Player`s Chosen Avatar'
+                    className='avatar'
+                  ></img>
+                </div>
+                <h1 className='vs'>VS</h1>
+                <div className='playerTwo'>
+                  <h2>{this.state.username2}</h2>
+                  <img
+                    src={'./images/cardImg/' + this.state.avatar2}
+                    alt='Player`s Chosen Avatar'
+                    className='avatar'
+                  ></img>
+                </div>
+              </div>
+
+              <div className='row'>
+                <input
+                  className='game-input'
+                  type='number'
+                  value={this.state.gameId}
+                  onChange={this.handleChangeJoinId}
+                ></input>
+              </div>
+
+              <div className='row'>
+                <div className='button-col'>
+                  <br></br>
+                  <br></br>
+                  <button className='wood' onClick={this.handleJoin}>
+                    Join Match
+                  </button>
+                  <button className='wood' onClick={this.handleCreate}>
+                    Create Match
+                  </button>
+                </div>
+              </div>
             </div>
-        )
-    }
+          </div>
+        </Container>
+      </div>
+    );
+  }
 }
 
 export default Lobby;

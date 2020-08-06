@@ -8,12 +8,14 @@ export default {
   init: function(gameSocket) {
     this.socket = gameSocket;
 
-    this.socket.on('userJoined', this.updateLobby);
+    const that = this;
+    this.socket.on('userJoined', () => this.updateLobby(that));
   },
   
   createNewGame: function() {
     // Create a unique Socket.IO Room
     const room = Math.ceil(Math.random() * 100000); 
+    this.roomId = room.toString();
 
     axios.post('/api/lobby/' + room.toString() + '/create')
       .then(() => {
@@ -22,33 +24,39 @@ export default {
   },
   
   joinRoom: function(id) {
-    this.roomId = id.toString();
-
-    // Make sure this lobby exists before joining
-    axios.get('/api/lobby/' + this.roomId + '/checkLobby')
+    this.roomId = id;
+    return axios.get('/api/lobby/' + id + '/checkLobby')
       .then(result => {
-        if (result.found) {
+        // Make sure this lobby exists before joining
+        if (result.data.found) {
           // Add the current player to the lobby
-          axios.put('/api/lobby/' + this.roomId + '/addPlayer')
+          axios.put('/api/lobby/' + id + '/addPlayer')
             .then(() => {
               // Return the Room ID (gameId) to the browser client to be created
-              this.socket.emit('joinRoom' + this.socket.id.toString(), this.roomId);
+              this.socket.emit('joinRoom', id);
             })
-        }
-        else {
+            .catch((err) => {
+              console.log(err);
+              this.roomId = null;
+            });
+        } else {
           this.roomId = null;
         }
+      })
+      .catch(err => {
+        console.log(err);
       });
   },
 
-  updateLobby: function() {
-    // TODO: Update lobby info?
-    axios.get('/api/lobby/' + this.roomId + '/getPlayerInfo')
+  updateLobby: function(self) {
+    axios.get('/api/lobby/' + self.roomId + '/getPlayerInfo')
       .then(info => {
-        console.log(info);
-        this.connected = true;
+        self.connected = true;
         // Let the front end know it needs to update
-        this.socket.to(this.state.gameID.toString()).emit('updateFrontEnd', info);
+        self.socket.emit('room', { room: self.roomId, msg: 'updateFrontEnd', info: info });
       })
+      .catch(err => {
+        console.log(err);
+      });
   }
 }
