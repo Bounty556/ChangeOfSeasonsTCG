@@ -1,9 +1,29 @@
+nav {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 h3 {
     color: white;
-    margin: 20px 0 50px 20px;
+    margin-left: 15px;
     font-family: 'Trade Winds', cursive;
 }
 
 a:hover {
     text-decoration: none;
+}
+
+.dropdown {
+    margin-right: 15px;
+}
+
+.dropdown-toggle, .dropdown-toggle:hover, .dropdown-toggle:focus {
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    color: white;
+    font-size: 30px;
+    outline: none;
 }
