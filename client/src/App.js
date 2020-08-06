@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import ProtectedRoute from './components/ProtectedRoute'
 import {logout, getAuthLocally, saveAuthLocally} from './utils/authentication'
 import {useAuthContext} from './utils/GlobalState'
@@ -14,6 +14,7 @@ import Game from './pages/Gameboard/index';
 
 
 function App() {
+    const [authLoading, setAuthLoading] = useState(true)
     const [auth, setAuth] = useAuthContext()
     useEffect(() => {
         let auth = getAuthLocally();
@@ -21,7 +22,11 @@ function App() {
         if (auth){
             setAuth(auth);
         }
+        setAuthLoading(false);
     }, [])
+    if (authLoading) {
+        return null;
+    }
     return (
 
         <Router>
