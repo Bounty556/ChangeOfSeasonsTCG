@@ -26,7 +26,6 @@ class Lobby extends Component {
     //  this.setState({ [this.state.gameID]: iD });
     //  console.log(iD)
 
-    }
 
     render() {
         return (
@@ -69,7 +68,6 @@ class Lobby extends Component {
             </div>
         )
     }
-
 }
 
 export default Lobby;
