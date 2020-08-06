@@ -3,7 +3,7 @@ const userRoutes = require('./user');
 const lobbyRoutes = require('./lobby');
 
 // API Routes
-router.use('/api', userRoutes);
-router.use('/api', lobbyRoutes);
+router.use('/', userRoutes);
+router.use('/', lobbyRoutes);
 
 module.exports = router;
