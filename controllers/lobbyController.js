@@ -1,14 +1,9 @@
 const db = require('../models');
 
-// TODO: There needs to be some sort of authentication to prevent normal users
-// from being able to modify anything in this database. This should ever only
-// be able to be updated by us as the developers
-
 module.exports = {
   createLobby: (req, res) => {
-    console.log(req, res);
     db.Lobby
-      .create({ roomId: res.params.roomId })
+      .create({ roomId: req.params.roomId })
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
   },
@@ -26,11 +21,13 @@ module.exports = {
   addPlayer: (req, res) => {
     if (req.user)
     {
-      console.log(req.user);
-      // db.Lobby
-      //   .updateOne({ roomId: req.params.roomId }, { $push: { players: req.params.playerId } })
-      //   .then(dbModel => res.json(dbModel))
-      //   .catch(err => res.status(422).json(err));
+      db.Lobby
+        .updateOne({ roomId: req.params.roomId }, { $push: { players: req.user.id } })
+        .then(dbModel => res.json(dbModel))
+        .catch(err => res.status(422).json(err));
+    }
+    else {
+      res.status(401).json({ error: 'User not authenticated' });
     }
   },
 
