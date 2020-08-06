@@ -4,70 +4,122 @@ import React, { Component } from 'react';
 
 import Container from '../../components/Container/index';
 import Navbar from '../../components/Navbar/index';
+import socketIO from 'socket.io-client';
+import Connection from './connection'; // The 'backend' for the lobby
 
 import './lobby.css';
 
+const ENDPOINT = 'http://localhost:3001/';
+
+// TODO: when joinedMatch is true, that means we are currently in a room, and we should disable the ability to edit the gameId
+// TODO: display the info of any users connected to the room
+
 class Lobby extends Component {
+  constructor() {
+    super();
+    this.state = {
+      username_1: 'User 1',
+      username_2: 'User 2',
+      avatar1: '',
+      avatar2: '',
+      gameId: 0,
+      joinedMatch: false
+    };
 
-    state = {
-        username_1: 'User 1',
-        username_2: 'User 2',
-        avatar1: '',
-        avatar2: '',
-        gameID: 0
-    }
-    submitFunc = event => {
-        event.preventDefault();
-    }
-    //creates a 5 digit game lobby when players choose to create a game
-    //not currently working / do not know if we will be using a randomly generated code for socket.io or assigment a code that we have predefined 
-    // gameIDFunc = event => { 
-    //  const iD =  Math.floor(Math.random()*90000) + 10000;
-    //  this.setState({ [this.state.gameID]: iD });
-    //  console.log(iD)
+    this.socket = null;
+  }
 
+  submitFunc = event => {
+    event.preventDefault();
+  };
 
-    render() {
-        return (
-            <div>
-                <Navbar />
-                <Container>
-                    <div className='card animate__animated animate__slideInDown profileCard '>
-                        <div className='card-body'>
-                            {/* row displaying users */}
-                            <div className='players row'>
-                                <div>
-                                <h2>{this.state.username_1}</h2>
-                                    <img src='https://via.placeholder.com/250
-                                    'alt='Player`s Chosen Avatar' className='avatar'></img>
-                                </div>
-                                <h1 className='vs'>VS</h1>
-                                <div>
-                                <h2>{this.state.username_2}</h2>
-                                    <img src='https://via.placeholder.com/250
-                                    'alt='Player`s Chosen Avatar' className='avatar'></img>
-                                </div>
-                            </div>
+  componentDidMount() {
+    this.socket = socketIO(ENDPOINT);
 
-                            <div className='row'>
-                                <input className = 'game-input' type= 'number' min = '5' max='5' value = {this.state.gameID}></input>
-                            </div>
+    this.socket.on('connected', () => {
+      Connection.init(this.socket);
+    });
 
-                            <div className='row'>
-                                <div className='button-col'>
-                                    <br></br>
-                                    <br></br>
-                                    <button className='wood'>Join Match</button>
-                                    <button className='wood' >Create Match</button>
-                                </div>
-                            </div>
+    this.socket.on('updateFrontEnd', info => {
+      console.log(info);
+      this.setState({ gameId: parseInt(Connection.roomId) });
+      this.setState({ joinedMatch: Connection.connected });
+    });
+  }
 
-                        </div>
-                    </div>
-                </Container>
+  componentWillUnmount() {
+    this.socket.disconnect();
+  }
+
+  handleCreate = () => {
+    Connection.createNewGame();
+  };
+
+  handleJoin = () => {
+    Connection.joinRoom(this.state.gameId);
+  };
+
+  handleChangeJoinId = event => {
+    this.setState({ gameId: parseInt(event.target.value || 0) });
+  };
+
+  render() {
+    return (
+      <div>
+        <Navbar />
+        <Container>
+          <div className='card animate__animated animate__slideInDown profileCard '>
+            <div className='card-body'>
+              {/* row displaying users */}
+              <div className='players row'>
+                <div className='playerOne'>
+                  <h2>{this.state.username_1}</h2>
+                  <img
+                    src='https://via.placeholder.com/250
+                                    '
+                    alt='Player`s Chosen Avatar'
+                    className='avatar'
+                  ></img>
+                </div>
+                <h1 className='vs'>VS</h1>
+                <div className='playerTwo'>
+                  <h2>{this.state.username_2}</h2>
+                  <img
+                    src='https://via.placeholder.com/250
+                                    '
+                    alt='Player`s Chosen Avatar'
+                    className='avatar'
+                  ></img>
+                </div>
+              </div>
+
+              <div className='row'>
+                <input
+                  className='game-input'
+                  type='number'
+                  value={this.state.gameId}
+                  onChange={this.handleChangeJoinId}
+                ></input>
+              </div>
+
+              <div className='row'>
+                <div className='button-col'>
+                  <br></br>
+                  <br></br>
+                  <button className='wood' onClick={this.handleJoin}>
+                    Join Match
+                  </button>
+                  <button className='wood' onClick={this.handleCreate}>
+                    Create Match
+                  </button>
+                </div>
+              </div>
             </div>
-        )
-    }
+          </div>
+        </Container>
+      </div>
+    );
+  }
 }
 
 export default Lobby;

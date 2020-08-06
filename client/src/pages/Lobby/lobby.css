@@ -11,6 +11,14 @@
     justify-content: space-between !important;
 }
 
+.playerOne {
+    margin-left: 30px;
+}
+
+.playerTwo {
+    margin-right: 30px;
+}
+
 .avatar {
     background-color: rgba(148, 79, 0, 0.835);
     display: block;
@@ -40,6 +48,10 @@ p{
     font-family: 'Trade Winds', cursive;
     font-weight: bolder;
     color: whitesmoke
+}
+
+button {
+    margin-right: 25px;
 }
 
 .wood{ 

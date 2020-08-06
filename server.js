@@ -10,18 +10,27 @@ const server = require('http').createServer(app);
 
 const io = require('socket.io')(server, { serveClient: false });
 
-let timer;
+// Let the front end know a user has connected to socket.io
+io.on('connection', socket => {
+  socket.emit('connected', {}); // Send client info about themselves
 
-io.on('connection', (socket) => {
-  const time = () => {
-    const d = new Date();
-    socket.emit(socket.id, d.toLocaleTimeString());
-  };
-  console.log('A user connected');
-  timer = setInterval(time, 1000);
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
-    clearInterval(timer);
+  socket.on('joinRoom', room => {
+    // Make sure the room has enough room in it
+    if (!io.nsps['/'].adapter.rooms[room] || io.nsps['/'].adapter.rooms[room].length < 2)
+    {
+      socket.join(room);
+
+      // Let the room know that a socket has joined
+      io.sockets.in(room).emit('userJoined');
+    }
+  });
+
+  socket.on('room', ({room, msg, info}) => {
+    // Make sure the room exists and has users in it
+    if (!io.nsps['/'].adapter.rooms[room] || io.nsps['/'].adapter.rooms[room].length > 0)
+    {
+      io.sockets.in(room).emit(msg, info);
+    }
   });
 });
 
