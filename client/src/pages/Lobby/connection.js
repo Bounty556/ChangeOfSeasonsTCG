@@ -10,6 +10,7 @@ export default {
 
     const that = this;
     this.socket.on('userJoined', () => this.updateLobby(that));
+    this.socket.on('userLeft', () => this.updateLobby(that));
   },
   
   createNewGame: function() {
@@ -28,9 +29,9 @@ export default {
     return axios.get('/api/lobby/' + id + '/checkLobby')
       .then(result => {
         // Make sure this lobby exists before joining
-        if (result.data.found) {
+        if (result.data.found && localStorage.getItem('authentication')) {
           // Add the current player to the lobby
-          axios.put('/api/lobby/' + id + '/addPlayer')
+          axios.put('/api/lobby/' + id + '/addPlayer/' + JSON.parse(localStorage.getItem('authentication'))._id)
             .then(() => {
               // Return the Room ID (gameId) to the browser client to be created
               this.socket.emit('joinRoom', id);

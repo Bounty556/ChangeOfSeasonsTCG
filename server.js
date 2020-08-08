@@ -16,8 +16,7 @@ io.on('connection', socket => {
 
   socket.on('joinRoom', room => {
     // Make sure the room has enough room in it
-    if (!io.nsps['/'].adapter.rooms[room] || io.nsps['/'].adapter.rooms[room].length < 2)
-    {
+    if (!io.nsps['/'].adapter.rooms[room] || io.nsps['/'].adapter.rooms[room].length < 2) {
       socket.join(room);
 
       // Let the room know that a socket has joined
@@ -27,11 +26,14 @@ io.on('connection', socket => {
 
   socket.on('room', ({room, msg, info}) => {
     // Make sure the room exists and has users in it
-    if (!io.nsps['/'].adapter.rooms[room] || io.nsps['/'].adapter.rooms[room].length > 0)
-    {
+    if (!io.nsps['/'].adapter.rooms[room] || io.nsps['/'].adapter.rooms[room].length > 0) {
       io.sockets.in(room).emit(msg, info);
     }
   });
+
+  socket.on('disconnect', (info) => {
+    //console.log(socket.rooms);
+  })
 });
 
 require('./passport')(passport);
@@ -46,13 +48,13 @@ if (process.env.NODE_ENV === 'production') {
 // Add routes, both API and view
 
 // MIDDLEWARE
-app.use(morgan('dev'))
+app.use(morgan('dev'));
 app.use(
 	express.urlencoded({
 		extended: false
 	})
-)
-app.use(express.json())
+);
+app.use(express.json());
 
 // Sessions
 app.use(
@@ -62,13 +64,13 @@ app.use(
 		resave: false, //required
 		saveUninitialized: false //required
 	})
-)
+);
 // Connect to the Mongo DB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/changeOfSeasons');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/changeOfSeasons', { useNewUrlParser: true, useUnifiedTopology: true });
 
 // Passport
-app.use(passport.initialize())
-app.use(passport.session()) // calls the deserializeUser
+app.use(passport.initialize());
+app.use(passport.session()); // calls the deserializeUser
 // Routes
 // app.use('/user', user)
 app.use(routes);
