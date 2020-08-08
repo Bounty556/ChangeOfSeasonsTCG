@@ -3,9 +3,11 @@ nav {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    margin-bottom: 50px;
 }
 
 h3 {
+    margin-top: 5px;
     color: white;
     margin-left: 15px;
     font-family: 'Trade Winds', cursive;
@@ -19,11 +21,30 @@ a:hover {
     margin-right: 15px;
 }
 
-.dropdown-toggle, .dropdown-toggle:hover, .dropdown-toggle:focus {
+.dropdownBtn, .dropdownBtn:hover, .dropdownBtn:focus {
     background-color: transparent;
     border-color: transparent;
     box-shadow: none;
     color: white;
     font-size: 30px;
+    outline: none;
+}
+
+#dropdownMenuButton {
+    margin-top: 0;
+    padding: 0;
+}
+
+#userProfileIcon {
+    background-color: white;
+    border: 1px solid white;
+    border-radius: 50%;
+    box-shadow: 1px 2px 3px 0px black;
+    padding: 1px;
+    width: 40px;
+}
+
+.btn:focus {
+    box-shadow: none;
     outline: none;
 }

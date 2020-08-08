@@ -6,7 +6,6 @@ export function logout() {
 
 export function getAuthLocally() {
   let auth = JSON.parse(localStorage.getItem('authentication'));
-  console.log(auth);
   if (auth) {
     return auth;
   }
