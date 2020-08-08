@@ -33,7 +33,7 @@ class UserProfile extends Component {
                                 <div>
                                     <img src={phImg} alt='Player`s Chosen Avatar' className='avatar'></img>
                                 </div>
-                                <p className='chooseAvatar'>Change Avatar (PH)</p>
+                                <a className='chooseAvatar'>Change Avatar (PH)</a>
                                 <div >
                                     <p className='stats-div'>Wins: {this.state.wins} Losses: {this.state.losses} </p>
                                 </div>

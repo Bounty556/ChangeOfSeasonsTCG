@@ -109,12 +109,18 @@ class Lobby extends Component {
               </div>
 
               <div className='row'>
-                <input
-                  className='game-input'
+                {!this.state.joinedMatch ? (<input
+                  className='game-input hide'
                   type='number'
                   value={this.state.gameId}
                   onChange={this.handleChangeJoinId}
-                ></input>
+                ></input>) : (<p
+                  className='gameIdText'
+                >
+                  {this.state.gameId}
+                </p>)}
+
+
               </div>
 
               <div className='row'>
