@@ -18,15 +18,17 @@ function App() {
     const [auth, setAuth] = useAuthContext()
     useEffect(() => {
         let auth = getAuthLocally();
-        console.log(auth);
+
         if (auth){
             setAuth(auth);
         }
         setAuthLoading(false);
-    }, [])
+    }, []);
+
     if (authLoading) {
         return null;
     }
+    
     return (
 
         <Router>
