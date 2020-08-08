@@ -41,7 +41,10 @@ class SignUp extends Component {
         if (email === '') {
             this.displayError('email', defaultMessage);
             anyErrors = true;
-        } else if (!email.match(/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/)) {
+        }
+        
+        // eslint-disable-next-line
+        else if (!email.match(/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/)) {
             this.displayError('email', '* Not valid email address.');
             anyErrors = true;
         }

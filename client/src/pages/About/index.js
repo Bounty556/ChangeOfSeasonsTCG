@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
+// import { Link } from 'react-router-dom';
 
 import Container from '../../components/Container/index';
-import Navbar from '../../components/Navbar/index';
+// import Navbar from '../../components/Navbar/index';
 
 import './about.css';
 
@@ -23,7 +23,7 @@ function About() {
                                 <p className = "attack">3</p>
                                 <p className = "resourse">3</p>
                                 <p className = "health">3</p>
-                                </div>
+                            </div>
                     </div>
                 </div>
             </Container>

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import ProtectedRoute from './components/ProtectedRoute'
-import {logout, getAuthLocally, saveAuthLocally} from './utils/authentication'
+import { getAuthLocally } from './utils/authentication'
 import {useAuthContext} from './utils/GlobalState'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Homepage from './pages/Homepage/index';
@@ -14,15 +14,19 @@ import Game from './pages/Gameboard/index';
 
 
 function App() {
-    const [authLoading, setAuthLoading] = useState(true)
-    const [auth, setAuth] = useAuthContext()
+    const [authLoading, setAuthLoading] = useState(true);
+    const [, setAuth] = useAuthContext();
+
     useEffect(() => {
         let auth = getAuthLocally();
 
         if (auth){
             setAuth(auth);
         }
+
         setAuthLoading(false);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     if (authLoading) {
