@@ -27,4 +27,6 @@ router.get('/login/user', (req, res) => {
   res.json(req.session.passport.user);
 });
 
+router.get('/user/:id', (req, res) => userController.getUser(req.params.id));
+
 module.exports = router;

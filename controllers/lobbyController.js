@@ -32,9 +32,20 @@ module.exports = {
   },
 
   removePlayer: (req, res) => {
+    // Check to see if this lobby will be empty
     db.Lobby
       .updateOne({ roomId: req.params.roomId }, { $pull: { players: req.body.playerId } })
-      .then(dbModel => res.json(dbModel))
+      .then(dbModel => {
+        let json = dbModel.toJSON();
+        if (json.players.length === 0) {
+          db.Lobby
+            .deleteOne({ roomId: req.params.roomId })
+            .then(dbModel => res.json(dbModel))
+            .catch(err => res.status(422).json(err));
+        } else {
+          res.json(dbModel);
+        }
+      })
       .catch(err => res.status(422).json(err));
   }
 };
