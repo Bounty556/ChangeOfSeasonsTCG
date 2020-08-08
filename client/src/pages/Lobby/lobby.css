@@ -86,6 +86,20 @@ button {
     0 0 120px rgb(0, 153, 255);
 }
 
+.gameIdText { 
+    font-size: 60px;
+    font-weight: bolder;
+    text-shadow:
+    0 0 1px #fff,
+    0 0 1px #fff,
+    0 0 2px #fff,
+    0 0 4px rgb(220, 20, 60),
+    0 0 8px rgb(220, 20, 60),
+    0 0 80px rgb(220, 20, 60),
+    0 0 100px rgb(220, 20, 60),
+    0 0 120px rgb(220, 20, 60);  
+}
+
 .row { 
     justify-content: center;
 }
