@@ -70,6 +70,30 @@ p{
 
 .chooseAvatar { 
     margin-top: 5px;
-    color: rgba(248, 242, 231, 0.466) ;
-    font-size: small;
+    color: rgb(248, 242, 231) !important;
+    font-size: medium;
 }
+
+.chooseAvatar:hover { 
+    font-weight: bolder;
+    text-shadow:
+    0 0 1px #fff,
+    0 0 1px #fff,
+    0 0 2px #fff,
+    0 0 4px rgb(220, 20, 60),
+    0 0 8px rgb(220, 20, 60),
+    0 0 80px rgb(220, 20, 60),
+    0 0 100px rgb(220, 20, 60),
+    0 0 120px rgb(220, 20, 60);  
+}
+.modalTitle { 
+text-align: center !important;
+font-family: 'Trade Winds', cursive;
+
+}
+
+.modalBody {
+    background-color: gray;
+    border: none !important; 
+}
+
