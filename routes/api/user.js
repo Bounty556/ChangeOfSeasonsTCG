@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../../controllers/userController');
 const passport = require('passport');
+const { db } = require('../../models/card');
 
 router.post('/register', userController.createUser);
 
@@ -27,6 +28,12 @@ router.get('/login/user', (req, res) => {
   res.json(req.session.passport.user);
 });
 
-router.get('/user/:id', (req, res) => userController.getUser(req.params.id));
+router.get('/user/:id', (req, res) => {
+  return new Promise((resolve, reject) => {
+    userController.getUser(req.params.id)
+      .then(user => resolve(user))
+      .catch(err => reject(err));
+  });
+});
 
 module.exports = router;
