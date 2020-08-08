@@ -41,8 +41,6 @@ class Lobby extends Component {
     });
 
     this.socket.on('updateFrontEnd', info => {
-      console.log(info);
-
       if (info.data[0]) {
         this.setState({
           username1: info.data[0].username,

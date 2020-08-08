@@ -5,9 +5,9 @@ const lobbyController = require('../../controllers/lobbyController');
 
 router.post('/lobby/:roomId/create', lobbyController.createLobby);
 
-router.put('/lobby/:roomId/addPlayer', lobbyController.addPlayer);
+router.put('/lobby/:roomId/addPlayer/:userId', lobbyController.addPlayer);
 
-router.put('/lobby/:roomId/removePlayer/:playerId', lobbyController.removePlayer);
+router.put('/lobby/:roomId/removePlayer', lobbyController.removePlayer);
 
 router.get('/lobby/:roomId/getPlayerInfo', (req, res) => {
   lobbyController.getLobby(req.params.roomId)
