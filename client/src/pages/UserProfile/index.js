@@ -4,7 +4,7 @@ import React, { Component, useState, } from 'react';
 
 import Container from '../../components/Container/index';
 import Navbar from '../../components/Navbar/index';
-
+import ModalColumn from '../../components/ModalColumn/index'
 import './userProfile.css';
 import phImg from './Images/cyclop_01.png';
 // import button from './Images/woodsign.png';
@@ -25,10 +25,12 @@ function UserProfile() {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    //Array for avatar images 
+    const avatarArr = ['bird_01', 'dark_knight_01', 'cyclop_01', 'ghost_01', 'joker_01', 'orc_05', 'living_armor_02', 'owl_01', 'ash_zombies', 'crystal_golem_01', 'dragon_08', 'dragon_09', 'dragon_07', 'phoenix_01', 'skeleton_06']
+
     //Needs 
     //Write function for setUsername to get the get the users name 
     //Repeat for wins and losses
-    //create modal for the avatar selection 
     //create function for setAvatar that actually usues that
 
     return (
@@ -66,7 +68,15 @@ function UserProfile() {
                         <Modal.Title className='modalTitle'>Select an Avatar </Modal.Title>
                     </Modal.Header>
                     <Modal.Body className='modalBody'>
-    
+                            {
+                            avatarArr.map((avatars, i) => (
+                                <Container key={i}> 
+                                    <ModalColumn 
+                                    imageString= {avatars}
+                                    />
+                                </Container>
+                            ))
+                            }
                     </Modal.Body>
                     <Modal.Footer className='modalBody'>
                         <Button variant="danger" className='closeButtonModal'  onClick={handleClose}> Close </Button>
