@@ -29,11 +29,9 @@ router.get('/login/user', (req, res) => {
 });
 
 router.get('/user/:id', (req, res) => {
-  return new Promise((resolve, reject) => {
-    userController.getUser(req.params.id)
-      .then(user => resolve(user))
-      .catch(err => reject(err));
-  });
+  return userController.getUser(req.params.id)
+    .then(user => res.json(user))
+    .catch(err => res.status(422).json(err));
 });
 
 module.exports = router;
