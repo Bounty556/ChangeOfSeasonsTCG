@@ -6,7 +6,7 @@ import axios from 'axios';
 import './navbar.css';
 
 function Navbar() {
-    const [auth, setAuth] = useAuthContext();
+    const [auth,] = useAuthContext();
     const [avatar, setAvatar] = useState(localStorage.getItem('avatar'));
 
     let userId = null;
@@ -18,12 +18,14 @@ function Navbar() {
     useEffect(() => {
         if (userId != null && avatar == null) {
             axios.get(`/api/user/${userId}`)
-                .then(res => {
-                    localStorage.setItem('avatar', res.data.avatar);
-                    setAvatar(localStorage.getItem('avatar'));
-                })
-                .catch(err => console.log(err));
+            .then(res => {
+                localStorage.setItem('avatar', res.data.avatar);
+                setAvatar(localStorage.getItem('avatar'));
+            })
+            .catch(err => console.log(err));
         }
+        
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 

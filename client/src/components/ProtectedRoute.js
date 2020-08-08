@@ -4,7 +4,7 @@ import {useAuthContext} from '../utils/GlobalState'
 
 
 const ProtectedRoute =({ component: Component, ...rest}) => {
-  const[auth, setAuth] = useAuthContext(null)
+  const[auth,] = useAuthContext(null)
 
   return (
     <Route {...rest} render={
