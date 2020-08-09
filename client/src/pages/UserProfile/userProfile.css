@@ -89,11 +89,14 @@ p{
 .modalTitle { 
 text-align: center !important;
 font-family: 'Trade Winds', cursive;
+justify-content: center;
 
 }
 
 .modalBody {
     background-color: gray;
     border: none !important; 
+    text-align: center !important;
+
 }
 
