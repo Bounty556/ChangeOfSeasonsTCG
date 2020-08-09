@@ -65,7 +65,11 @@ function UserProfile() {
                 </div>
                 <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton className='modalBody'>
-                        <Modal.Title className='modalTitle'>Select an Avatar </Modal.Title>
+                        <Modal.Title>
+                            <div className = 'row'>
+                            <p className='modalTitle'>Select an Avatar </p>
+                            </div>
+                        </Modal.Title>
                     </Modal.Header>
                     <Modal.Body className='modalBody'>
                             {
