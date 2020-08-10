@@ -10,7 +10,6 @@ import Signin from './pages/Sign In/index';
 import ForgotPassword from './pages/Forgot-Password/index';
 import UserProfile from './pages/UserProfile/index';
 import Lobby from './pages/Lobby/index'
-import Game from './pages/Gameboard/index';
 
 
 function App() {
@@ -45,7 +44,6 @@ function App() {
                     <Route exact path='/Forgot' component={ForgotPassword}/>
                     <ProtectedRoute exact path = '/Profile' component = {UserProfile}/>
                     <Route exact path = '/Lobby' component = {Lobby}/>
-                    <Route exact path='/Game' component={Game} />
                 </Switch>
             </div>
         </Router>
