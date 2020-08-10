@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import ProtectedRoute from './components/ProtectedRoute'
 import { getAuthLocally } from './utils/authentication'
-import {useAuthContext} from './utils/GlobalState'
+import { useAuthContext } from './utils/GlobalState'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Homepage from './pages/Homepage/index';
 import About from './pages/About/index';
