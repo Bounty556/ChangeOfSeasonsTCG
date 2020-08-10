@@ -1,7 +1,7 @@
-import React, { Component, useState, } from 'react';
+import React, { useState } from 'react';
 //Will be used to go to card lists and deck builder ~possibly friends list if implimented
 // import { Link } from 'react-router-dom';
-
+import { useHistory } from 'react-router-dom';
 import Container from '../../components/Container/index';
 import Navbar from '../../components/Navbar/index';
 import ModalColumn from '../../components/ModalColumn/index'
@@ -15,17 +15,25 @@ import Modal from 'react-bootstrap/Modal';
 
 
 function UserProfile() {
-    const [username, setUsername] = useState('');
+    const [username, ] = useState('');
     //used to grab the current chosen avatar from the db 
-    const [avatar, setAvatar] = useState('');
+
+    // const [avatar, setAvatar] = useState('');
+
     //used for when a user is selecting a new avatar 
     const [selectAvatar, setSelectAvatar] = useState('');
-    const [wins, setWins] = useState(0);
-    const [losses, setLosses] = useState(0);
-
+    const [wins, ] = useState(0);
+    const [losses, ] = useState(0);
+    const history = useHistory();
+  
     //code for Modal
     const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
+
+    const handleClose = () => {
+        setShow(false);
+        setSelectAvatar('');
+    }
+    
     const handleShow = () => setShow(true);
 
     //Array for avatar images 
@@ -37,11 +45,12 @@ function UserProfile() {
     //create function for setAvatar that actually usues that
 
     function someFunk(event) {
-    const selectedAvatar = event.target.getAttribute('data');
-    setSelectAvatar(selectedAvatar);
-    console.log(selectAvatar);
+        setSelectAvatar(event.target.getAttribute('data'));
     };
 
+    function goToLobby() {
+        history.push('/Lobby'); 
+    }
 
     return (
         <div>
@@ -53,10 +62,10 @@ function UserProfile() {
                         <div className='user-avatar col-4'>
                             <h2>{username}</h2>
                             <div>
-                                <img src={phImg} alt='Player`s Chosen Avatar' className='avatar'></img>
+                                <img src={phImg} alt="Player's Chosen Avatar" className='avatar' />
                             </div>
                             {/* open the modal to select an Avatar */}
-                            <a className='chooseAvatar' onClick={handleShow}>Change Avatar</a>
+                            <button className='chooseAvatar' onClick={handleShow}>Change Avatar</button>
                             <div >
                                 <p className='stats-div'>Wins: {wins} Losses: {losses} </p>
                             </div>
@@ -67,30 +76,61 @@ function UserProfile() {
                                 <button className='wood'>Choose Deck</button>
                                 <br></br>
                                 <br></br>
-                                <button className='wood'>Play Match</button>
+                                <button className='wood' onClick={goToLobby}>Play Match</button>
                             </div>
                         </div>
 
                     </div>
                 </div>
                 <Modal className='avatarModal' show={show} onHide={handleClose}>
+
                     <Modal.Body className='modalBody'>
-                            {
-                            avatarArr.map((avatars, i) => (
-                                <Container className ='modalContainer' 
-                                key={i}> 
-                                    <ModalColumn 
-                                    imageString= {avatars}
-                                    imgData={avatars}
-                                    someFunk= {someFunk}
-                                    />
-                                </Container>
-                            ))
-                            }
+                        <Container className ='modalContainer'>
+                            <div className='row'>
+                                {selectAvatar === '' ? (
+                                    avatarArr.map((avatars, i) => (
+                                        <div className='col-lg-3' key={i}>
+                                            <ModalColumn 
+                                                imageString={avatars}
+                                                imgData={avatars}
+                                                someFunk= {someFunk}
+                                            />
+                                        </div>
+                                    ))
+                                ) : (
+                                    avatarArr.map((avatars, i) => {
+                                        if (avatars !== selectAvatar) {
+                                            return (
+                                                <div className='col-lg-3 faded' key={i}>
+                                                    <ModalColumn 
+                                                        imageString={avatars}
+                                                        imgData={avatars}
+                                                        someFunk= {someFunk}
+                                                    />
+                                                </div>
+                                            )
+                                        } 
+
+                                        else {
+                                            return (
+                                                <div className='col-lg-3' key={i}>
+                                                    <ModalColumn 
+                                                        imageString={avatars}
+                                                        imgData={avatars}
+                                                        someFunk= {someFunk}
+                                                    />
+                                                </div>
+                                            )
+                                        }
+                                    })
+                                )}
+                                </div>
+                        </Container>
                     </Modal.Body>
-                    <Modal.Footer className='modalBody'>
-                        <Button variant="danger" className='closeButtonModal'  onClick={handleClose}> Close </Button>
-                        <Button variant="primary" className='saveButtonModal' onClick={handleClose}> Save Changes </Button>
+
+                    <Modal.Footer className='modalFooter'>
+                        <Button variant='danger' className='closeButtonModal'  onClick={handleClose}> Close </Button>
+                        <Button variant='primary' className='saveButtonModal' onClick={handleClose}> Save Changes </Button>
                     </Modal.Footer>
                 </Modal>
             </Container>

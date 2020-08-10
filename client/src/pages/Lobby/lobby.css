@@ -44,12 +44,6 @@ h2 {
     color: whitesmoke
 }
 
-p{ 
-    font-family: 'Trade Winds', cursive;
-    font-weight: bolder;
-    color: whitesmoke
-}
-
 button {
     margin-right: 25px;
 }
@@ -114,4 +108,4 @@ button {
     justify-content: center;
     text-align: center;
     font-size: xx-large;
-    }
+}
