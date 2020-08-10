@@ -32,7 +32,8 @@ io.on('connection', socket => {
   });
 
   socket.on('disconnect', (info) => {
-    //console.log(socket.rooms);
+    // TODO: Cleanup lobby if empty
+    // console.log(socket.rooms);
   })
 });
 
