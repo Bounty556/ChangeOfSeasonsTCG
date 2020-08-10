@@ -43,7 +43,7 @@ function App() {
                     <Route exact path='/Signin' component={Signin} />
                     <Route exact path='/Forgot' component={ForgotPassword}/>
                     <ProtectedRoute exact path = '/Profile' component = {UserProfile}/>
-                    <Route exact path = '/Lobby' component = {Lobby}/>
+                    <ProtectedRoute exact path = '/Lobby' component = {Lobby}/>
                 </Switch>
             </div>
         </Router>
