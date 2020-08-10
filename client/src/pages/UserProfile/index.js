@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 //Will be used to go to card lists and deck builder ~possibly friends list if implimented
 // import { Link } from 'react-router-dom';
-
+import { useHistory } from 'react-router-dom';
 import Container from '../../components/Container/index';
 import Navbar from '../../components/Navbar/index';
 import ModalColumn from '../../components/ModalColumn/index'
@@ -22,9 +22,10 @@ function UserProfile() {
 
     //used for when a user is selecting a new avatar 
     const [selectAvatar, setSelectAvatar] = useState('');
-    const [wins, ] = useState(0);
-    const [losses, ] = useState(0);
-
+    const [wins, setWins] = useState(0);
+    const [losses, setLosses] = useState(0);
+    const history = useHistory();
+  
     //code for Modal
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -43,6 +44,10 @@ function UserProfile() {
         setSelectAvatar(selectedAvatar);
         console.log(selectAvatar);
     };
+
+    function goToLobby() {
+        history.push('/Lobby'); 
+    }
 
     return (
         <div>
@@ -68,7 +73,7 @@ function UserProfile() {
                                 <button className='wood'>Choose Deck</button>
                                 <br></br>
                                 <br></br>
-                                <button className='wood'>Play Match</button>
+                                <button className='wood' onClick={goToLobby}>Play Match</button>
                             </div>
                         </div>
 
