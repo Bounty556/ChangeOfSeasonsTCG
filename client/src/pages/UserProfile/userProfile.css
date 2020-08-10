@@ -34,6 +34,10 @@ button {
     outline: none;
 }
 
+.faded {
+    opacity: 0.5;
+}
+
 .wood { 
     background-image: url(./Images/woodsign.png) !important;
     width: 300px;
@@ -98,14 +102,17 @@ button {
 }
 
 .modalBody {
-    justify-content: center;
+    background-color: gray;
+    border-top-left-radius: .3rem;
+    border-top-right-radius: .3rem;
     display: flex;
     flex-direction: column;
-    background-color: gray;
+    justify-content: center;
 }
 
 .modalFooter {
     background-color: #444;
+    border: none;
 }
 
 .modalContainer{ 
