@@ -22,13 +22,18 @@ function UserProfile() {
 
     //used for when a user is selecting a new avatar 
     const [selectAvatar, setSelectAvatar] = useState('');
-    const [wins, setWins] = useState(0);
-    const [losses, setLosses] = useState(0);
+    const [wins, ] = useState(0);
+    const [losses, ] = useState(0);
     const history = useHistory();
   
     //code for Modal
     const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
+
+    const handleClose = () => {
+        setShow(false);
+        setSelectAvatar('');
+    }
+    
     const handleShow = () => setShow(true);
 
     //Array for avatar images 
@@ -40,9 +45,7 @@ function UserProfile() {
     //create function for setAvatar that actually usues that
 
     function someFunk(event) {
-        const selectedAvatar = event.target.getAttribute('data');
-        setSelectAvatar(selectedAvatar);
-        console.log(selectAvatar);
+        setSelectAvatar(event.target.getAttribute('data'));
     };
 
     function goToLobby() {
@@ -84,17 +87,43 @@ function UserProfile() {
                     <Modal.Body className='modalBody'>
                         <Container className ='modalContainer'>
                             <div className='row'>
-                                {
+                                {selectAvatar === '' ? (
                                     avatarArr.map((avatars, i) => (
                                         <div className='col-lg-3' key={i}>
                                             <ModalColumn 
-                                                imageString= {avatars}
+                                                imageString={avatars}
                                                 imgData={avatars}
                                                 someFunk= {someFunk}
                                             />
                                         </div>
                                     ))
-                                }
+                                ) : (
+                                    avatarArr.map((avatars, i) => {
+                                        if (avatars !== selectAvatar) {
+                                            return (
+                                                <div className='col-lg-3 faded' key={i}>
+                                                    <ModalColumn 
+                                                        imageString={avatars}
+                                                        imgData={avatars}
+                                                        someFunk= {someFunk}
+                                                    />
+                                                </div>
+                                            )
+                                        } 
+
+                                        else {
+                                            return (
+                                                <div className='col-lg-3' key={i}>
+                                                    <ModalColumn 
+                                                        imageString={avatars}
+                                                        imgData={avatars}
+                                                        someFunk= {someFunk}
+                                                    />
+                                                </div>
+                                            )
+                                        }
+                                    })
+                                )}
                                 </div>
                         </Container>
                     </Modal.Body>
