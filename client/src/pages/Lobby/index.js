@@ -11,9 +11,6 @@ import './lobby.css';
 
 const ENDPOINT = 'http://localhost:3001/';
 
-// TODO: when joinedMatch is true, that means we are currently in a room, and we should disable the ability to edit the gameId
-// TODO: display the info of any users connected to the room
-
 class Lobby extends Component {
   constructor() {
     super();
