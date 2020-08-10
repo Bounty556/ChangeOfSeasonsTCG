@@ -17,6 +17,12 @@ const ENDPOINT = 'http://localhost:3001/';
 // TODO: When 2 people are in a lobby, show the 'play game button'
 // TODO: When in a lobby, show the 'Leave lobby' button
 
+// Socket io works via a back and forth of communication.
+// 1. The user joins a lobby by telling the server to put it in the given room
+// 2. The server then returns the playerNumber back to the client, and the client records this, as well as that it has successfully disconnected
+// 3. The client sends a message to the server telling all clients in the room it has successfully connected, and that player info needs to be updated
+// 4. All clients send back their player info to the room via the server, so all clients can update their local player information correctly
+
 class Lobby extends Component {
   constructor() {
     super();
@@ -26,7 +32,7 @@ class Lobby extends Component {
       avatar1: '',
       avatar2: '',
       gameId: 0,
-      joinedMatch: false,
+      joinedLobby: false,
       playGame: false,
       playerNumber: -1
     };
@@ -41,12 +47,10 @@ class Lobby extends Component {
   componentDidMount() {
     this.socket = socketIO(ENDPOINT);
 
-    this.socket.on('connected', () => {
-      this.socket.on('requestPlayerInfo', this.sendPlayerInfo);
-      //const that = this;
-      //this.socket.on('userJoined', (playerInfo) => this.updatePlayerInfo(that, playerInfo));
-      // Worry about this later: this.socket.on('userLeft', (playerNumber) => this.removePlayerInfo(that, playerNumber));
-    });
+    this.socket.on('requestPlayerInfo', this.sendPlayerInfo);
+    this.socket.on('receivePlayerInfo', this.updatePlayerInfo);
+    
+    // Worry about this later: this.socket.on('userLeft', (playerNumber) => this.removePlayerInfo(that, playerNumber));
   }
 
   componentWillUnmount() {
@@ -60,69 +64,51 @@ class Lobby extends Component {
   createNewGame = () => {
     // Create a unique Socket.IO Room
     const room = Math.ceil(Math.random() * 100000);
-    this.setState({ gameId: room }, () => {
-      axios.post('/api/lobby/' + this.state.gameId + '/create').then(() => this.joinLobby())
-    });
+    this.setState({ gameId: room }, () => this.joinLobby());
   };
 
   joinLobby = () => {
     // Make sure we're authenticated
     if (localStorage.getItem('authentication')) {
-      this.socket.emit('joinRoom', this.state.gameId, (playerNumber) => { this.setThisPlayersInfo(this, playerNumber) } );
+      this.socket.emit('joinRoom', this.state.gameId, this.setThisPlayersInfo);
     }
-    // axios
-    //   .get('/api/lobby/' + this.state.gameId + '/checkLobby')
-    //   .then(result => {
-    //     // Make sure this lobby exists before joining
-    //     if (result.data.found && localStorage.getItem('authentication')) {
-    //       // Add the current player to the lobby
-    //       axios
-    //         .put('/api/lobby/' + this.state.gameId + '/addPlayer/' + JSON.parse(localStorage.getItem('authentication'))._id)
-    //         .then(() => {
-    //           // Return the Room ID (gameId) to the browser client to be joined
-    //           this.socket.emit('joinRoom', this.state.gameId);
-    //         })
-    //         .catch(err => console.log(err));
-    //     }
-    //   })
-    //   .catch(err => console.log(err));
   };
-
-  setThisPlayersInfo = (self, playerNumber) => {
-    self.setState({ playerNumber: playerNumber }, () => {
-      self.socket.emit('room', self.state.gameId, 'requestPlayerInfo', {});
-    });
+  
+  setThisPlayersInfo = playerNumber => {
+    this.setState({joinedLobby: true, playerNumber: playerNumber}, () => 
+      this.socket.emit('room', this.state.gameId, 'requestPlayerInfo')
+    );
   };
 
   sendPlayerInfo = () => {
-    console.log('We should be sending stuff...');
+    // TODO: we shouldn't be returning the user password at all
     axios.get('/api/user/' + JSON.parse(localStorage.getItem('authentication'))._id)
       .then(info => {
-        console.log(info);
+        const playerInfo = {
+          username: info.data.username,
+          avatar: info.data.avatar,
+          number: this.state.playerNumber
+        };
+        this.socket.emit('room', this.state.gameId, 'receivePlayerInfo', playerInfo);
       })
       .catch(err => console.log(err));
   };
 
-  updatePlayerInfo = (self, playerInfo) => {
-    // TODO: we shouldn't be returning the user password at all
+  updatePlayerInfo = playerInfo => {
     // Get player info
-    axios.get('/api/user/' + playerInfo._id)
-      .then(info => {
-        if (playerInfo.number === 1) {
-          self.setState({
-            username1: info.data[0].username,
-            avatar1: info.data[0].avatar
-          });
-        }
+    if (playerInfo.number === 1) {
+      this.setState({
+        username1: playerInfo.username,
+        avatar1: playerInfo.avatar
+      });
+    }
 
-        if (playerInfo.number === 2) {
-          self.setState({
-            username2: info.data[1].username,
-            avatar2: info.data[1].avatar
-          });
-        }
-      })
-      .catch(err => console.log(err));
+    if (playerInfo.number === 2) {
+      this.setState({
+        username2: playerInfo.username,
+        avatar2: playerInfo.avatar
+      });
+    }
   };
 
   render() {
@@ -156,7 +142,7 @@ class Lobby extends Component {
                   </div>
 
                   <div className='row'>
-                    {!this.state.joinedMatch ? (
+                    {!this.state.joinedLobby ? (
                       <input
                         className='game-input hide'
                         type='number'

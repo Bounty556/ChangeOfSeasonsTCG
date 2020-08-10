@@ -24,7 +24,6 @@ io.on('connection', socket => {
   });
 
   socket.on('room', (room, msg, info) => {
-    console.log('emitting');
     // Make sure the room exists and has users in it
     if (!io.nsps['/'].adapter.rooms[room] || io.nsps['/'].adapter.rooms[room].length > 0) {
       io.sockets.in(room).emit(msg, info);
