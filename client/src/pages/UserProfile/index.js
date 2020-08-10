@@ -15,10 +15,13 @@ import Modal from 'react-bootstrap/Modal';
 
 
 function UserProfile() {
-    const [username, setUsername] = useState('')
-    const [avatar, setAvatar] = useState('')
-    const [wins, setWins] = useState(0)
-    const [losses, setLosses] = useState(0)
+    const [username, setUsername] = useState('');
+    //used to grab the current chosen avatar from the db 
+    const [avatar, setAvatar] = useState('');
+    //used for when a user is selecting a new avatar 
+    const [selectAvatar, setSelectAvatar] = useState('');
+    const [wins, setWins] = useState(0);
+    const [losses, setLosses] = useState(0);
 
     //code for Modal
     const [show, setShow] = useState(false);
@@ -26,12 +29,19 @@ function UserProfile() {
     const handleShow = () => setShow(true);
 
     //Array for avatar images 
-    const avatarArr = ['bird_01', 'dark_knight_01', 'cyclop_01', 'ghost_01', 'joker_01', 'orc_05', 'living_armor_02', 'owl_01', 'ash_zombies', 'crystal_golem_01', 'dragon_08', 'dragon_09', 'dragon_07', 'phoenix_01', 'skeleton_06']
+    const avatarArr = ['bird_01', 'dark_knight_01', 'cyclop_01', 'ghost_01', 'joker_01', 'orc_05', 'living_armor_02', 'owl_01', 'ash_zombies', 'crystal_golem_01', 'dragon_08', 'dragon_09', 'dragon_07', 'phoenix_01', 'skeleton_06'];
 
     //Needs 
     //Write function for setUsername to get the get the users name 
     //Repeat for wins and losses
     //create function for setAvatar that actually usues that
+
+    function someFunk(event) {
+    const selectedAvatar = event.target.getAttribute('data');
+    setSelectAvatar(selectedAvatar);
+    console.log(selectAvatar);
+    };
+
 
     return (
         <div>
@@ -63,20 +73,16 @@ function UserProfile() {
 
                     </div>
                 </div>
-                <Modal show={show} onHide={handleClose}>
-                    <Modal.Header closeButton className='modalBody'>
-                        <Modal.Title>
-                            <div className = 'row'>
-                            <p className='modalTitle'>Select an Avatar </p>
-                            </div>
-                        </Modal.Title>
-                    </Modal.Header>
+                <Modal className='avatarModal' show={show} onHide={handleClose}>
                     <Modal.Body className='modalBody'>
                             {
                             avatarArr.map((avatars, i) => (
-                                <Container key={i}> 
+                                <Container className ='modalContainer' 
+                                key={i}> 
                                     <ModalColumn 
                                     imageString= {avatars}
+                                    imgData={avatars}
+                                    someFunk= {someFunk}
                                     />
                                 </Container>
                             ))

@@ -4,9 +4,10 @@ import './modal.css';
 
 function ModalColumn(props) {
   return (
-  <div>
-    <img className='userProfileIcons' src={`./images/cardImg/${props.imageString}.png`}/>
-  </div>
+  <button
+  onClick={props.someFunk}>
+    <img className='userProfileIcons' data={props.imgData} src={`./images/cardImg/${props.imageString}.png`}/>
+  </button>
   )
 }
 

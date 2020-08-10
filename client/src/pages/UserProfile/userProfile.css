@@ -86,17 +86,20 @@ p{
     0 0 100px rgb(220, 20, 60),
     0 0 120px rgb(220, 20, 60);  
 }
-.modalTitle { 
-text-align: center !important;
-font-family: 'Trade Winds', cursive;
-justify-content: center;
-
-}
 
 .modalBody {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
     background-color: gray;
     border: none !important; 
-    text-align: center !important;
-
 }
 
+
+.modalContainer{ 
+    justify-content: center;
+}
+.avatarModal { 
+justify-content: center;
+text-align: center;
+}
