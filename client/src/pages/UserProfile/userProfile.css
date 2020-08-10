@@ -5,21 +5,13 @@
     background-size: cover;
 }
 
-.avatar {
-    background-color: rgba(148, 79, 0, 0.835);
-    display: block;
-    border: 10px solid transparent;
-    border-image-source: url(https://media1.giphy.com/media/5vidmSHUsyoybSYNN0/giphy.gif?cid=ecf05e47ta00vpixh6lraija5cpo2bhvvsif55qgx61zmlkl&rid=giphy.gif);
-    border-image-repeat: stretch;
-    border-image-slice: 30;
-    border-image-width: 10px;       
-    box-shadow: 1px 1px 1px 1px black;
-    height: 250px;
-    width: 250px;
-}
-
 .col-4 {
     justify-content: center;
+}
+
+.col-lg-3 {
+    padding-left: 9px;
+    margin-bottom: 10px;
 }
 
 h2 { 
@@ -30,13 +22,19 @@ h2 {
     color: whitesmoke
 }
 
-p{ 
+p { 
     font-family: 'Trade Winds', cursive;
     font-weight: bolder;
     color: whitesmoke
 }
 
-.wood{ 
+button {
+    background: none;
+    border: none;
+    outline: none;
+}
+
+.wood { 
     background-image: url(./Images/woodsign.png) !important;
     width: 300px;
     height: 150px;
@@ -67,11 +65,15 @@ p{
     font-family: 'Trade Winds', cursive;
 }
 
+.stats-div {
+    margin-left: 5px;
+}
 
 .chooseAvatar { 
-    margin-top: 5px;
     color: rgb(248, 242, 231) !important;
-    font-size: medium;
+    font-weight: bolder;
+    margin: 10px 0;
+    text-align: left;
 }
 
 .chooseAvatar:hover { 
@@ -87,19 +89,30 @@ p{
     0 0 120px rgb(220, 20, 60);  
 }
 
+.closeButtonModal {
+    margin-right: 15px !important;
+}
+
+.modal-content {
+    border: none;
+}
+
 .modalBody {
     justify-content: center;
     display: flex;
     flex-direction: column;
     background-color: gray;
-    border: none !important; 
 }
 
+.modalFooter {
+    background-color: #444;
+}
 
 .modalContainer{ 
     justify-content: center;
 }
+
 .avatarModal { 
-justify-content: center;
-text-align: center;
+    justify-content: center;
+    text-align: center;
 }
