@@ -1,7 +1,6 @@
 .userProfileIcons { 
     
         background-color: rgba(148, 79, 0, 0.835);
-        display: block;
         border: 10px solid transparent;
         border-image-source: url(https://media1.giphy.com/media/5vidmSHUsyoybSYNN0/giphy.gif?cid=ecf05e47ta00vpixh6lraija5cpo2bhvvsif55qgx61zmlkl&rid=giphy.gif);
         border-image-repeat: stretch;
@@ -10,5 +9,5 @@
         box-shadow: 1px 1px 1px 1px black;
         height: 250px;
         width: 250px;
-        justify-content: center;
 }
+
