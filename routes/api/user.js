@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../../controllers/userController');
 const passport = require('passport');
-const { db } = require('../../models/card');
 
 router.post('/register', userController.createUser);
 
@@ -23,6 +22,8 @@ router.post('/logout', (req, res) => {
     res.send({ msg: 'no user to log out' });
   }
 });
+
+router.put('/user/:id/avatar/:avatar', userController.setUserAvatar);
 
 router.get('/login/user', (req, res) => {
   res.json(req.session.passport.user);

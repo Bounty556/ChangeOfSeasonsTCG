@@ -12,19 +12,19 @@ const io = require('socket.io')(server, { serveClient: false });
 
 // Let the front end know a user has connected to socket.io
 io.on('connection', socket => {
-  socket.emit('connected', {}); // Send client info about themselves
-
-  socket.on('joinRoom', room => {
+  socket.on('joinRoom', (room, playerCallback) => {
     // Make sure the room has enough room in it
-    if (!io.nsps['/'].adapter.rooms[room] || io.nsps['/'].adapter.rooms[room].length < 2) {
+    const playersLength = (io.nsps['/'].adapter.rooms[room]) ? io.nsps['/'].adapter.rooms[room].length : 0;
+    if (playersLength < 2) {
       socket.join(room);
 
       // Let the room know that a socket has joined
-      io.sockets.in(room).emit('userJoined');
+      playerCallback(playersLength + 1);
     }
   });
 
-  socket.on('room', ({room, msg, info}) => {
+  socket.on('room', (room, msg, info) => {
+    console.log('emitting');
     // Make sure the room exists and has users in it
     if (!io.nsps['/'].adapter.rooms[room] || io.nsps['/'].adapter.rooms[room].length > 0) {
       io.sockets.in(room).emit(msg, info);
@@ -34,7 +34,7 @@ io.on('connection', socket => {
   socket.on('disconnect', (info) => {
     // TODO: Cleanup lobby if empty
     // console.log(socket.rooms);
-  })
+  });
 });
 
 require('./passport')(passport);
