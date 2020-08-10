@@ -28,7 +28,7 @@ module.exports = {
 
   setUserAvatar: (req, res) => {
     db.User
-    .updateOne({ _id: req.params.id }, { avatar: req.body.avatar })
+    .updateOne({ _id: req.params.id }, { avatar: req.params.avatar })
     .then(dbModel => res.json(dbModel))
     .catch(err => res.status(422).json(err));
   }
