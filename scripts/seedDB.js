@@ -31,7 +31,7 @@ mongoose.connect(
 const cardSeed = [
   {
     season: 'Spring',
-    cardID: 1,
+    cardId: 1,
     isCreature: true,
     resourceCost: 2,
     attack: 2,
@@ -41,7 +41,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardID: 2,
+    cardId: 2,
     isCreature: true,
     resourceCost: 2,
     attack: 3,
@@ -51,7 +51,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardID: 3,
+    cardId: 3,
     isCreature: true,
     resourceCost: 2,
     attack: 4,
@@ -61,7 +61,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardID: 4,
+    cardId: 4,
     isCreature: true,
     resourceCost: 2,
     attack: 1,
@@ -71,7 +71,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardID: 5,
+    cardId: 5,
     isCreature: true,
     resourceCost: 3,
     attack: 1,
@@ -83,7 +83,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardID: 6,
+    cardId: 6,
     isCreature: true,
     resourceCost: 3,
     attack: 3,
@@ -93,7 +93,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardID: 7,
+    cardId: 7,
     isCreature: true,
     resourceCost: 3,
     attack: 1,
@@ -105,7 +105,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardID: 8,
+    cardId: 8,
     isCreature: true,
     resourceCost: 3,
     attack: 2,
@@ -115,7 +115,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardID: 9,
+    cardId: 9,
     isCreature: true,
     resourceCost: 3,
     attack: 3,
@@ -125,7 +125,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardID: 10,
+    cardId: 10,
     isCreature: true,
     resourceCost: 3,
     attack: 1,
@@ -137,7 +137,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardID: 11,
+    cardId: 11,
     isCreature: true,
     resourceCost: 3,
     attack: 3,
@@ -147,7 +147,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardID: 12,
+    cardId: 12,
     isCreature: true,
     resourceCost: 3,
     attack: 1,
@@ -159,7 +159,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardID: 13,
+    cardId: 13,
     isCreature: true,
     resourceCost: 4,
     attack: 4,
@@ -169,7 +169,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardID: 14,
+    cardId: 14,
     isCreature: true,
     resourceCost: 4,
     attack: 3,
@@ -179,7 +179,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardID: 15,
+    cardId: 15,
     isCreature: true,
     resourceCost: 4,
     attack: 3,
@@ -189,7 +189,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardID: 16,
+    cardId: 16,
     isCreature: true,
     resourceCost: 4,
     attack: 0,
@@ -199,7 +199,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardID: 17,
+    cardId: 17,
     isCreature: true,
     resourceCost: 4,
     attack: 3,
@@ -209,7 +209,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardID: 18,
+    cardId: 18,
     isCreature: true,
     resourceCost: 4,
     attack: 5,
@@ -219,7 +219,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardID: 19,
+    cardId: 19,
     isCreature: true,
     resourceCost: 4,
     attack: 6,
@@ -229,7 +229,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardID: 20,
+    cardId: 20,
     isCreature: true,
     resourceCost: 4,
     attack: 2,
@@ -239,7 +239,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardID: 21,
+    cardId: 21,
     isCreature: true,
     resourceCost: 5,
     attack: 4,
@@ -249,7 +249,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardID: 22,
+    cardId: 22,
     isCreature: true,
     resourceCost: 5,
     attack: 5,
@@ -259,7 +259,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardID: 23,
+    cardId: 23,
     isCreature: true,
     resourceCost: 5,
     attack: 6,
@@ -269,7 +269,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardID: 24,
+    cardId: 24,
     isCreature: true,
     resourceCost: 5,
     attack: 4,
@@ -279,7 +279,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardID: 25,
+    cardId: 25,
     isCreature: true,
     resourceCost: 5,
     attack: 3,
@@ -291,7 +291,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardID: 26,
+    cardId: 26,
     isCreature: true,
     resourceCost: 5,
     attack: 3,
@@ -303,7 +303,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardID: 27,
+    cardId: 27,
     isCreature: true,
     resourceCost: 5,
     attack: 3,
@@ -315,7 +315,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardID: 28,
+    cardId: 28,
     isCreature: true,
     resourceCost: 5,
     attack: 3,
@@ -327,7 +327,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardID: 29,
+    cardId: 29,
     isCreature: false,
     resourceCost: 5,
     attack: 0,
@@ -339,7 +339,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardID: 30,
+    cardId: 30,
     isCreature: false,
     resourceCost: 4,
     attack: 0,
@@ -351,7 +351,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardID: 31,
+    cardId: 31,
     isCreature: false,
     resourceCost: 3,
     attack: 0,
@@ -363,7 +363,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardID: 32,
+    cardId: 32,
     isCreature: false,
     resourceCost: 4,
     attack: 0,
@@ -375,7 +375,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardID: 33,
+    cardId: 33,
     isCreature: true,
     resourceCost: 4,
     attack: 4,
@@ -385,7 +385,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardID: 34,
+    cardId: 34,
     isCreature: true,
     resourceCost: 4,
     attack: 3,
@@ -395,7 +395,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardID: 35,
+    cardId: 35,
     isCreature: true,
     resourceCost: 4,
     attack: 3,
@@ -405,7 +405,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardID: 36,
+    cardId: 36,
     isCreature: true,
     resourceCost: 4,
     attack: 0,
@@ -415,7 +415,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardID: 37,
+    cardId: 37,
     isCreature: true,
     resourceCost: 4,
     attack: 3,
@@ -425,7 +425,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardID: 38,
+    cardId: 38,
     isCreature: true,
     resourceCost: 4,
     attack: 5,
@@ -435,7 +435,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardID: 39,
+    cardId: 39,
     isCreature: true,
     resourceCost: 4,
     attack: 6,
@@ -445,7 +445,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardID: 40,
+    cardId: 40,
     isCreature: true,
     resourceCost: 4,
     attack: 2,
@@ -455,7 +455,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardID: 41,
+    cardId: 41,
     isCreature: true,
     resourceCost: 5,
     attack: 4,
@@ -465,7 +465,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardID: 42,
+    cardId: 42,
     isCreature: true,
     resourceCost: 5,
     attack: 5,
@@ -475,7 +475,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardID: 43,
+    cardId: 43,
     isCreature: true,
     resourceCost: 5,
     attack: 6,
@@ -485,7 +485,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardID: 44,
+    cardId: 44,
     isCreature: true,
     resourceCost: 5,
     attack: 4,
@@ -495,7 +495,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardID: 45,
+    cardId: 45,
     isCreature: true,
     resourceCost: 5,
     attack: 3,
@@ -507,7 +507,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardID: 46,
+    cardId: 46,
     isCreature: true,
     resourceCost: 5,
     attack: 3,
@@ -519,7 +519,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardID: 47,
+    cardId: 47,
     isCreature: true,
     resourceCost: 5,
     attack: 3,
@@ -531,7 +531,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardID: 48,
+    cardId: 48,
     isCreature: true,
     resourceCost: 5,
     attack: 3,
@@ -543,7 +543,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardID: 49,
+    cardId: 49,
     isCreature: false,
     resourceCost: 5,
     attack: 0,
@@ -555,7 +555,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardID: 50,
+    cardId: 50,
     isCreature: false,
     resourceCost: 6,
     attack: 0,
@@ -567,7 +567,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardID: 51,
+    cardId: 51,
     isCreature: false,
     resourceCost: 7,
     attack: 0,
@@ -579,7 +579,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardID: 52,
+    cardId: 52,
     isCreature: false,
     resourceCost: 7,
     attack: 0,
@@ -591,7 +591,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardID: 53,
+    cardId: 53,
     isCreature: true,
     resourceCost: 6,
     attack: 5,
@@ -601,7 +601,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardID: 54,
+    cardId: 54,
     isCreature: true,
     resourceCost: 6,
     attack: 5,
@@ -611,7 +611,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardID: 55,
+    cardId: 55,
     isCreature: true,
     resourceCost: 6,
     attack: 6,
@@ -621,7 +621,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardID: 56,
+    cardId: 56,
     isCreature: true,
     resourceCost: 6,
     attack: 4,
@@ -631,7 +631,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardID: 57,
+    cardId: 57,
     isCreature: true,
     resourceCost: 6,
     attack: 3,
@@ -643,7 +643,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardID: 58,
+    cardId: 58,
     isCreature: true,
     resourceCost: 6,
     attack: 3,
@@ -655,7 +655,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardID: 59,
+    cardId: 59,
     isCreature: true,
     resourceCost: 6,
     attack: 3,
@@ -667,7 +667,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardID: 60,
+    cardId: 60,
     isCreature: true,
     resourceCost: 6,
     attack: 3,
@@ -679,7 +679,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardID: 61,
+    cardId: 61,
     isCreature: true,
     resourceCost: 7,
     attack:5,
@@ -689,7 +689,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardID: 62,
+    cardId: 62,
     isCreature: true,
     resourceCost: 7,
     attack: 5,
@@ -699,7 +699,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardID: 63,
+    cardId: 63,
     isCreature: true,
     resourceCost: 7,
     attack: 5,
@@ -709,7 +709,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardID: 64,
+    cardId: 64,
     isCreature: true,
     resourceCost: 7,
     attack: 5,
@@ -719,7 +719,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardID: 65,
+    cardId: 65,
     isCreature: true,
     resourceCost: 7,
     attack:3,
@@ -731,7 +731,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardID: 66,
+    cardId: 66,
     isCreature: true,
     resourceCost: 7,
     attack: 3,
@@ -743,7 +743,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardID: 67,
+    cardId: 67,
     isCreature: true,
     resourceCost: 7,
     attack: 3,
@@ -755,7 +755,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardID: 68,
+    cardId: 68,
     isCreature: true,
     resourceCost: 7,
     attack: 3,
@@ -767,7 +767,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardID: 69,
+    cardId: 69,
     isCreature: true,
     resourceCost: 8,
     attack: 6,
@@ -777,7 +777,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardID: 70,
+    cardId: 70,
     isCreature: true,
     resourceCost: 8,
     attack: 6,
@@ -787,7 +787,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardID: 71,
+    cardId: 71,
     isCreature: true,
     resourceCost: 8,
     attack: 6,
@@ -797,7 +797,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardID: 72,
+    cardId: 72,
     isCreature: true,
     resourceCost: 8,
     attack: 6,
@@ -807,7 +807,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardID: 73,
+    cardId: 73,
     isCreature: true,
     resourceCost: 8,
     attack:4,
@@ -819,7 +819,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardID: 74,
+    cardId: 74,
     isCreature: true,
     resourceCost: 8,
     attack: 4,
@@ -831,7 +831,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardID: 75,
+    cardId: 75,
     isCreature: true,
     resourceCost: 8,
     attack: 4,
@@ -843,7 +843,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardID: 76,
+    cardId: 76,
     isCreature: true,
     resourceCost: 8,
     attack: 4,
@@ -855,7 +855,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardID: 77,
+    cardId: 77,
     isCreature: false,
     resourceCost: 9,
     attack:0,
@@ -867,7 +867,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardID: 78,
+    cardId: 78,
     isCreature: false,
     resourceCost: 9,
     attack: 0,
@@ -879,7 +879,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardID: 79,
+    cardId: 79,
     isCreature: false,
     resourceCost: 9,
     attack: 0,
@@ -891,7 +891,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardID: 80,
+    cardId: 80,
     isCreature: false,
     resourceCost: 9,
     attack: 0,
@@ -903,7 +903,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardID: 81,
+    cardId: 81,
     isCreature: true,
     resourceCost: 9,
     attack:6,
@@ -913,7 +913,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardID: 82,
+    cardId: 82,
     isCreature: true,
     resourceCost: 9,
     attack:6,
@@ -923,7 +923,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardID: 83,
+    cardId: 83,
     isCreature: true,
     resourceCost: 9,
     attack:6,
@@ -933,7 +933,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardID: 84,
+    cardId: 84,
     isCreature: true,
     resourceCost: 9,
     attack:6,
@@ -943,7 +943,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardID: 85,
+    cardId: 85,
     isCreature: true,
     resourceCost: 9,
     attack:5,
@@ -955,7 +955,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardID: 86,
+    cardId: 86,
     isCreature: true,
     resourceCost: 9,
     attack:5,
@@ -967,7 +967,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardID: 87,
+    cardId: 87,
     isCreature: true,
     resourceCost: 9,
     attack:5,
@@ -979,7 +979,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardID: 88,
+    cardId: 88,
     isCreature: true,
     resourceCost: 9,
     attack:5,
