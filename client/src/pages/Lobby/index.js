@@ -16,6 +16,7 @@ const ENDPOINT = 'http://localhost:3001/';
 
 // TODO: When 2 people are in a lobby, show the 'play game button'
 // TODO: When in a lobby, show the 'Leave lobby' button
+// TODO: Detect if the same player is the lobby twice 
 
 // Socket io works via a back and forth of communication.
 // 1. The user joins a lobby by telling the server to put it in the given room
@@ -35,7 +36,9 @@ class Lobby extends Component {
       joinedLobby: false,
       playGame: false,
       allJoined: false,
-      playerNumber: -1
+      playerNumber: -1,
+      //used for rederecting in React Router Dom 
+      redirect: false
     };
 
     this.socket = null;
@@ -118,6 +121,25 @@ class Lobby extends Component {
     }
   };
 
+  startMatch = () => {
+    this.checkUser();
+    this.setState({ playGame: true })
+    
+  }
+
+  //duplicate user check 
+    checkUser = () => { 
+      if (this.username1 === this.username2) { 
+        console.log('DUPLICATE USER DETECTED');
+        this.exitGame();
+      }
+    }
+    
+  //leave game and reuturn to the userProfile page 
+    exitGame = () => { 
+      console.log('EXITING GAME')
+    }
+
   render() {
     return (
       <div>
@@ -162,19 +184,23 @@ class Lobby extends Component {
                   </div>
 
                   <div className='row'>
-                    <div className='button-col'>
-                      <br></br>
-                      <br></br>
-                      <button className='wood' onClick={this.joinLobby}>
-                        Join Match
+                    {!this.state.allJoined ? (
+                      <div className='button-col'>
+                        <button className='wood' onClick={this.joinLobby}>
+                          Join Match
                       </button>
-                      <button className='wood' onClick={this.createNewGame}>
-                        Create Match
+                        <button className='wood' onClick={this.createNewGame}>
+                          Create Match
                       </button>
-                      <button className='wood' onClick={this.createNewGame}>
-                        Start Game
-                      </button>
-                    </div>
+                      </div>
+                    ) : (
+                        <button className='wood' onClick={this.startMatch}>
+                          Start Game
+                        </button>
+                        // <button className='wood' onClick={this.exitGame}>
+                        //   Start Game
+                        // </button>
+                      )}
                   </div>
                 </div>
               </div>
