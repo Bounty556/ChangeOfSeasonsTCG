@@ -50,7 +50,7 @@ class Lobby extends Component {
 
     this.socket.on('requestPlayerInfo', this.sendPlayerInfo);
     this.socket.on('receivePlayerInfo', this.updatePlayerInfo);
-    
+
     // Worry about this later: this.socket.on('userLeft', (playerNumber) => this.removePlayerInfo(that, playerNumber));
   }
 
@@ -74,9 +74,9 @@ class Lobby extends Component {
       this.socket.emit('joinRoom', this.state.gameId, this.setThisPlayersInfo);
     }
   };
-  
+
   setThisPlayersInfo = playerNumber => {
-    this.setState({joinedLobby: true, playerNumber: playerNumber}, () => 
+    this.setState({ joinedLobby: true, playerNumber: playerNumber }, () =>
       this.socket.emit('room', this.state.gameId, 'requestPlayerInfo')
     );
   };
@@ -157,8 +157,8 @@ class Lobby extends Component {
                         onChange={this.handleChangeJoinId}
                       ></input>
                     ) : (
-                      <p className='gameIdText'>{this.state.gameId}</p>
-                    )}
+                        <p className='gameIdText'>{this.state.gameId}</p>
+                      )}
                   </div>
 
                   <div className='row'>
@@ -171,6 +171,9 @@ class Lobby extends Component {
                       <button className='wood' onClick={this.createNewGame}>
                         Create Match
                       </button>
+                      <button className='wood' onClick={this.createNewGame}>
+                        Start Game
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -178,8 +181,8 @@ class Lobby extends Component {
             </Container>
           </div>
         ) : (
-          <Gameboard />
-        )}
+            <Gameboard />
+          )}
       </div>
     );
   }
