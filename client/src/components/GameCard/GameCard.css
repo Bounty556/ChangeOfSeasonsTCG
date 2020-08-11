@@ -1,4 +1,4 @@
-.gameCard { 
+#gameCard { 
     min-height: 375px;
     max-height: 375px;
     max-width: 250px;
@@ -57,7 +57,7 @@
     -webkit-text-stroke: .5px white;
 }
 
-.resourse { 
+.resource { 
     height: 100%;
     margin: 0;
     border: black;
