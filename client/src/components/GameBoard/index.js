@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Card from '../Card/index';
+
+import Parser from './scriptParser';
 
 import './gameboard.css';
 
@@ -10,6 +12,11 @@ function Gameboard(props) {
   const [opponentPlayAreaCount, setOpponentPlayAreaCount] = useState(0);
   const [opponentDefenseRow, setOpponentDefenseRow] = useState([]);
   const [opponentAttackRow, setOpponentAttackRow] = useState([]);
+
+  useEffect(() => {
+    const test = Parser.parseScript('ONPLAY RAISEATK ATKROW 1 RAISEDEF ATKROW 1 ONDEATH RAISEATK ATKROW -1 RAISEDEF ATKROW -1');
+    console.log(test);
+  }, []);
 
   return (
     <div>
