@@ -6,14 +6,14 @@ const db = require('../models');
 // TODO: Add other imgs to cards with 'TBD'
 
 /*
-OPERATORS:
+TRIGGERS:
    ONDEATH
    ONPLAY
    ONATK
 
-ACTIONS:
+OPERATORS:
    DRAW # - If FULL, give cards until hand is full
-   RES TARGET # - SELF, OPP
+   RES TARGET # - SELF, OPP - gives target resources
    DMG #
    HEAL TARGET # - SINGLE, ALL, DEFROW
    KILL TARGET - SELF, OPP, ALL, OPPDEFROW
