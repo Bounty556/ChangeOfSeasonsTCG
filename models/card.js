@@ -8,7 +8,8 @@ const CardSchema = new Schema({
     resourceCost: {type: Number, required: true},
     attack: {type: Number, required: true},
     health: {type: Number},                           // Health doesn't need to be required, since spells won't have health
-    effect: {type: String},
+    effect: {type: String, default: ''},
+    effectScript: {type: String, default: ''},
     name: {type: String, required: true},
     img: {type: String, required: true}
 });

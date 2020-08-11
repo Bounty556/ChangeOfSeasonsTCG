@@ -3,6 +3,27 @@ const db = require('../models');
 
 // This file empties the Books collection and inserts the books below
 
+// TODO: Add other imgs to cards with 'TBD'
+
+/*
+OPERATORS:
+   ONDEATH
+   ONPLAY
+   ONATK
+
+ACTIONS:
+   DRAW # - If FULL, give cards until hand is full
+   RES TARGET # - SELF, OPP
+   DMG #
+   HEAL TARGET # - SINGLE, ALL, DEFROW
+   KILL TARGET - SELF, OPP, ALL, OPPDEFROW
+   RTNHND - Moves the card back to the players hand
+   RAISEATK TARGET # - ALL, ATKROW, DEFROW
+   RAISEDEF TARGET # - ALL, ATKROW, DEFROW
+   SETATK TARGET # - OPPATKROW
+   ADDEFFECT "..."
+*/
+
 mongoose.connect(
   process.env.MONGODB_URI || 'mongodb://localhost/changeOfSeasons'
 );
@@ -15,7 +36,6 @@ const cardSeed = [
     resourceCost: 2,
     attack: 2,
     health: 3,
-    effect: '',
     name: 'Gudrun',
     img: 'buddy.png'
   },
@@ -26,7 +46,6 @@ const cardSeed = [
     resourceCost: 2,
     attack: 3,
     health: 2,
-    effect: '',
     name: 'Jacinto the masked one',
     img: 'mask_01.png'
   },
@@ -37,7 +56,6 @@ const cardSeed = [
     resourceCost: 2,
     attack: 4,
     health: 1,
-    effect: '',
     name: 'Revna',
     img: 'crow_01.png'
   },
@@ -48,7 +66,6 @@ const cardSeed = [
     resourceCost: 2,
     attack: 1,
     health: 4,
-    effect: '',
     name: 'Obasi of the Deep',
     img: 'hound.png'
   },
@@ -59,7 +76,8 @@ const cardSeed = [
     resourceCost: 3,
     attack: 1,
     health: 1,
-    effect: 'Gain 1 resource spot ',
+    effect: 'When played, gain 1 resource spot',
+    effectScript: 'ONPLAY RES SELF 1',
     name: 'Hinode',
     img: 'turtle_01.png'
   },
@@ -70,7 +88,6 @@ const cardSeed = [
     resourceCost: 3,
     attack: 3,
     health: 3,
-    effect: '',
     name: 'Yōsei',
     img: 'snake_01.png'
   },
@@ -81,7 +98,8 @@ const cardSeed = [
     resourceCost: 3,
     attack: 1,
     health: 1,
-    effect: 'draw a card when this dies',
+    effect: 'Draw a card when this dies',
+    effectScript: 'ONDEATH DRAW 1',
     name: 'Dodokeki',
     img: 'bone_beast.png'
   },
@@ -92,7 +110,6 @@ const cardSeed = [
     resourceCost: 3,
     attack: 2,
     health: 4,
-    effect: '',
     name: 'Akashita',
     img: 'banshee.png'
   },
@@ -103,7 +120,6 @@ const cardSeed = [
     resourceCost: 3,
     attack: 3,
     health: 3,
-    effect: '',
     name: 'Maia',
     img: 'plant_monster_01.png'
   },
@@ -114,7 +130,8 @@ const cardSeed = [
     resourceCost: 3,
     attack: 1,
     health: 3,
-    effect: 'Deal 3 damage to an enemy minion or player',
+    effect: 'When played, deal 3 damage to an enemy minion or player',
+    effectScript: 'ONPLAY DMG 3',
     name: 'Fanus',
     img: 'phoenix_01.png'
   },
@@ -125,7 +142,6 @@ const cardSeed = [
     resourceCost: 3,
     attack: 3,
     health: 3,
-    effect: '',
     name: 'Consus',
     img: 'dragon_03.png'
   },
@@ -136,7 +152,8 @@ const cardSeed = [
     resourceCost: 3,
     attack: 1,
     health: 3,
-    effect: 'Restore 5 health to any player or creature',
+    effect: 'When played, restore 5 health to any player or creature',
+    effectScript: 'ONPLAY HEAL SINGLE 5',
     name: 'Hathor',
     img: 'yeti_01.png'
   },
@@ -147,7 +164,6 @@ const cardSeed = [
     resourceCost: 4,
     attack: 4,
     health: 3,
-    effect: '',
     name: 'Zevran',
     img: 'golem_02.png'
   },
@@ -158,7 +174,6 @@ const cardSeed = [
     resourceCost: 4,
     attack: 3,
     health: 4,
-    effect: '',
     name: 'Arven',
     img: 'bug.png'
   },
@@ -169,7 +184,6 @@ const cardSeed = [
     resourceCost: 4,
     attack: 3,
     health: 4,
-    effect: '',
     name: 'Jarian',
     img: 'emerald (7).png'
   },
@@ -180,7 +194,6 @@ const cardSeed = [
     resourceCost: 4,
     attack: 0,
     health: 7,
-    effect: '',
     name: 'Wall of Swords',
     img: 'red (34).png'
   },
@@ -191,7 +204,6 @@ const cardSeed = [
     resourceCost: 4,
     attack: 3,
     health: 4,
-    effect: '',
     name: 'Zothogth',
     img: 'insect_02.png'
   },
@@ -202,7 +214,6 @@ const cardSeed = [
     resourceCost: 4,
     attack: 5,
     health: 2,
-    effect: '',
     name: 'Cursed Dromaeo',
     img: 'deamon_05.png'
   },
@@ -213,7 +224,6 @@ const cardSeed = [
     resourceCost: 4,
     attack: 6,
     health: 1,
-    effect: '',
     name: 'Thuolond the unsuspecting Jin',
     img: 'jin.png'
   },
@@ -224,7 +234,6 @@ const cardSeed = [
     resourceCost: 4,
     attack: 2,
     health: 5,
-    effect: '',
     name: 'Shuasheme',
     img: 'frost_giant_01.png'
   },
@@ -235,7 +244,6 @@ const cardSeed = [
     resourceCost: 5,
     attack: 4,
     health: 5,
-    effect: '',
     name: 'Yiennare',
     img: 'living_armor_02.png'
   },
@@ -246,7 +254,6 @@ const cardSeed = [
     resourceCost: 5,
     attack: 5,
     health: 4,
-    effect: '',
     name: 'Vegnessss',
     img: 'lizardman_01.png'
   },
@@ -257,7 +264,6 @@ const cardSeed = [
     resourceCost: 5,
     attack: 6,
     health: 3,
-    effect: '',
     name: 'Nithrilar',
     img: 'orc_03.png'
   },
@@ -268,7 +274,6 @@ const cardSeed = [
     resourceCost: 5,
     attack: 4,
     health: 5,
-    effect: '',
     name: 'Lykoo',
     img: 'crystal_golem_01.png'
   },
@@ -279,7 +284,8 @@ const cardSeed = [
     resourceCost: 5,
     attack: 3,
     health: 3,
-    effect: 'Gain an extra resourse ',
+    effect: 'Gain an extra resource',
+    effectScript: 'ONPLAY RES SELF 1',
     name: 'Rynia',
     img: 'dragon_01.png'
   },
@@ -291,6 +297,7 @@ const cardSeed = [
     attack: 3,
     health: 3,
     effect: 'Deal 5 damage to an enemy minion or player',
+    effectScript: 'ONPLAY DMG 5',
     name: 'Vyniho',
     img: 'dragon_04.png'
   },
@@ -302,6 +309,7 @@ const cardSeed = [
     attack: 3,
     health: 3,
     effect: 'Destroy 1 enemy resource',
+    effectScript: 'ONPLAY RES OPP -1',
     name: 'Tirdyha',
     img:'dragon_03.png'
   },
@@ -312,7 +320,8 @@ const cardSeed = [
     resourceCost: 5,
     attack: 3,
     health: 3,
-    effect: 'Draw a card ',
+    effect: 'Draw a card',
+    effectScript: 'ONPLAY DRAW 1',
     name: 'Nymymnas',
     img: 'dragon_05.png'
   },
@@ -323,7 +332,8 @@ const cardSeed = [
     resourceCost: 5,
     attack: 0,
     health: 0,
-    effect: 'Gain 2 resource spots ',
+    effect: 'Gain 2 resource',
+    effectScript: 'ONPLAY RES SELF 2',
     name: 'Concentration of Nature',
     img: 'emerald (9).png'
   },
@@ -334,7 +344,8 @@ const cardSeed = [
     resourceCost: 4,
     attack: 0,
     health: 0,
-    effect: 'give attack row 1 extra attack ',
+    effect: 'Give attack row +1ATK',
+    effectScript: 'ONPLAY RAISEATK ATKROW 1',
     name: 'Assault of Nature',
     img: 'green (11).png'
   },
@@ -345,7 +356,8 @@ const cardSeed = [
     resourceCost: 3,
     attack: 0,
     health: 0,
-    effect: 'Destroy 1 of your own minions - give the rest 1 attack',
+    effect: 'Destroy 1 of your own minions - give the rest +1ATK',
+    effectScript: 'ONPLAY KILL SELF RAISEATK ALL 1',
     name: 'Mystic Typhoon',
     img: 'blue (25)'
   },
@@ -356,7 +368,8 @@ const cardSeed = [
     resourceCost: 4,
     attack: 0,
     health: 0,
-    effect: 'Give defense row 2 extra health ',
+    effect: 'Give defense row +2DEF',
+    effectScript: 'ONPLAY RAISEDEF DEFROW 2',
     name: 'Phantom Form',
     img: 'violet (11).png'
   },
@@ -367,7 +380,6 @@ const cardSeed = [
     resourceCost: 4,
     attack: 4,
     health: 3,
-    effect: '',
     name: 'Zevran',
     img: 'golem_02.png'
   },
@@ -378,7 +390,6 @@ const cardSeed = [
     resourceCost: 4,
     attack: 3,
     health: 4,
-    effect: '',
     name: 'Arven',
     img: 'bug.png'
   },
@@ -389,7 +400,6 @@ const cardSeed = [
     resourceCost: 4,
     attack: 3,
     health: 4,
-    effect: '',
     name: 'Jarian',
     img: 'emerald (7).png'
   },
@@ -400,7 +410,6 @@ const cardSeed = [
     resourceCost: 4,
     attack: 0,
     health: 7,
-    effect: '',
     name: 'Wall of Swords',
     img: 'red (34).png'
   },
@@ -411,7 +420,6 @@ const cardSeed = [
     resourceCost: 4,
     attack: 3,
     health: 4,
-    effect: '',
     name: 'Zothogth',
     img: 'insect_02.png'
   },
@@ -422,7 +430,6 @@ const cardSeed = [
     resourceCost: 4,
     attack: 5,
     health: 2,
-    effect: '',
     name: 'Cursed Dromaeo',
     img: 'deamon_05.png'
   },
@@ -433,7 +440,6 @@ const cardSeed = [
     resourceCost: 4,
     attack: 6,
     health: 1,
-    effect: '',
     name: 'Thuolond the unsuspecting Jin',
     img: 'jin.png'
   },
@@ -444,7 +450,6 @@ const cardSeed = [
     resourceCost: 4,
     attack: 2,
     health: 5,
-    effect: '',
     name: 'Shuasheme',
     img: 'frost_giant_01.png'
   },
@@ -455,7 +460,6 @@ const cardSeed = [
     resourceCost: 5,
     attack: 4,
     health: 5,
-    effect: '',
     name: 'Yiennare',
     img: 'living_armor_02.png'
   },
@@ -466,7 +470,6 @@ const cardSeed = [
     resourceCost: 5,
     attack: 5,
     health: 4,
-    effect: '',
     name: 'Vegnessss',
     img: 'lizardman_01.png'
   },
@@ -477,7 +480,6 @@ const cardSeed = [
     resourceCost: 5,
     attack: 6,
     health: 3,
-    effect: '',
     name: 'Nithrilar',
     img: 'orc_03.png'
   },
@@ -488,7 +490,6 @@ const cardSeed = [
     resourceCost: 5,
     attack: 4,
     health: 5,
-    effect: '',
     name: 'Lykoo',
     img: 'crystal_golem_01.png'
   },
@@ -499,7 +500,8 @@ const cardSeed = [
     resourceCost: 5,
     attack: 3,
     health: 3,
-    effect: 'Gain an extra resourse ',
+    effect: 'Gain an extra resource',
+    effecScript: 'ONPLAY RES SELF 1',
     name: 'Rynia',
     img: 'dragon_01.png'
   },
@@ -511,6 +513,7 @@ const cardSeed = [
     attack: 3,
     health: 3,
     effect: 'Deal 5 damage to an enemy minion or player',
+    effectScript: 'ONPLAY DMG 5',
     name: 'Vyniho',
     img: 'dragon_04.png'
   },
@@ -522,6 +525,7 @@ const cardSeed = [
     attack: 3,
     health: 3,
     effect: 'Destroy 1 enemy resource',
+    effectScript: 'ONPLAY RES OPP -1',
     name: 'Tirdyha',
     img: 'dragon_03.png'
   },
@@ -533,6 +537,7 @@ const cardSeed = [
     attack: 3,
     health: 3,
     effect: 'Draw a card',
+    effectScript: 'ONPLAY DRAW 1',
     name: 'Nymymnas',
     img: 'dragon_05.png'
   },
@@ -543,7 +548,8 @@ const cardSeed = [
     resourceCost: 5,
     attack: 0,
     health: 0,
-    effect: 'Gain an extra resourse ',
+    effect: 'Gain an extra resource',
+    effectScript: 'ONPLAY RES SELF 1',
     name: 'Rynia',
     img: 'dragon_01.png'
   },
@@ -554,7 +560,8 @@ const cardSeed = [
     resourceCost: 6,
     attack: 0,
     health: 0,
-    effect: 'restore 15 life to all your creatures',
+    effect: 'Restore 15 life to all your creatures',
+    effectScript: 'ONPLAY HEAL ALL 15',
     name: 'Call of Health',
     img: 'TBD'
   },
@@ -565,7 +572,8 @@ const cardSeed = [
     resourceCost: 7,
     attack: 0,
     health: 0,
-    effect: 'Give all your creatures +2 attack ',
+    effect: 'Give all your creatures +2ATK',
+    effectScript: 'ONPLAY RAISEATK ALL 2',
     name: 'Hidden Dagger',
     img: 'TBD'
   },
@@ -576,7 +584,8 @@ const cardSeed = [
     resourceCost: 7,
     attack: 0,
     health: 0,
-    effect: 'Destroy all creatures ',
+    effect: 'Destroy all creatures',
+    effectScript: 'ONPLAY KILL ALL',
     name: 'Seal of Death',
     img: 'TBD'
   },
@@ -587,7 +596,6 @@ const cardSeed = [
     resourceCost: 6,
     attack: 5,
     health: 5,
-    effect: '',
     name: 'Slughorth',
     img: 'TBD'
   },
@@ -598,7 +606,6 @@ const cardSeed = [
     resourceCost: 6,
     attack: 5,
     health: 5,
-    effect: '',
     name: 'Vrunteghe',
     img: 'TBD'
   },
@@ -609,7 +616,6 @@ const cardSeed = [
     resourceCost: 6,
     attack: 6,
     health: 4,
-    effect: '',
     name: 'Ito',
     img: 'TBD'
   },
@@ -620,7 +626,6 @@ const cardSeed = [
     resourceCost: 6,
     attack: 4,
     health: 6,
-    effect: '',
     name: 'Brethraodduss',
     img: 'TBD'
   },
@@ -631,7 +636,8 @@ const cardSeed = [
     resourceCost: 6,
     attack: 3,
     health: 4,
-    effect: 'draw a card',
+    effect: 'Draw a card',
+    effectScript: 'ONPLAY DRAW 1',
     name: 'Wiubhun',
     img: 'TBD'
   },
@@ -642,7 +648,8 @@ const cardSeed = [
     resourceCost: 6,
     attack: 3,
     health: 4,
-    effect: 'When this enters give your atk row +2 attack',
+    effect: 'When this enters give your atk row +1ATK +1DEF',
+    effectScript: 'ONPLAY RAISEATK ATKROW 1 RAISEDEF ATKROW 1',
     name: 'Vrunteghe',
     img: 'TBD'
   },
@@ -653,7 +660,8 @@ const cardSeed = [
     resourceCost: 6,
     attack: 3,
     health: 4,
-    effect: 'return 2 random cards from your grave yard to your hand',
+    effect: 'When this enters give your atk row +2 ATK',
+    effectScript: 'ONPLAY RAISEATK ATKROW 2',
     name: 'Ito',
     img: 'TBD'
   },
@@ -664,7 +672,8 @@ const cardSeed = [
     resourceCost: 6,
     attack: 3,
     health: 4,
-    effect: 'When this enters give your def row  +3 health',
+    effect: 'When this enters heal your def row by 3 health',
+    effectScript: 'ONPLAY HEAL DEFROW 3',
     name: 'Brethraodduss',
     img: 'TBD'
   },
@@ -675,7 +684,6 @@ const cardSeed = [
     resourceCost: 7,
     attack:5,
     health: 6,
-    effect: '',
     name: 'Reldo',
     img: 'TBD'
   },
@@ -686,7 +694,6 @@ const cardSeed = [
     resourceCost: 7,
     attack: 5,
     health: 6,
-    effect: '',
     name: 'Sherthok',
     img: 'TBD'
   },
@@ -697,7 +704,6 @@ const cardSeed = [
     resourceCost: 7,
     attack: 5,
     health: 6,
-    effect: '',
     name: 'Grarthu',
     img: 'TBD'
   },
@@ -708,7 +714,6 @@ const cardSeed = [
     resourceCost: 7,
     attack: 5,
     health: 6,
-    effect: '',
     name: 'Snorbaglel',
     img: 'TBD'
   },
@@ -720,6 +725,7 @@ const cardSeed = [
     attack:3,
     health: 5,
     effect: 'When this enters give your atk row +3 attack',
+    effectScript: 'ONPLAY RAISEATK ATKROW 3',
     name: 'Dilbuggraulm',
     img: 'TBD'
   },
@@ -731,6 +737,7 @@ const cardSeed = [
     attack: 3,
     health: 5,
     effect: 'Deal 6 damage to an enemy minion or player',
+    effectScript: 'ONPLAY DMG 6',
     name: 'Legrash',
     img: 'TBD'
   },
@@ -741,7 +748,8 @@ const cardSeed = [
     resourceCost: 7,
     attack: 3,
     health: 5,
-    effect: 'restore life equal to the damge this deals',
+    effect: 'Restore life equal to the damage this deals',
+    effectScript: 'ONATK HEAL DMG',
     name: 'Fardel',
     img: 'TBD'
   },
@@ -752,7 +760,8 @@ const cardSeed = [
     resourceCost: 7,
     attack: 3,
     health: 2,
-    effect: 'when this dies return it to your hand',
+    effect: 'When this dies return it to your hand',
+    effectScript: 'ONDEATH RTNHND',
     name: 'Volmuloelle',
     img: 'TBD'
   },
@@ -763,7 +772,6 @@ const cardSeed = [
     resourceCost: 8,
     attack: 6,
     health: 6,
-    effect: '',
     name: 'Lailzon',
     img: 'TBD'
   },
@@ -774,7 +782,6 @@ const cardSeed = [
     resourceCost: 8,
     attack: 6,
     health: 6,
-    effect: '',
     name: 'Nemastos',
     img: 'TBD'
   },
@@ -785,7 +792,6 @@ const cardSeed = [
     resourceCost: 8,
     attack: 6,
     health: 6,
-    effect: '',
     name: 'Alcinysius',
     img: 'TBD'
   },
@@ -796,7 +802,6 @@ const cardSeed = [
     resourceCost: 8,
     attack: 6,
     health: 6,
-    effect: '',
     name: 'Icariss',
     img: 'TBD'
   },
@@ -808,6 +813,7 @@ const cardSeed = [
     attack:4,
     health: 5,
     effect: 'When this deals damage draw a card',
+    effectScript: 'ONATK DRAW 1',
     name: 'Phantisto',
     img: 'TBD'
   },
@@ -818,7 +824,8 @@ const cardSeed = [
     resourceCost: 8,
     attack: 4,
     health: 5,
-    effect: 'draw 2 cards',
+    effect: 'Draw 2 cards',
+    effectScript: 'ONPLAY DRAW 2',
     name: 'Elenone',
     img: 'TBD'
   },
@@ -829,7 +836,8 @@ const cardSeed = [
     resourceCost: 8,
     attack: 4,
     health: 5,
-    effect: 'give all your minions +2 +1',
+    effect: 'Give all your minions +2ATK +1DEF',
+    effectScript: 'ONPLAY RAISEATK ALL 2 RAISEDEF ALL 1',
     name: 'Xanderise',
     img: 'TBD'
   },
@@ -840,7 +848,8 @@ const cardSeed = [
     resourceCost: 8,
     attack: 4,
     health: 5,
-    effect: 'give all your minions +1 +2',
+    effect: 'Give all your minions +1 +2',
+    effectScript: 'ONPLAY RAISEATK ALL 1 RAISEDEF ALL 2',
     name: 'Artesa',
     img: 'TBD'
   },
@@ -852,6 +861,7 @@ const cardSeed = [
     attack:0,
     health: 0,
     effect: 'Draw cards until your hand is full',
+    effectScript: 'ONPLAY DRAW FULL',
     name: 'Deep Pockets',
     img: 'TBD'
   },
@@ -862,7 +872,8 @@ const cardSeed = [
     resourceCost: 9,
     attack: 0,
     health: 0,
-    effect: 'Deal 10 damage to the enemy player',
+    effect: 'Deal 10 damage to an enemy minion or player',
+    effectScript: 'ONPLAY DMG 10',
     name: 'Fires of the Divine',
     img: 'TBD'
   },
@@ -870,10 +881,11 @@ const cardSeed = [
     season: 'Fall',
     cardID: 79,
     isCreature: false,
-    resourceCost: 7,
+    resourceCost: 9,
     attack: 0,
     health: 0,
     effect: 'You may play a card from your graveyard for free',
+    effectScript: 'ONPLAY ADDEFFECT "ONDEATH RTNHND"',
     name: 'Gravediggers Delight',
     img: 'TBD'
   },
@@ -884,7 +896,8 @@ const cardSeed = [
     resourceCost: 9,
     attack: 0,
     health: 0,
-    effect: 'Give all your minions +4 attack',
+    effect: 'Give all your minions +4ATK',
+    effectScript: 'ONPLAY RAISEATK ALL 4',
     name: 'Winter`s End',
     img: 'TBD'
   },
@@ -895,7 +908,6 @@ const cardSeed = [
     resourceCost: 9,
     attack:6,
     health: 7,
-    effect: '',
     name: 'Sühkgüi',
     img: 'TBD'
   },
@@ -906,7 +918,6 @@ const cardSeed = [
     resourceCost: 9,
     attack:6,
     health: 7,
-    effect: '',
     name: 'Enezorig',
     img: 'TBD'
   },
@@ -917,7 +928,6 @@ const cardSeed = [
     resourceCost: 9,
     attack:6,
     health: 7,
-    effect: '',
     name: 'Nertsetseg',
     img: 'TBD'
   },
@@ -928,7 +938,6 @@ const cardSeed = [
     resourceCost: 9,
     attack:6,
     health: 7,
-    effect: '',
     name: 'Hontuyaa',
     img: 'TBD'
   },
@@ -939,7 +948,8 @@ const cardSeed = [
     resourceCost: 9,
     attack:5,
     health: 5,
-    effect: 'While this is in play give all your creatures +2+4',
+    effect: 'While this is in play give all your creatures +2ATK +4DEF',
+    effectScript: 'ONPLAY RAISEATK ALL 2 RAISEDEF ALL 4 ONDEATH RAISEATK ALL -2 RAISEDEF ALL -4',
     name: 'Hontuyaa',
     img: 'TBD'
   },
@@ -950,7 +960,8 @@ const cardSeed = [
     resourceCost: 9,
     attack:5,
     health: 5,
-    effect: 'While this is in play give all your creatures +3 +3 ',
+    effect: 'While this is in play give all your creatures +3 +3',
+    effectScript: 'ONPLAY RAISEATK ALL 3 RAISEDEF ALL 3 ONDEATH RAISEATK ALL -3 RAISEDEF ALL -3',
     name: 'Otgonbaatar',
     img: 'TBD'
   },
@@ -961,7 +972,8 @@ const cardSeed = [
     resourceCost: 9,
     attack:5,
     health: 5,
-    effect: 'When this dies destory your oponents defense row',
+    effect: 'When this dies destroy your opponents defense row',
+    effectScript: 'ONDEATH KILL OPPDEFROW',
     name: 'Nertulga',
     img: 'TBD'
   },
@@ -972,7 +984,8 @@ const cardSeed = [
     resourceCost: 9,
     attack:5,
     health: 5,
-    effect: 'reduce your opponents attack row attack to 0 ',
+    effect: 'Reduce your opponents attack row attack to 0',
+    effectScript: 'ONPLAY SETATK OPPATKROW 0',
     name: 'Batgüi',
     img: 'TBD'
   },
