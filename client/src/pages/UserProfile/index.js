@@ -61,12 +61,11 @@ function UserProfile() {
     const avatarArr = ['bird_01', 'dark_knight_01', 'cyclop_01', 'ghost_01', 'joker_01', 'orc_05', 'living_armor_02', 'owl_01', 'ash_zombies', 'crystal_golem_01', 'dragon_08', 'dragon_09', 'dragon_07', 'phoenix_01', 'skeleton_06'];
 
 
-
     function changeFunc(event) {
         setSelectAvatar(event.target.getAttribute('data'));
     };
 
-    function changeFunc(event) {
+    function deckFunc(event) {
         setSelectDeck(event.target.getAttribute('data'));
     };
 
@@ -82,19 +81,19 @@ function UserProfile() {
             .catch(err => console.log(err));
     }
 
-    function selectSpring() { 
+    function selectSpring() {
         const userId = JSON.parse(localStorage.getItem('authentication'))._id;
         axios.put(`/api/user/${userId}/deck/Spring`)
     };
-    function selectSummer() { 
+    function selectSummer() {
         const userId = JSON.parse(localStorage.getItem('authentication'))._id;
         axios.put(`/api/user/${userId}/deck/Summer`)
     };
-    function selectFall() { 
+    function selectFall() {
         const userId = JSON.parse(localStorage.getItem('authentication'))._id;
         axios.put(`/api/user/${userId}/deck/Fall`)
     };
-    function selectWinter() { 
+    function selectWinter() {
         const userId = JSON.parse(localStorage.getItem('authentication'))._id;
         axios.put(`/api/user/${userId}/deck/Winter`)
     };
@@ -190,10 +189,10 @@ function UserProfile() {
 
                     <Modal.Body className='modalBody'>
                         <Container className='modalContainer'>
-                         <Button type ='button' onClick={selectSpring}>Spring</Button>
-                         <Button type ='button' onClick={selectSummer}>Summer</Button>
-                         <Button type ='button' onClick={selectFall}>Fall</Button>
-                         <Button type ='button' onClick={selectWinter}>Winter</Button>
+                            <Button type='button' onClick={selectSpring}>Spring</Button>
+                            <Button type='button' onClick={selectSummer}>Summer</Button>
+                            <Button type='button' onClick={selectFall}>Fall</Button>
+                            <Button type='button' onClick={selectWinter}>Winter</Button>
                         </Container>
                     </Modal.Body>
 
