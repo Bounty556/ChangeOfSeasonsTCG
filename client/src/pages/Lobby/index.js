@@ -7,6 +7,8 @@ import Navbar from '../../components/Navbar/index';
 import Card from '../../components/Card/index';
 import socketIO from 'socket.io-client';
 
+import Gameboard from '../../components/GameBoard/index';
+
 import axios from 'axios';
 
 import './lobby.css';
