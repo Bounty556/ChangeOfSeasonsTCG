@@ -86,6 +86,18 @@ function UserProfile() {
         const userId = JSON.parse(localStorage.getItem('authentication'))._id;
         axios.put(`/api/user/${userId}/deck/Spring`)
     };
+    function selectSummer() { 
+        const userId = JSON.parse(localStorage.getItem('authentication'))._id;
+        axios.put(`/api/user/${userId}/deck/Summer`)
+    };
+    function selectFall() { 
+        const userId = JSON.parse(localStorage.getItem('authentication'))._id;
+        axios.put(`/api/user/${userId}/deck/Fall`)
+    };
+    function selectWinter() { 
+        const userId = JSON.parse(localStorage.getItem('authentication'))._id;
+        axios.put(`/api/user/${userId}/deck/Winter`)
+    };
 
     function goToLobby() {
         history.push('/Lobby');
@@ -179,9 +191,9 @@ function UserProfile() {
                     <Modal.Body className='modalBody'>
                         <Container className='modalContainer'>
                          <Button type ='button' onClick={selectSpring}>Spring</Button>
-                         <Button type ='button' onClick={() => console.log('SUMMMER')}>Summer</Button>
-                         <Button type ='button' onClick={() => console.log('FALL')}>Fall</Button>
-                         <Button type ='button' onClick={() => console.log('WINTER')}>Winter</Button>
+                         <Button type ='button' onClick={selectSummer}>Summer</Button>
+                         <Button type ='button' onClick={selectFall}>Fall</Button>
+                         <Button type ='button' onClick={selectWinter}>Winter</Button>
                         </Container>
                     </Modal.Body>
 
