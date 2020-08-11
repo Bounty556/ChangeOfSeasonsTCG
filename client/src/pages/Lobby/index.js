@@ -1,10 +1,9 @@
-import React, { Component, useState, useEffect, useRef } from 'react';
+import React, { Component } from 'react';
 //Will be used to go to card lists and deck builder ~possibly friends list if implimented
 // import { Link } from 'react-router-dom';
 
 import Container from '../../components/Container/index';
 import Navbar from '../../components/Navbar/index';
-import Card from '../../components/Card/index';
 import socketIO from 'socket.io-client';
 
 import Gameboard from '../../components/GameBoard/index';
@@ -12,7 +11,6 @@ import Gameboard from '../../components/GameBoard/index';
 import axios from 'axios';
 
 import './lobby.css';
-import './gameboard.css';
 
 const ENDPOINT = 'http://localhost:3001/';
 
