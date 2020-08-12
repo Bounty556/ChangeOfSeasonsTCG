@@ -28,12 +28,11 @@ function Navbar() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-
-
     function logoutFunc() {
         axios.post('/api/logout').then(res => {
             localStorage.removeItem('authentication');
             localStorage.removeItem('avatar');
+            localStorage.removeItem('username');
             window.location = '/';
         })
         .catch(err => console.log(err));

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-
+import { saveAuthLocally } from '../../utils/authentication'
 import Container from '../../components/Container/index';
 import Card from '../../components/Card/index';
 import Navbar from '../../components/Navbar/index';
+
 
 import './signUp.css';
 
@@ -75,6 +76,12 @@ class SignUp extends Component {
 
     submitFunc = () => {
         axios.post('/api/register', {username:this.state.username, password: this.state.password, email: this.state.email})
+        .then(res => {
+            localStorage.removeItem('authentication');
+            localStorage.removeItem('avatar');
+            saveAuthLocally(res.data);
+            window.location = '/Profile';
+        });
     }
 
     inputFunc = event => {

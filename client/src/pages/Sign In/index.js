@@ -38,11 +38,13 @@ function SignIn() {
 
     function submitFunc () {
         axios.post ('/api/login', {username:username, password: userpass})
-        .then (res=>{
+        .then(res => {
+            localStorage.removeItem('authentication');
+            localStorage.removeItem('avatar');
             setAuth(res.data);
             saveAuthLocally(res.data);
             window.location = '/Profile';
-        })
+        });
     }
 
     function inputFunc(event) {
