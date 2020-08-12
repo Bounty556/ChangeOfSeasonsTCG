@@ -123,3 +123,25 @@ button {
     justify-content: center;
     text-align: center;
 }
+
+.springButton { 
+    background-color: rgb(142, 209, 42);
+}
+
+.summerButton { 
+    background-color: rgb(255, 255, 0);
+}
+
+.fallButton { 
+    background-color: rgb(253, 49, 22);
+}
+
+.winterButton { 
+    background-color: rgb(116, 201, 235);
+}
+
+.springButton, .summerButton, .fallButton, .winterButton { 
+    border-color: black;
+    margin: 2px;
+    color: black
+}
