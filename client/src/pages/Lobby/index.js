@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-//Will be used to go to card lists and deck builder ~possibly friends list if implimented
+//Will be used to go to card lists and deck builder ~possibly friends list if implemented
 // import { Link } from 'react-router-dom';
 
 import Container from '../../components/Container/index';
@@ -14,9 +14,9 @@ import './lobby.css';
 
 const ENDPOINT = 'http://localhost:3001/';
 
-// TODO: When 2 people are in a lobby, show the 'play game button'
 // TODO: When in a lobby, show the 'Leave lobby' button
-// TODO: Detect if the same player is the lobby twice 
+// TODO: Make leaving a lobby work
+// TODO: Make sure both users have decks
 
 // Socket io works via a back and forth of communication.
 // 1. The user joins a lobby by telling the server to put it in the given room
@@ -36,9 +36,7 @@ class Lobby extends Component {
       joinedLobby: false,
       playGame: false,
       allJoined: false,
-      playerNumber: -1,
-      //used for rederecting in React Router Dom 
-      redirect: false
+      playerNumber: -1
     };
 
     this.socket = null;
@@ -54,12 +52,17 @@ class Lobby extends Component {
 
     this.socket.on('requestPlayerInfo', this.sendPlayerInfo);
     this.socket.on('receivePlayerInfo', this.updatePlayerInfo);
-
-    // Worry about this later: this.socket.on('userLeft', (playerNumber) => this.removePlayerInfo(that, playerNumber));
+    this.socket.on('playerLeft', this.cleanUpPlayer);
   }
 
   componentWillUnmount() {
-    this.socket.disconnect();
+    // Check if we're connected
+    if (this.state.joinedLobby) {
+      // Tell the server that we're disconnecting
+      this.socket.emit('room', this.state.gameId, 'playerLeft', this.state.playerNumber);
+
+      this.socket.disconnect();
+    }
   }
 
   handleChangeJoinId = event => {
@@ -87,14 +90,22 @@ class Lobby extends Component {
 
   sendPlayerInfo = () => {
     // TODO: we shouldn't be returning the user password at all
-    axios.get('/api/user/' + JSON.parse(localStorage.getItem('authentication'))._id)
+    axios
+      .get(
+        '/api/user/' + JSON.parse(localStorage.getItem('authentication'))._id
+      )
       .then(info => {
         const playerInfo = {
           username: info.data.username,
           avatar: info.data.avatar,
           number: this.state.playerNumber
         };
-        this.socket.emit('room', this.state.gameId, 'receivePlayerInfo', playerInfo);
+        this.socket.emit(
+          'room',
+          this.state.gameId,
+          'receivePlayerInfo',
+          playerInfo
+        );
       })
       .catch(err => console.log(err));
   };
@@ -102,43 +113,64 @@ class Lobby extends Component {
   updatePlayerInfo = playerInfo => {
     // Get player info
     if (playerInfo.number === 1) {
-      this.setState({
-        username1: playerInfo.username,
-        avatar1: playerInfo.avatar
-      }, () => {
-        if (this.state.avatar1 && this.state.avatar2) {
-          this.setState({ allJoined: true });
+      this.setState(
+        {
+          username1: playerInfo.username,
+          avatar1: playerInfo.avatar
+        },
+        () => {
+          if (this.state.avatar1 && this.state.avatar2) {
+            this.setState({ allJoined: true });
+          }
         }
-      });
+      );
     } else if (playerInfo.number === 2) {
-      this.setState({
-        username2: playerInfo.username,
-        avatar2: playerInfo.avatar
-      }, () => {
-        if (this.state.avatar1 && this.state.avatar2) {
-          this.setState({ allJoined: true });
+      this.setState(
+        {
+          username2: playerInfo.username,
+          avatar2: playerInfo.avatar
+        },
+        () => {
+          if (this.state.avatar1 && this.state.avatar2) {
+            this.setState({ allJoined: true });
+          }
         }
-      });
+      );
     }
   };
 
   startMatch = () => {
     this.checkUser();
-    this.setState({ playGame: true })
 
-  }
+    this.setState({ playGame: true });
+  };
 
-  //duplicate user check 
+  // Duplicate user check
+
   checkUser = () => {
     if (this.username1 === this.username2) {
       console.log('DUPLICATE USER DETECTED');
       this.exitGame();
     }
-  }
 
-  //leave game and reuturn to the userProfile page 
+  };
+
+  // Exit game should just redirect the user to the lobby
   exitGame = () => {
-    console.log('EXITING GAME')
+    window.location = '/lobby';
+  };
+
+  cleanUpPlayer = () => {
+    this.setState({
+      username1: 'User 1',
+      username2: 'User 2',
+      avatar1: '',
+      avatar2: '',
+      playerNumber: 1
+    });
+
+    this.sendPlayerInfo();
+
   }
 
   render() {
@@ -182,8 +214,8 @@ class Lobby extends Component {
                         onChange={this.handleChangeJoinId}
                       ></input>
                     ) : (
-                        <p className='gameIdText'>{this.state.gameId}</p>
-                      )}
+                      <p className='gameIdText'>{this.state.gameId}</p>
+                    )}
                   </div>
 
                   <div className='row'>
@@ -191,28 +223,31 @@ class Lobby extends Component {
                       <div className='button-col'>
                         <button className='wood' onClick={this.joinLobby}>
                           Join Match
-                      </button>
+                        </button>
                         <button className='wood' onClick={this.createNewGame}>
                           Create Match
-                      </button>
+                        </button>
                       </div>
                     ) : (
+                      <div className='button-col'>
                         <button className='wood' onClick={this.startMatch}>
-                          Start Game
+                          Start Match
                         </button>
-                        // <button className='wood' onClick={this.exitGame}>
-                        //   Start Game
-                        // </button>
-                      )}
+                        <button className='wood' onClick={this.exitGame}>
+                          Exit Game
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
             </Container>
           </div >
         ) : (
-            <Gameboard />
-          )
-        }
+
+          <Gameboard />
+        )}
+
       </div>
     );
   }
