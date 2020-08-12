@@ -503,7 +503,7 @@ const cardSeed = [
     effect: 'Gain an extra resource',
     effecScript: 'ONPLAY RES SELF 1',
     name: 'Rynia',
-    img: 'dragon_01.png'
+    img: 'emerald (13).png'
   },
   {
     season: 'Summer',
@@ -515,7 +515,7 @@ const cardSeed = [
     effect: 'Deal 5 damage to an enemy minion or player',
     effectScript: 'ONPLAY DMG 5',
     name: 'Vyniho',
-    img: 'dragon_04.png'
+    img: 'red (1).png'
   },
   {
     season: 'Fall',
@@ -527,7 +527,7 @@ const cardSeed = [
     effect: 'Destroy 1 enemy resource',
     effectScript: 'ONPLAY RES OPP -1',
     name: 'Tirdyha',
-    img: 'dragon_03.png'
+    img: 'skeleton_02.png'
   },
   {
     season: 'Winter',
@@ -539,7 +539,7 @@ const cardSeed = [
     effect: 'Draw a card',
     effectScript: 'ONPLAY DRAW 1',
     name: 'Nymymnas',
-    img: 'dragon_05.png'
+    img: 'blue (26).png'
   },
   {
     season: 'Spring',
@@ -548,10 +548,10 @@ const cardSeed = [
     resourceCost: 5,
     attack: 0,
     health: 0,
-    effect: 'Gain an extra resource',
-    effectScript: 'ONPLAY RES SELF 1',
-    name: 'Rynia',
-    img: 'dragon_01.png'
+    effect: 'Draw 3 Card',
+    effectScript: 'ONPLAY DRAW 3',
+    name: 'Runes of Calling',
+    img: 'yellow (22).png'
   },
   {
     season: 'Summer',
@@ -563,7 +563,7 @@ const cardSeed = [
     effect: 'Restore 15 life to all your creatures',
     effectScript: 'ONPLAY HEAL ALL 15',
     name: 'Call of Health',
-    img: 'TBD'
+    img: 'green (22).png'
   },
   {
     season: 'Fall',
@@ -575,7 +575,7 @@ const cardSeed = [
     effect: 'Give all your creatures +2ATK',
     effectScript: 'ONPLAY RAISEATK ALL 2',
     name: 'Hidden Dagger',
-    img: 'TBD'
+    img: 'yellow (37).png'
   },
   {
     season: 'Winter',
@@ -587,7 +587,7 @@ const cardSeed = [
     effect: 'Destroy all creatures',
     effectScript: 'ONPLAY KILL ALL',
     name: 'Seal of Death',
-    img: 'TBD'
+    img: 'blue (1).png'
   },
   {
     season: 'Spring',
@@ -597,7 +597,7 @@ const cardSeed = [
     attack: 5,
     health: 5,
     name: 'Slughorth',
-    img: 'TBD'
+    img: 'green (27).png'
   },
   {
     season: 'Summer',
@@ -607,7 +607,7 @@ const cardSeed = [
     attack: 5,
     health: 5,
     name: 'Vrunteghe',
-    img: 'TBD'
+    img: 'emerald (4).png'
   },
   {
     season: 'Fall',
@@ -617,7 +617,7 @@ const cardSeed = [
     attack: 6,
     health: 4,
     name: 'Ito',
-    img: 'TBD'
+    img: 'deamon_03.png'
   },
   {
     season: 'Winter',
@@ -627,7 +627,7 @@ const cardSeed = [
     attack: 4,
     health: 6,
     name: 'Brethraodduss',
-    img: 'TBD'
+    img: 'blue (37).png'
   },
   {
     season: 'Spring',
@@ -639,7 +639,7 @@ const cardSeed = [
     effect: 'Draw a card',
     effectScript: 'ONPLAY DRAW 1',
     name: 'Wiubhun',
-    img: 'TBD'
+    img: 'green (18).png'
   },
   {
     season: 'Summer',
@@ -650,8 +650,8 @@ const cardSeed = [
     health: 4,
     effect: 'When this enters give your atk row +1ATK +1DEF',
     effectScript: 'ONPLAY RAISEATK ATKROW 1 RAISEDEF ATKROW 1',
-    name: 'Vrunteghe',
-    img: 'TBD'
+    name: 'Koedranduk',
+    img: 'golem_01.png'
   },
   {
     season: 'Fall',
@@ -662,8 +662,8 @@ const cardSeed = [
     health: 4,
     effect: 'When this enters give your atk row +2 ATK',
     effectScript: 'ONPLAY RAISEATK ATKROW 2',
-    name: 'Ito',
-    img: 'TBD'
+    name: 'Omdib',
+    img: 'doll_01.png'
   },
   {
     season: 'Winter',
@@ -674,8 +674,8 @@ const cardSeed = [
     health: 4,
     effect: 'When this enters heal your def row by 3 health',
     effectScript: 'ONPLAY HEAL DEFROW 3',
-    name: 'Brethraodduss',
-    img: 'TBD'
+    name: 'Chilnershir',
+    img: 'madman.png'
   },
   {
     season: 'Spring',
@@ -685,7 +685,7 @@ const cardSeed = [
     attack:5,
     health: 6,
     name: 'Reldo',
-    img: 'TBD'
+    img: 'gremlin_01.png'
   },
   {
     season: 'Summer',
@@ -695,7 +695,7 @@ const cardSeed = [
     attack: 5,
     health: 6,
     name: 'Sherthok',
-    img: 'TBD'
+    img: 'l_02.png'
   },
   {
     season: 'Fall',
@@ -705,7 +705,7 @@ const cardSeed = [
     attack: 5,
     health: 6,
     name: 'Grarthu',
-    img: 'TBD'
+    img: 'joker_02.png'
   },
   {
     season: 'Winter',
@@ -715,7 +715,7 @@ const cardSeed = [
     attack: 5,
     health: 6,
     name: 'Snorbaglel',
-    img: 'TBD'
+    img: 'bear.png'
   },
   {
     season: 'Spring',
@@ -727,7 +727,7 @@ const cardSeed = [
     effect: 'When this enters give your atk row +3 attack',
     effectScript: 'ONPLAY RAISEATK ATKROW 3',
     name: 'Dilbuggraulm',
-    img: 'TBD'
+    img: 'demon_05.png'
   },
   {
     season: 'Summer',
@@ -739,7 +739,7 @@ const cardSeed = [
     effect: 'Deal 6 damage to an enemy minion or player',
     effectScript: 'ONPLAY DMG 6',
     name: 'Legrash',
-    img: 'TBD'
+    img: 'parasit_01.png'
   },
   {
     season: 'Fall',
@@ -751,7 +751,7 @@ const cardSeed = [
     effect: 'Restore life equal to the damage this deals',
     effectScript: 'ONATK HEAL DMG',
     name: 'Fardel',
-    img: 'TBD'
+    img: 'pumpkin.png'
   },
   {
     season: 'Winter',
@@ -763,7 +763,7 @@ const cardSeed = [
     effect: 'When this dies return it to your hand',
     effectScript: 'ONDEATH RTNHND',
     name: 'Volmuloelle',
-    img: 'TBD'
+    img: 'blue (32).png'
   },
   {
     season: 'Spring',
@@ -773,7 +773,7 @@ const cardSeed = [
     attack: 6,
     health: 6,
     name: 'Lailzon',
-    img: 'TBD'
+    img: 'dark_knight_04.png'
   },
   {
     season: 'Summer',
@@ -783,7 +783,7 @@ const cardSeed = [
     attack: 6,
     health: 6,
     name: 'Nemastos',
-    img: 'TBD'
+    img: 'violet (21).png'
   },
   {
     season: 'Fall',
@@ -793,7 +793,7 @@ const cardSeed = [
     attack: 6,
     health: 6,
     name: 'Alcinysius',
-    img: 'TBD'
+    img: 'red (2).png'
   },
   {
     season: 'Winter',
@@ -803,7 +803,7 @@ const cardSeed = [
     attack: 6,
     health: 6,
     name: 'Icariss',
-    img: 'TBD'
+    img: 'goblin_01.png'
   },
   {
     season: 'Spring',
@@ -815,7 +815,7 @@ const cardSeed = [
     effect: 'When this deals damage draw a card',
     effectScript: 'ONATK DRAW 1',
     name: 'Phantisto',
-    img: 'TBD'
+    img: 'skeleton_01.png'
   },
   {
     season: 'Summer',
@@ -827,7 +827,7 @@ const cardSeed = [
     effect: 'Draw 2 cards',
     effectScript: 'ONPLAY DRAW 2',
     name: 'Elenone',
-    img: 'TBD'
+    img: 'skeleton_03.png'
   },
   {
     season: 'Fall',
@@ -839,7 +839,7 @@ const cardSeed = [
     effect: 'Give all your minions +2ATK +1DEF',
     effectScript: 'ONPLAY RAISEATK ALL 2 RAISEDEF ALL 1',
     name: 'Xanderise',
-    img: 'TBD'
+    img: 'skeleton_07.png'
   },
   {
     season: 'Winter',
@@ -851,7 +851,7 @@ const cardSeed = [
     effect: 'Give all your minions +1 +2',
     effectScript: 'ONPLAY RAISEATK ALL 1 RAISEDEF ALL 2',
     name: 'Artesa',
-    img: 'TBD'
+    img: 'skeleton_05.png'
   },
   {
     season: 'Spring',
@@ -863,7 +863,7 @@ const cardSeed = [
     effect: 'Draw cards until your hand is full',
     effectScript: 'ONPLAY DRAW FULL',
     name: 'Deep Pockets',
-    img: 'TBD'
+    img: 'gray (5).png'
   },
   {
     season: 'Summer',
@@ -875,7 +875,7 @@ const cardSeed = [
     effect: 'Deal 10 damage to an enemy minion or player',
     effectScript: 'ONPLAY DMG 10',
     name: 'Fires of the Divine',
-    img: 'TBD'
+    img: 'violet (28).png'
   },
   {
     season: 'Fall',
@@ -887,7 +887,7 @@ const cardSeed = [
     effect: 'You may play a card from your graveyard for free',
     effectScript: 'ONPLAY ADDEFFECT "ONDEATH RTNHND"',
     name: 'Gravediggers Delight',
-    img: 'TBD'
+    img: 'emerald (3).png'
   },
   {
     season: 'Winter',
@@ -899,7 +899,7 @@ const cardSeed = [
     effect: 'Give all your minions +4ATK',
     effectScript: 'ONPLAY RAISEATK ALL 4',
     name: 'Winter`s End',
-    img: 'TBD'
+    img: 'violet (4).png'
   },
   {
     season: 'Spring',
@@ -909,7 +909,7 @@ const cardSeed = [
     attack:6,
     health: 7,
     name: 'Sühkgüi',
-    img: 'TBD'
+    img: 'violet (11).png'
   },
   {
     season: 'Summer',
@@ -919,7 +919,7 @@ const cardSeed = [
     attack:6,
     health: 7,
     name: 'Enezorig',
-    img: 'TBD'
+    img: 'dark_knight_01.png'
   },
   {
     season: 'Fall',
@@ -929,7 +929,7 @@ const cardSeed = [
     attack:6,
     health: 7,
     name: 'Nertsetseg',
-    img: 'TBD'
+    img: 'yellow (40).png'
   },
   {
     season: 'Winter',
@@ -939,7 +939,7 @@ const cardSeed = [
     attack:6,
     health: 7,
     name: 'Hontuyaa',
-    img: 'TBD'
+    img: 'orc_05.png'
   },
   {
     season: 'Spring',
@@ -950,8 +950,8 @@ const cardSeed = [
     health: 5,
     effect: 'While this is in play give all your creatures +2ATK +4DEF',
     effectScript: 'ONPLAY RAISEATK ALL 2 RAISEDEF ALL 4 ONDEATH RAISEATK ALL -2 RAISEDEF ALL -4',
-    name: 'Hontuyaa',
-    img: 'TBD'
+    name: 'Irikmolush',
+    img: 'dragon_01.png'
   },
   {
     season: 'Summer',
@@ -963,7 +963,7 @@ const cardSeed = [
     effect: 'While this is in play give all your creatures +3 +3',
     effectScript: 'ONPLAY RAISEATK ALL 3 RAISEDEF ALL 3 ONDEATH RAISEATK ALL -3 RAISEDEF ALL -3',
     name: 'Otgonbaatar',
-    img: 'TBD'
+    img: 'dragon_04.png'
   },
   {
     season: 'Fall',
@@ -975,7 +975,7 @@ const cardSeed = [
     effect: 'When this dies destroy your opponents defense row',
     effectScript: 'ONDEATH KILL OPPDEFROW',
     name: 'Nertulga',
-    img: 'TBD'
+    img: 'dragon_03.png'
   },
   {
     season: 'Winter',
@@ -987,7 +987,7 @@ const cardSeed = [
     effect: 'Reduce your opponents attack row attack to 0',
     effectScript: 'ONPLAY SETATK OPPATKROW 0',
     name: 'Batgüi',
-    img: 'TBD'
+    img: 'dragon_05.png'
   },
 ];
 
