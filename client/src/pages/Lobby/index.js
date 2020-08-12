@@ -131,7 +131,7 @@ class Lobby extends Component {
         },
         () => {
           if (this.state.deck1.length > 0 && this.state.deck2.length > 0) {
-            document.getElementById('loadingID').classList.remove('loading')
+            document.getElementById('loadingID').classList.remove('loading');
            this.setState({ allJoined: true });
           }
         }
@@ -145,6 +145,7 @@ class Lobby extends Component {
         },
         () => {
           if (this.state.deck1.length > 0 && this.state.deck2.length > 0) {
+            document.getElementById('loadingID').classList.remove('loading');
             this.setState({ allJoined: true });
           }
         }
