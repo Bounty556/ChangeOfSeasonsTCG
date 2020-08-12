@@ -11,6 +11,7 @@ import ForgotPassword from './pages/Forgot-Password/index';
 import UserProfile from './pages/UserProfile/index';
 import Lobby from './pages/Lobby/index'
 
+// TODO: Check out blank page when duplicating tabs
 
 function App() {
     const [authLoading, setAuthLoading] = useState(true);

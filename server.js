@@ -30,9 +30,13 @@ io.on('connection', socket => {
     }
   });
 
-  socket.on('disconnect', (info) => {
-    // TODO: Cleanup lobby if empty
-    // console.log(socket.rooms);
+  // Sends a message to the room the socket disconnected from letting them know there is one less user
+  socket.on('disconnecting', (info) => {
+    const keys = Object.keys(socket.rooms);
+    for (let i = 1; i < keys.length; i++) {
+      const room = socket.rooms[keys[i - 1]]; 
+      io.sockets.in(room).emit('playerLeft', {});
+    }
   });
 });
 
