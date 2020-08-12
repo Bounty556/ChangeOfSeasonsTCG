@@ -84,19 +84,23 @@ function UserProfile() {
 
     function selectSpring() {
         const userId = JSON.parse(localStorage.getItem('authentication'))._id;
-        axios.put(`/api/user/${userId}/deck/Spring`)
+        axios.put(`/api/user/${userId}/deck/Spring`);
+        handleCloseDeck();
     };
     function selectSummer() {
         const userId = JSON.parse(localStorage.getItem('authentication'))._id;
-        axios.put(`/api/user/${userId}/deck/Summer`)
+        axios.put(`/api/user/${userId}/deck/Summer`);
+        handleCloseDeck();
     };
     function selectFall() {
         const userId = JSON.parse(localStorage.getItem('authentication'))._id;
-        axios.put(`/api/user/${userId}/deck/Fall`)
+        axios.put(`/api/user/${userId}/deck/Fall`);
+        handleCloseDeck();
     };
     function selectWinter() {
         const userId = JSON.parse(localStorage.getItem('authentication'))._id;
-        axios.put(`/api/user/${userId}/deck/Winter`)
+        axios.put(`/api/user/${userId}/deck/Winter`);
+        handleCloseDeck();
     };
 
     function goToLobby() {
