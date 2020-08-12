@@ -34,6 +34,7 @@ function Navbar() {
         axios.post('/api/logout').then(res => {
             localStorage.removeItem('authentication');
             localStorage.removeItem('avatar');
+            localStorage.removeItem('username');
             window.location = '/';
         })
         .catch(err => console.log(err));
