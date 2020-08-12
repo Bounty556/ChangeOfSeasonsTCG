@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-
+import { saveAuthLocally } from '../../utils/authentication'
 import Container from '../../components/Container/index';
 import Card from '../../components/Card/index';
 import Navbar from '../../components/Navbar/index';
@@ -75,7 +75,12 @@ class SignUp extends Component {
 
     submitFunc = () => {
         axios.post('/api/register', {username:this.state.username, password: this.state.password, email: this.state.email})
+        .then (res=>{
+            saveAuthLocally(res.data);
+            window.location = '/Profile';
+        })
     }
+
 
     inputFunc = event => {
         const { name, value } = event.target;
