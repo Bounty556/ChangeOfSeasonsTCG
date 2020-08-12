@@ -28,17 +28,17 @@ class Lobby extends Component {
   constructor() {
     super();
     this.state = {
-      username1: 'User 1',
-      username2: 'User 2',
+      username1: (localStorage.getItem('username')),
+      username2: 'Waiting for player',
       avatar1: (localStorage.getItem('avatar')),
-      avatar2: '',
+      avatar2: 'blue_15.png',
       gameId: 0,
       joinedLobby: false,
       playGame: false,
       allJoined: false,
       playerNumber: -1
     };
-
+ 
     this.socket = null;
   }
 
@@ -119,8 +119,9 @@ class Lobby extends Component {
           avatar1: playerInfo.avatar
         },
         () => {
-          if (this.state.avatar1 && this.state.avatar2) {
-            this.setState({ allJoined: true });
+          if (this.state.deck1.length > 0 && this.state.deck2.length > 0) {
+            document.getElementById('loadingID').classList.remove('loading')
+           this.setState({ allJoined: true });
           }
         }
       );
@@ -131,7 +132,7 @@ class Lobby extends Component {
           avatar2: playerInfo.avatar
         },
         () => {
-          if (this.state.avatar1 && this.state.avatar2) {
+          if (this.state.deck1.length > 0 && this.state.deck2.length > 0) {
             this.setState({ allJoined: true });
           }
         }
@@ -192,16 +193,21 @@ class Lobby extends Component {
                         className='avatar'
                       ></img>
                     </div>
-                    <h1 className='vs'>VS</h1>
+
                     {!this.state.joinedLobby ? (<div></div>) : (
-                      <div className='playerTwo'>
-                        <h2>{this.state.username2}</h2>
-                        <img
-                          src={'./images/cardImg/' + this.state.avatar2}
-                          alt='Player`s Chosen Avatar'
-                          className='avatar'
-                        ></img>
-                      </div>)}
+                      <div className='players'>
+                        <h1 className='vs'>VS</h1>
+                        <div className='playerTwo'>
+                          <h2>{this.state.username2}</h2>
+                          <img
+                            src={'./images/cardImg/' + this.state.avatar2}
+                            alt='Player`s Chosen Avatar'
+                            className='avatar loading'
+                            id='loadingID'
+                          ></img>
+                        </div>
+                      </div>
+                    )}
 
                   </div>
 
@@ -214,8 +220,8 @@ class Lobby extends Component {
                         onChange={this.handleChangeJoinId}
                       ></input>
                     ) : (
-                      <p className='gameIdText'>{this.state.gameId}</p>
-                    )}
+                        <p className='gameIdText'>{this.state.gameId}</p>
+                      )}
                   </div>
 
                   <div className='row'>
@@ -229,15 +235,15 @@ class Lobby extends Component {
                         </button>
                       </div>
                     ) : (
-                      <div className='button-col'>
-                        <button className='wood' onClick={this.startMatch}>
-                          Start Match
+                        <div className='button-col'>
+                          <button className='wood' onClick={this.startMatch}>
+                            Start Match
                         </button>
-                        <button className='wood' onClick={this.exitGame}>
-                          Exit Game
+                          <button className='wood' onClick={this.exitGame}>
+                            Exit Game
                         </button>
-                      </div>
-                    )}
+                        </div>
+                      )}
                   </div>
                 </div>
               </div>
@@ -245,8 +251,8 @@ class Lobby extends Component {
           </div >
         ) : (
 
-          <Gameboard />
-        )}
+            <Gameboard />
+          )}
 
       </div>
     );

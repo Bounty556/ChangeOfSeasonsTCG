@@ -15,7 +15,7 @@ import Modal from 'react-bootstrap/Modal';
 import './userProfile.css';
 
 function UserProfile() {
-    const [username,] = useState('');
+    const [username,] = useState((localStorage.getItem('username')));
     //used to grab the current chosen avatar from the db 
 
     const [avatar, setAvatar] = useState('');
@@ -190,10 +190,10 @@ function UserProfile() {
 
                     <Modal.Body className='modalBody'>
                         <Container className='modalContainer'>
-                            <Button type='button' className='springButton' onClick={selectSpring}>Spring</Button>
-                            <Button type='button' className='summerButton' onClick={selectSummer}>Summer</Button>
-                            <Button type='button' className='fallButton' onClick={selectFall}>Fall</Button>
-                            <Button type='button' className='winterButton' onClick={selectWinter}>Winter</Button>
+                            <button  className='wood springButton' onClick={selectSpring}>🌱 Spring 🌱</button>
+                            <button  className='wood summerButton' onClick={selectSummer}>☀️ Summer ☀️</button>
+                            <button  className='wood fallButton' onClick={selectFall}>🍂 Fall 🍂</button>
+                            <button  className='wood winterButton' onClick={selectWinter}>❄️ Winter ❄️</button>
                         </Container>
                     </Modal.Body>
 

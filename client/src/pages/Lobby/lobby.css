@@ -8,7 +8,7 @@
 .players { 
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly !important;
+    justify-content: space-evenly;
 }
 
 .playerOne {
@@ -17,7 +17,10 @@
 
 .playerTwo {
     margin-right: 30px;
+    
 }
+
+
 
 .avatar {
     background-color: rgba(148, 79, 0, 0.835);
@@ -30,7 +33,33 @@
     box-shadow: 1px 1px 1px 1px black;
     height: 250px;
     width: 250px;
+    margin-bottom: 25px;
 }
+
+.loading { 
+    animation: rotation 4s infinite linear;
+    border: none;
+    border-radius: 50%;
+
+    box-shadow:
+    0 0 1px #fff,
+    0 0 1px #fff,
+    0 0 2px #fff,
+    0 0 4px rgb(0, 153, 255),
+    0 0 8px rgb(0, 153, 255),
+    0 0 80px rgb(0, 153, 255),
+    0 0 100px rgb(0, 153, 255),
+    0 0 120px rgb(0, 153, 255);
+}
+
+@keyframes rotation {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(359deg);
+    }
+  }
 
 .col {
     justify-content: center;
