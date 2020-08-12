@@ -1,110 +1,97 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
-import Card from '../Card/index';
+import CardHolder from '../CardHolder';
 
 import Parser from './scriptParser';
 
 import './gameboard.css';
 
-function Gameboard(props) {
-  const [opponentGraveyardIsEmpty, setOpponentGraveyardEmpty] = useState(false);
-  const [opponentDeckIsEmpty, setOpponentDeckIsEmpty] = useState(false);
-  const [opponentPlayAreaCount, setOpponentPlayAreaCount] = useState(0);
-  const [opponentDefenseRow, setOpponentDefenseRow] = useState([]);
-  const [opponentAttackRow, setOpponentAttackRow] = useState([]);
+// Give this function to the children of this component so they can tell us when
+// A card was dropped on them
+export const CardContext = createContext({
+  cardDraggedToPosition: null,
+  cards: null
+});
 
+// TODO: We definitely need to redo the CSS for all of the cardholders and the cards themselves
+//       So things don't look awful
+
+function GameBoard(props) {
   useEffect(() => {
-    const test = Parser.parseScript('ONPLAY RAISEATK ATKROW 1 RAISEDEF ATKROW 1 ONDEATH RAISEATK ATKROW -1 RAISEDEF ATKROW -1');
+    const test = Parser.parseScript(
+      'ONPLAY RAISEATK ATKROW 1 RAISEDEF ATKROW 1 ONDEATH RAISEATK ATKROW -1 RAISEDEF ATKROW -1'
+    );
     console.log(test);
   }, []);
 
+  const [cards, setCards] = useState([
+    {
+      id: 0,
+      key: 0,
+      position: 'userPlayArea',
+      name: 'Gudrun',
+      img: 'buddy.png',
+      attack: 2,
+      resourceCost: 2,
+      health: 3
+    }
+  ]);
+
+  const cardDraggedToPosition = (cardId, position) => {
+    // Look for the card with the given cardkey
+    const cardIndex = cards.findIndex(card => card.id === cardId);
+    const cardVal = cards[cardIndex];
+    cardVal.position = position;
+    setCards([...cards.filter(card => card.id !== cardId), cardVal]);
+  };
+
   return (
-    <div>
-      <div className='wrapper'>
-        <div id='opponentRow'>
-          {/* Opponent's Graveyard*/}
-          <Card id='opponentGrave'>
-            <h6>Opponent Graveyard</h6>
-          </Card>
+    <CardContext.Provider value={{ cardDraggedToPosition, cards }}>
+      <DndProvider backend={HTML5Backend}>
+        <div className='wrapper'>
+          <div id='opponentRow'>
+            <CardHolder id='opponentGrave' />
+            <CardHolder id='opponentDeck' />
+            <CardHolder id='opponentPlayArea' />
+          </div>
 
-          {/* Opponent's Deck */}
-          <Card id='opponentDeck'>
-            <h6>Opponent Deck</h6>
-          </Card>
+          <div id='opponentDefRow'>
+            <CardHolder id='opponentDef1' />
+            <CardHolder id='opponentDef2' />
+          </div>
 
-          {/* Opponent's Play area */}
-          <Card id='opponentPlayArea'>
-            <h4>Opponent Play Area</h4>
-          </Card>
+          <div id='opponentAttRow'>
+            <CardHolder id='opponentAtt1' />
+            <CardHolder id='opponentAtt2' />
+            <CardHolder id='opponentAtt3' />
+          </div>
         </div>
 
-        {/* Defense Row */}
-        <div id='opponentDefRow'>
-          <Card id='opponentDef1'>
-            <h6>Opponent Defense 1</h6>
-          </Card>
-          <Card id='opponentDef2'>
-            <h6>Opponent Defense 2</h6>
-          </Card>
+        <hr />
+
+        <div className='wrapper'>
+          <div id='userAttRow'>
+            <CardHolder id='userAtt1' />
+            <CardHolder id='userAtt2' />
+            <CardHolder id='userAtt3' />
+          </div>
+
+          <div id='userDefRow'>
+            <CardHolder id='userDef1' />
+            <CardHolder id='userDef2' />
+          </div>
+
+          <div id='userRow'>
+            <CardHolder id='userGrave' />
+            <CardHolder id='userDeck' />
+            <CardHolder id='userPlayArea' />
+          </div>
         </div>
-
-        {/* Attack Row */}
-        <div id='opponentAttRow'>
-          <Card id='opponentAtt1'>
-            <h6>Opponent Attack 1</h6>
-          </Card>
-          <Card id='opponentAtt2'>
-            <h6>Opponent Attack 2</h6>
-          </Card>
-          <Card id='opponentAtt3'>
-            <h6>Opponent Attack 3</h6>
-          </Card>
-        </div>
-      </div>
-
-      <hr />
-
-      <div className='wrapper'>
-        <div id='userAttRow'>
-          <Card id='userAtt1'>
-            <h6>User Attack 1</h6>
-          </Card>
-          <Card id='userAtt2'>
-            <h6>User Attack 2</h6>
-          </Card>
-          <Card id='userAtt3'>
-            <h6>User Attack 3</h6>
-          </Card>
-        </div>
-
-        <div id='userDefRow'>
-          <Card id='userDef1'>
-            <h6>User Defense 1</h6>
-          </Card>
-          <Card id='userDef2'>
-            <h6>User Defense 2</h6>
-          </Card>
-        </div>
-
-        <div id='userRow'>
-          {/* User's Graveyard*/}
-          <Card id='userGrave'>
-            <h6>User Graveyard</h6>
-          </Card>
-
-          {/* User's Deck */}
-          <Card id='userDeck'>
-            <h6>User Deck</h6>
-          </Card>
-
-          {/* User's Play area */}
-          <Card id='userPlayArea'>
-            <h4>User Play Area</h4>
-          </Card>
-        </div>
-      </div>
-    </div>
+      </DndProvider>
+    </CardContext.Provider>
   );
 }
 
-export default Gameboard;
+export default GameBoard;

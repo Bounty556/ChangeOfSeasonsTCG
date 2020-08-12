@@ -1,27 +1,46 @@
 import React from 'react';
+import { useDrag, DragPreviewImage } from 'react-dnd';
 
 import Card from '../Card/index';
+import ItemTypes from '../../utils/ItemTypes';
+
 import './GameCard.css';
 
 function GameCard(props) {
-    return (
-        <Card id='gameCard'>
-            <h5 className='card-name'>{props.name}</h5>
+  const [, drag, preview] = useDrag({
+    item: { type: ItemTypes.CARD, id: props.id }
+  });
 
-            <div className = 'image-container'>
-                <img src={props.imgSrc} alt='placeholder' className='card-image' />
-            </div>
-            
-            <div className = 'effect-box'>
-                <p className = 'effect'></p>
-            </div>
-                <div className = 'stats-box row'>  
-                <p className = 'attack'>{props.attack}</p>
-                <p className = 'resource'>{props.resource}</p>
-                <p className = 'health'>{props.health}</p>
-            </div>
+  return (
+    <>
+      <DragPreviewImage
+        connect={preview}
+        src={'/images/cardImg/' + props.img}
+      />
+      <div ref={drag}>
+        <Card id='gameCard'>
+          <h5 className='card-name'>{props.name}</h5>
+
+          <div className='image-container'>
+            <img
+              src={'/images/cardImg/' + props.img}
+              alt='placeholder'
+              className='card-image'
+            />
+          </div>
+
+          <div className='effect-box'>
+            <p className='effect'></p>
+          </div>
+          <div className='stats-box row'>
+            <p className='attack'>{props.attack}</p>
+            <p className='resource'>{props.resourceCost}</p>
+            <p className='health'>{props.health}</p>
+          </div>
         </Card>
-    )
+      </div>
+    </>
+  );
 }
 
 export default GameCard;
