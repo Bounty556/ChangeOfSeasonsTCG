@@ -1,22 +1,15 @@
 import React, { Component } from 'react';
-//Will be used to go to card lists and deck builder ~possibly friends list if implemented
-// import { Link } from 'react-router-dom';
 
 import Container from '../../components/Container/index';
 import Navbar from '../../components/Navbar/index';
-import socketIO from 'socket.io-client';
-
 import Gameboard from '../../components/GameBoard/index';
 
+import socketIO from 'socket.io-client';
 import axios from 'axios';
 
 import './lobby.css';
 
 const ENDPOINT = 'http://localhost:3001/';
-
-// TODO: When in a lobby, show the 'Leave lobby' button
-// TODO: Make leaving a lobby work
-// TODO: Make sure both users have decks
 
 // Socket io works via a back and forth of communication.
 // 1. The user joins a lobby by telling the server to put it in the given room
@@ -28,10 +21,12 @@ class Lobby extends Component {
   constructor() {
     super();
     this.state = {
-      username1: 'User 1',
-      username2: 'User 2',
-      avatar1: (localStorage.getItem('avatar')),
+      username1: localStorage.getItem('username'),
+      username2: '',
+      avatar1: localStorage.getItem('avatar'),
       avatar2: '',
+      deck1: [],
+      deck2: [],
       gameId: 0,
       joinedLobby: false,
       playGame: false,
@@ -46,7 +41,6 @@ class Lobby extends Component {
     event.preventDefault();
   };
 
-
   componentDidMount() {
     this.socket = socketIO(ENDPOINT);
 
@@ -59,7 +53,12 @@ class Lobby extends Component {
     // Check if we're connected
     if (this.state.joinedLobby) {
       // Tell the server that we're disconnecting
-      this.socket.emit('room', this.state.gameId, 'playerLeft', this.state.playerNumber);
+      this.socket.emit(
+        'room',
+        this.state.gameId,
+        'playerLeft',
+        this.state.playerNumber
+      );
 
       this.socket.disconnect();
     }
@@ -89,15 +88,15 @@ class Lobby extends Component {
   };
 
   sendPlayerInfo = () => {
-    // TODO: we shouldn't be returning the user password at all
     axios
       .get(
-        '/api/user/' + JSON.parse(localStorage.getItem('authentication'))._id
+        '/api/user/' + JSON.parse(localStorage.getItem('authentication'))._id + '/deck'
       )
       .then(info => {
         const playerInfo = {
-          username: info.data.username,
-          avatar: info.data.avatar,
+          username: localStorage.getItem('username'),
+          avatar: localStorage.getItem('avatar'),
+          deck: info.data,
           number: this.state.playerNumber
         };
         this.socket.emit(
@@ -116,7 +115,8 @@ class Lobby extends Component {
       this.setState(
         {
           username1: playerInfo.username,
-          avatar1: playerInfo.avatar
+          avatar1: playerInfo.avatar,
+          deck1: playerInfo.deck
         },
         () => {
           if (this.state.avatar1 && this.state.avatar2) {
@@ -128,7 +128,8 @@ class Lobby extends Component {
       this.setState(
         {
           username2: playerInfo.username,
-          avatar2: playerInfo.avatar
+          avatar2: playerInfo.avatar,
+          deck2: playerInfo.deck
         },
         () => {
           if (this.state.avatar1 && this.state.avatar2) {
@@ -146,13 +147,10 @@ class Lobby extends Component {
   };
 
   // Duplicate user check
-
   checkUser = () => {
-    if (this.username1 === this.username2) {
-      console.log('DUPLICATE USER DETECTED');
+    if (this.state.username1 === this.state.username2) {
       this.exitGame();
     }
-
   };
 
   // Exit game should just redirect the user to the lobby
@@ -162,16 +160,17 @@ class Lobby extends Component {
 
   cleanUpPlayer = () => {
     this.setState({
-      username1: 'User 1',
-      username2: 'User 2',
-      avatar1: '',
+      username1: localStorage.getItem('username'),
+      username2: '',
+      avatar1: localStorage.getItem('avatar'),
       avatar2: '',
+      deck1: [],
+      deck2: [],
       playerNumber: 1
     });
 
     this.sendPlayerInfo();
-
-  }
+  };
 
   render() {
     return (
@@ -193,7 +192,9 @@ class Lobby extends Component {
                       ></img>
                     </div>
                     <h1 className='vs'>VS</h1>
-                    {!this.state.joinedLobby ? (<div></div>) : (
+                    {!this.state.joinedLobby ? (
+                      <div></div>
+                    ) : (
                       <div className='playerTwo'>
                         <h2>{this.state.username2}</h2>
                         <img
@@ -201,10 +202,9 @@ class Lobby extends Component {
                           alt='Player`s Chosen Avatar'
                           className='avatar'
                         ></img>
-                      </div>)}
-
+                      </div>
+                    )}
                   </div>
-
                   <div className='row'>
                     {!this.state.joinedLobby ? (
                       <input
@@ -217,7 +217,6 @@ class Lobby extends Component {
                       <p className='gameIdText'>{this.state.gameId}</p>
                     )}
                   </div>
-
                   <div className='row'>
                     {!this.state.allJoined ? (
                       <div className='button-col'>
@@ -242,12 +241,10 @@ class Lobby extends Component {
                 </div>
               </div>
             </Container>
-          </div >
+          </div>
         ) : (
-
           <Gameboard />
         )}
-
       </div>
     );
   }
