@@ -3,8 +3,6 @@ const db = require('../models');
 
 // This file empties the Books collection and inserts the books below
 
-// TODO: Add other imgs to cards with 'TBD'
-
 /*
 TRIGGERS:
    ONDEATH

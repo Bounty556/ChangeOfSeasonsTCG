@@ -93,6 +93,13 @@ class Lobby extends Component {
         '/api/user/' + JSON.parse(localStorage.getItem('authentication'))._id + '/deck'
       )
       .then(info => {
+        // Make sure this user has a deck that isn't empty
+        if (info.data && info.data.length === 0) {
+          // TODO: Maybe make some modal displaying this error?
+          console.log('Error: you need to select a deck first.');
+          this.exitGame();
+        }
+
         const playerInfo = {
           username: localStorage.getItem('username'),
           avatar: localStorage.getItem('avatar'),
@@ -106,7 +113,11 @@ class Lobby extends Component {
           playerInfo
         );
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        // TODO: Maybe make some modal displaying this error?
+        console.log('Error: could not find deck info');
+        this.exitGame();
+      });
   };
 
   updatePlayerInfo = playerInfo => {
