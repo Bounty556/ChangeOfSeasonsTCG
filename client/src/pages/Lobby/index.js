@@ -106,7 +106,10 @@ class Lobby extends Component {
           playerInfo
         );
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log('Error: could not find deck info');
+        this.exitGame();
+      });
   };
 
   updatePlayerInfo = playerInfo => {
