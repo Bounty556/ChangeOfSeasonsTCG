@@ -53,6 +53,7 @@ function UserProfile() {
         axios.get(`/api/user/${userId}`)
             .then(res => {
                 localStorage.setItem('avatar', res.data.avatar);
+                localStorage.setItem('username', res.data.username);
                 setAvatar(localStorage.getItem('avatar'));
             });
     }, []);
