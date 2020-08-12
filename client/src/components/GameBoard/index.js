@@ -4,7 +4,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import CardHolder from '../CardHolder';
 
-import Parser from './scriptParser';
+import Parser from './cardScript';
 
 import './gameboard.css';
 
@@ -17,6 +17,10 @@ export const CardContext = createContext({
 
 // TODO: We definitely need to redo the CSS for all of the cardholders and the cards themselves
 //       So things don't look awful
+// TODO: When we drag a card and hover it over a card slot, it should make the slot go grey or
+//       something similar so the user has some kind of feedback
+// TODO: When clicking and dragging the GameCard, the preview image is currently just the cards
+//       image, which looks awkward, so we should change that
 
 function GameBoard(props) {
   useEffect(() => {
