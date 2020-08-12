@@ -92,6 +92,50 @@ button {
     0 0 100px rgb(220, 20, 60),
     0 0 120px rgb(220, 20, 60);  
 }
+.springButton:hover { 
+    text-shadow:
+    0 0 1px #fff,
+    0 0 1px #fff,
+    0 0 2px #fff,
+    0 0 4px rgb(20, 220, 37),
+    0 0 8px rgb(20, 220, 37),
+    0 0 80px rgb(20, 220, 37),
+    0 0 100px rgb(20, 220, 37),
+    0 0 120px rgb(20, 220, 37);   
+}
+.summerButton:hover { 
+    text-shadow:
+    0 0 1px #fff,
+    0 0 1px #fff,
+    0 0 2px #fff,
+    0 0 4px rgb(238, 255, 1),
+    0 0 8px rgb(238, 255, 1),
+    0 0 80px rgb(238, 255, 1),
+    0 0 100px rgb(238, 255, 1),
+    0 0 120px rgb(238, 255, 1);   
+}
+.fallButton:hover { 
+    text-shadow:
+    0 0 1px #fff,
+    0 0 1px #fff,
+    0 0 2px #fff,
+    0 0 4px rgb(255, 94, 0),
+    0 0 8px rgb(255, 94, 0),
+    0 0 80px rgb(255, 94, 0),
+    0 0 100px rgb(255, 94, 0),
+    0 0 120px rgb(255, 94, 0);   
+}
+.winterButton:hover { 
+    text-shadow:
+    0 0 1px #fff,
+    0 0 1px #fff,
+    0 0 2px #fff,
+    0 0 4px rgb(20, 213, 220),
+    0 0 8px rgb(20, 213, 220),
+    0 0 80px rgb(20, 213, 220),
+    0 0 100px rgb(20, 213, 220),
+    0 0 120px rgb(20, 213, 220);   
+}
 
 .closeButtonModal {
     margin-right: 15px !important;
@@ -102,7 +146,7 @@ button {
 }
 
 .modalBody {
-    background-color: gray;
+    background-color: rgb(52, 30, 141);
     border-top-left-radius: .3rem;
     border-top-right-radius: .3rem;
     display: flex;
@@ -111,7 +155,7 @@ button {
 }
 
 .modalFooter {
-    background-color: #444;
+    background-color: rgb(34, 158, 194);
     border: none;
 }
 
