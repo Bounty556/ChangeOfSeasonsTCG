@@ -8,7 +8,7 @@
 .players { 
     display: flex;
     flex-direction: row;
-    justify-content: space-between !important;
+    justify-content: space-evenly !important;
 }
 
 .playerOne {

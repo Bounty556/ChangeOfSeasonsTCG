@@ -30,7 +30,7 @@ class Lobby extends Component {
     this.state = {
       username1: 'User 1',
       username2: 'User 2',
-      avatar1: '',
+      avatar1: (localStorage.getItem('avatar')),
       avatar2: '',
       gameId: 0,
       joinedLobby: false,
@@ -45,6 +45,7 @@ class Lobby extends Component {
   submitFunc = event => {
     event.preventDefault();
   };
+
 
   componentDidMount() {
     this.socket = socketIO(ENDPOINT);
@@ -140,15 +141,18 @@ class Lobby extends Component {
 
   startMatch = () => {
     this.checkUser();
+
     this.setState({ playGame: true });
   };
 
   // Duplicate user check
+
   checkUser = () => {
     if (this.username1 === this.username2) {
       console.log('DUPLICATE USER DETECTED');
       this.exitGame();
     }
+
   };
 
   // Exit game should just redirect the user to the lobby
@@ -166,6 +170,7 @@ class Lobby extends Component {
     });
 
     this.sendPlayerInfo();
+
   }
 
   render() {
@@ -188,14 +193,16 @@ class Lobby extends Component {
                       ></img>
                     </div>
                     <h1 className='vs'>VS</h1>
-                    <div className='playerTwo'>
-                      <h2>{this.state.username2}</h2>
-                      <img
-                        src={'./images/cardImg/' + this.state.avatar2}
-                        alt='Player`s Chosen Avatar'
-                        className='avatar'
-                      ></img>
-                    </div>
+                    {!this.state.joinedLobby ? (<div></div>) : (
+                      <div className='playerTwo'>
+                        <h2>{this.state.username2}</h2>
+                        <img
+                          src={'./images/cardImg/' + this.state.avatar2}
+                          alt='Player`s Chosen Avatar'
+                          className='avatar'
+                        ></img>
+                      </div>)}
+
                   </div>
 
                   <div className='row'>
@@ -235,10 +242,12 @@ class Lobby extends Component {
                 </div>
               </div>
             </Container>
-          </div>
+          </div >
         ) : (
+
           <Gameboard />
         )}
+
       </div>
     );
   }

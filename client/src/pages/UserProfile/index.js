@@ -189,10 +189,10 @@ function UserProfile() {
 
                     <Modal.Body className='modalBody'>
                         <Container className='modalContainer'>
-                            <Button type='button' onClick={selectSpring}>Spring</Button>
-                            <Button type='button' onClick={selectSummer}>Summer</Button>
-                            <Button type='button' onClick={selectFall}>Fall</Button>
-                            <Button type='button' onClick={selectWinter}>Winter</Button>
+                            <Button type='button' className='springButton' onClick={selectSpring}>Spring</Button>
+                            <Button type='button' className='summerButton' onClick={selectSummer}>Summer</Button>
+                            <Button type='button' className='fallButton' onClick={selectFall}>Fall</Button>
+                            <Button type='button' className='winterButton' onClick={selectWinter}>Winter</Button>
                         </Container>
                     </Modal.Body>
 
