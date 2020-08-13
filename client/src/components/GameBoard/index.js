@@ -17,12 +17,15 @@ export const CardContext = createContext({
   playerDeck: null
 });
 
+// FRONTEND:
 // TODO: We definitely need to redo the CSS for all of the cardholders and the cards themselves
 //       So things don't look awful
 // TODO: When we drag a card and hover it over a card slot, it should make the slot go grey or
 //       something similar so the user has some kind of feedback
-// TODO: When clicking and dragging the GameCard, the preview image is currently just the cards
-//       image, which looks awkward, so we should change that
+
+// BACKEND:
+// TODO: Show backs of cards in place of enemy's face down cards
+// TODO: Clean up code!!!!!
 
 // useEffect(() => {
 //   const test = Parser.parseScript(
@@ -32,52 +35,97 @@ export const CardContext = createContext({
 // }, []);
 
 function GameBoard(props) {
-  const { socket, deck, playerNumber } = useContext(GameContext);
+  const { socket, gameId, deck, playerNumber } = useContext(GameContext);
 
-  const [cards, setCards] = useState([
-    {
-      uId: 0,
-      key: 0,
-      season: 'Summer',
-      position: 'userPlayArea',
-      name: 'Gudrun',
-      img: 'buddy.png',
-      attack: 2,
-      resourceCost: 2,
-      health: 3
-    }
-  ]);
   const [playerDeck, setPlayerDeck] = useState(
     deck.map((card, i) => {
       card.key = i;
       card.uId = i;
       card.position = '';
       return card;
-    }));
+    })
+  );
+
+  const [opponentBoardData, setOpponentBoardData] = useState({
+    opponentPlayAreaCount: 5,
+    opponentHasGrave: false,
+    opponentHasDeck: true,
+    userDef1: null,
+    userDef2: null,
+    userAtt1: null,
+    userAtt2: null,
+    userAtt3: null
+  });
+
+  useEffect(() => {
+    // If we had previous listeners, remove those
+    socket.off('updateOpponentPlayArea');
+    socket.off('updateOpponentCardPlacement');
+    // Set up our socket
+    socket.on('updateOpponentPlayArea', ({ changeAmount, player }) => {
+      if (player !== playerNumber) {
+        const boardData = { ...opponentBoardData };
+        boardData.opponentPlayAreaCount += changeAmount;
+        setOpponentBoardData(prevState => ({ ...prevState, ...boardData }));
+      }
+    });
+    socket.on(
+      'updateOpponentCardPlacement',
+      ({ cardData, position, player }) => {
+        if (player !== playerNumber) {
+          const boardData = { ...opponentBoardData };
+          boardData[position] = cardData;
+          setOpponentBoardData(prevState => ({ ...prevState, ...boardData }));
+        }
+      }
+    );
+  }, [opponentBoardData]);
 
   useEffect(() => {
     // Shuffle player deck
-    const shuffledDeck = GameLogic.shuffleArray(playerDeck);
-    const assignedDeck = GameLogic.assignHand(shuffledDeck);
-    setPlayerDeck(assignedDeck);
+    const copy = playerDeck.map(card => {
+      return { ...card };
+    });
+    setPlayerDeck(GameLogic.assignHand(GameLogic.shuffleArray(copy)));
   }, []);
 
   const cardDraggedToPosition = (cardId, position) => {
-
     // Check to see if this is a position that can't hold multiple cards
     if (position !== 'userPlayArea') {
       // Check to see if the position already has a card
-      const cardIndex = playerDeck.findIndex(card => card.position === position);
+      const cardIndex = playerDeck.findIndex(
+        card => card.position === position
+      );
       if (cardIndex !== -1) {
         return;
-      } 
+      }
     }
 
     // Look for the card with the given cardkey
     const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
     const cardVal = playerDeck[cardIndex];
+
+    if (position !== 'userPlayArea') {
+      // Send info to enemy saying we moved a card into a position
+      socket.emit('room', gameId, 'updateOpponentCardPlacement', {
+        cardData: cardVal,
+        position: position,
+        player: playerNumber
+      });
+    } else if (
+      position === 'userPlayArea' &&
+      cardVal.position !== 'userPlayArea'
+    ) {
+      // Send info to enemy saying we moved a card away from a position
+      socket.emit('room', gameId, 'updateOpponentCardPlacement', {
+        cardData: null,
+        position: cardVal.position,
+        player: playerNumber
+      });
+    }
+
     cardVal.position = position;
-    setCards([...playerDeck.filter(card => card.uId !== cardId), cardVal]);
+    setPlayerDeck([...playerDeck.filter(card => card.uId !== cardId), cardVal]);
   };
 
   return (
@@ -91,14 +139,34 @@ function GameBoard(props) {
           </div>
 
           <div id='opponentDefRow'>
-            <CardHolder id='opponentDef1' />
-            <CardHolder id='opponentDef2' />
+            <CardHolder
+              id='opponentDef1'
+              override={true}
+              card={opponentBoardData.userDef1}
+            />
+            <CardHolder
+              id='opponentDef2'
+              override={true}
+              card={opponentBoardData.userDef2}
+            />
           </div>
 
           <div id='opponentAttRow'>
-            <CardHolder id='opponentAtt1' />
-            <CardHolder id='opponentAtt2' />
-            <CardHolder id='opponentAtt3' />
+            <CardHolder
+              id='opponentAtt1'
+              override={true}
+              card={opponentBoardData.userAtt1}
+            />
+            <CardHolder
+              id='opponentAtt2'
+              override={true}
+              card={opponentBoardData.userAtt2}
+            />
+            <CardHolder
+              id='opponentAtt3'
+              override={true}
+              card={opponentBoardData.userAtt3}
+            />
           </div>
         </div>
 
