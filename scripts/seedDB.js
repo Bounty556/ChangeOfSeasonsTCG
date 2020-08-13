@@ -44,7 +44,7 @@ const cardSeed = [
     resourceCost: 2,
     attack: 3,
     health: 2,
-    name: 'Jacinto the masked one',
+    name: 'Jacinto',
     img: 'mask_01.png'
   },
   {
@@ -261,7 +261,7 @@ const cardSeed = [
     attack: 5,
     health: 2,
     name: 'Cursed Dromaeo',
-    img: 'deamon_05.png'
+    img: 'demon_05.png'
   },
   {
     season: 'Fall',
