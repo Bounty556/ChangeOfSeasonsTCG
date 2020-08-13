@@ -158,32 +158,38 @@ const cardSeed = [
   {
     season: 'Spring',
     cardId: 13,
-    isCreature: true,
-    resourceCost: 4,
-    attack: 4,
-    health: 3,
-    name: 'Zevran',
-    img: 'golem_02.png'
+    isCreature: false,
+    resourceCost: 5,
+    attack: 0,
+    health: 0,
+    effect: 'Gain 2 resource spots ',
+    effectScript: 'ONPLAY RES 2',
+    name: 'Concentration of Nature',
+    img: 'emerald_9.png'
   },
   {
     season: 'Summer',
     cardId: 14,
-    isCreature: true,
+    isCreature: false,
     resourceCost: 4,
-    attack: 3,
-    health: 4,
-    name: 'Arven',
-    img: 'bug.png'
+    attack: 0,
+    health: 0,
+    effect: 'give attack row 1 extra attack ',
+    effectScript: 'ONPLAY RAISEATK ATKROW 1 ALL',
+    name: 'Assault of Nature',
+    img: 'green_11.png'
   },
   {
     season: 'Fall',
     cardId: 15,
     isCreature: true,
-    resourceCost: 4,
-    attack: 3,
-    health: 4,
-    name: 'Jarian',
-    img: 'emerald (7).png'
+    resourceCost: 3,
+    attack: 0,
+    health: 0,
+    effect: 'Destroy 1 of your own minions - give the rest 1 attack',
+    effectScript: 'ONPLAY KILL TARGET SELF ATKROW 1 ALL',
+    name: 'Mystic Typhoon',
+    img: 'blue_25.png'
   },
   {
     season: 'Winter',
@@ -191,189 +197,15 @@ const cardSeed = [
     isCreature: true,
     resourceCost: 4,
     attack: 0,
-    health: 7,
-    name: 'Wall of Swords',
-    img: 'red (34).png'
+    health: 0,
+    effect: 'Give defense row 2 extra health ',
+    effectScript: 'ONPLAY RAISEDEF 2 ALL',
+    name: 'Phantom Form',
+    img: 'violet_11.png'
   },
   {
     season: 'Spring',
     cardId: 17,
-    isCreature: true,
-    resourceCost: 4,
-    attack: 3,
-    health: 4,
-    name: 'Zothogth',
-    img: 'insect_02.png'
-  },
-  {
-    season: 'Summer',
-    cardId: 18,
-    isCreature: true,
-    resourceCost: 4,
-    attack: 5,
-    health: 2,
-    name: 'Cursed Dromaeo',
-    img: 'deamon_05.png'
-  },
-  {
-    season: 'Fall',
-    cardId: 19,
-    isCreature: true,
-    resourceCost: 4,
-    attack: 6,
-    health: 1,
-    name: 'Thuolond the unsuspecting Jin',
-    img: 'jin.png'
-  },
-  {
-    season: 'Winter',
-    cardId: 20,
-    isCreature: true,
-    resourceCost: 4,
-    attack: 2,
-    health: 5,
-    name: 'Shuasheme',
-    img: 'frost_giant_01.png'
-  },
-  {
-    season: 'Spring',
-    cardId: 21,
-    isCreature: true,
-    resourceCost: 5,
-    attack: 4,
-    health: 5,
-    name: 'Yiennare',
-    img: 'living_armor_02.png'
-  },
-  {
-    season: 'Summer',
-    cardId: 22,
-    isCreature: true,
-    resourceCost: 5,
-    attack: 5,
-    health: 4,
-    name: 'Vegnessss',
-    img: 'lizardman_01.png'
-  },
-  {
-    season: 'Fall',
-    cardId: 23,
-    isCreature: true,
-    resourceCost: 5,
-    attack: 6,
-    health: 3,
-    name: 'Nithrilar',
-    img: 'orc_03.png'
-  },
-  {
-    season: 'Winter',
-    cardId: 24,
-    isCreature: true,
-    resourceCost: 5,
-    attack: 4,
-    health: 5,
-    name: 'Lykoo',
-    img: 'crystal_golem_01.png'
-  },
-  {
-    season: 'Spring',
-    cardId: 25,
-    isCreature: true,
-    resourceCost: 5,
-    attack: 3,
-    health: 3,
-    effect: 'Gain an extra resource',
-    effectScript: 'ONPLAY RES SELF 1',
-    name: 'Rynia',
-    img: 'dragon_01.png'
-  },
-  {
-    season: 'Summer',
-    cardId: 26,
-    isCreature: true,
-    resourceCost: 5,
-    attack: 3,
-    health: 3,
-    effect: 'Deal 5 damage to an enemy minion or player',
-    effectScript: 'ONPLAY DMG 5',
-    name: 'Vyniho',
-    img: 'dragon_04.png'
-  },
-  {
-    season: 'Fall',
-    cardId: 27,
-    isCreature: true,
-    resourceCost: 5,
-    attack: 3,
-    health: 3,
-    effect: 'Destroy 1 enemy resource',
-    effectScript: 'ONPLAY RES OPP -1',
-    name: 'Tirdyha',
-    img:'dragon_03.png'
-  },
-  {
-    season: 'Winter',
-    cardId: 28,
-    isCreature: true,
-    resourceCost: 5,
-    attack: 3,
-    health: 3,
-    effect: 'Draw a card',
-    effectScript: 'ONPLAY DRAW 1',
-    name: 'Nymymnas',
-    img: 'dragon_05.png'
-  },
-  {
-    season: 'Spring',
-    cardId: 29,
-    isCreature: false,
-    resourceCost: 5,
-    attack: 0,
-    health: 0,
-    effect: 'Gain 2 resource',
-    effectScript: 'ONPLAY RES SELF 2',
-    name: 'Concentration of Nature',
-    img: 'emerald (9).png'
-  },
-  {
-    season: 'Summer',
-    cardId: 30,
-    isCreature: false,
-    resourceCost: 4,
-    attack: 0,
-    health: 0,
-    effect: 'Give attack row +1ATK',
-    effectScript: 'ONPLAY RAISEATK ATKROW 1',
-    name: 'Assault of Nature',
-    img: 'green (11).png'
-  },
-  {
-    season: 'Fall',
-    cardId: 31,
-    isCreature: false,
-    resourceCost: 3,
-    attack: 0,
-    health: 0,
-    effect: 'Destroy 1 of your own minions - give the rest +1ATK',
-    effectScript: 'ONPLAY KILL SELF RAISEATK ALL 1',
-    name: 'Mystic Typhoon',
-    img: 'blue (25)'
-  },
-  {
-    season: 'Winter',
-    cardId: 32,
-    isCreature: false,
-    resourceCost: 4,
-    attack: 0,
-    health: 0,
-    effect: 'Give defense row +2DEF',
-    effectScript: 'ONPLAY RAISEDEF DEFROW 2',
-    name: 'Phantom Form',
-    img: 'violet (11).png'
-  },
-  {
-    season: 'Spring',
-    cardId: 33,
     isCreature: true,
     resourceCost: 4,
     attack: 4,
@@ -383,7 +215,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardId: 34,
+    cardId: 18,
     isCreature: true,
     resourceCost: 4,
     attack: 3,
@@ -393,27 +225,27 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardId: 35,
+    cardId: 19,
     isCreature: true,
     resourceCost: 4,
     attack: 3,
     health: 4,
     name: 'Jarian',
-    img: 'emerald (7).png'
+    img: 'emerald_7.png'
   },
   {
     season: 'Winter',
-    cardId: 36,
+    cardId: 20,
     isCreature: true,
     resourceCost: 4,
     attack: 0,
     health: 7,
     name: 'Wall of Swords',
-    img: 'red (34).png'
+    img: 'red_34.png'
   },
   {
     season: 'Spring',
-    cardId: 37,
+    cardId: 21,
     isCreature: true,
     resourceCost: 4,
     attack: 3,
@@ -423,7 +255,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardId: 38,
+    cardId: 22,
     isCreature: true,
     resourceCost: 4,
     attack: 5,
@@ -433,7 +265,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardId: 39,
+    cardId: 23,
     isCreature: true,
     resourceCost: 4,
     attack: 6,
@@ -443,7 +275,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardId: 40,
+    cardId: 24,
     isCreature: true,
     resourceCost: 4,
     attack: 2,
@@ -453,7 +285,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardId: 41,
+    cardId: 25,
     isCreature: true,
     resourceCost: 5,
     attack: 4,
@@ -463,7 +295,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardId: 42,
+    cardId: 26,
     isCreature: true,
     resourceCost: 5,
     attack: 5,
@@ -473,7 +305,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardId: 43,
+    cardId: 27,
     isCreature: true,
     resourceCost: 5,
     attack: 6,
@@ -483,7 +315,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardId: 44,
+    cardId: 28,
     isCreature: true,
     resourceCost: 5,
     attack: 4,
@@ -493,19 +325,19 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardId: 45,
+    cardId: 29,
     isCreature: true,
     resourceCost: 5,
     attack: 3,
     health: 3,
     effect: 'Gain an extra resource',
-    effecScript: 'ONPLAY RES SELF 1',
+    effectScript: 'ONPLAY RES SELF 1',
     name: 'Rynia',
-    img: 'emerald (13).png'
+    img: 'emerald_13.png'
   },
   {
     season: 'Summer',
-    cardId: 46,
+    cardId: 30,
     isCreature: true,
     resourceCost: 5,
     attack: 3,
@@ -513,11 +345,11 @@ const cardSeed = [
     effect: 'Deal 5 damage to an enemy minion or player',
     effectScript: 'ONPLAY DMG 5',
     name: 'Vyniho',
-    img: 'red (1).png'
+    img: 'red_1.png'
   },
   {
     season: 'Fall',
-    cardId: 47,
+    cardId: 31,
     isCreature: true,
     resourceCost: 5,
     attack: 3,
@@ -525,11 +357,11 @@ const cardSeed = [
     effect: 'Destroy 1 enemy resource',
     effectScript: 'ONPLAY RES OPP -1',
     name: 'Tirdyha',
-    img: 'skeleton_02.png'
+    img:'skeleton_02.png'
   },
   {
     season: 'Winter',
-    cardId: 48,
+    cardId: 32,
     isCreature: true,
     resourceCost: 5,
     attack: 3,
@@ -537,79 +369,79 @@ const cardSeed = [
     effect: 'Draw a card',
     effectScript: 'ONPLAY DRAW 1',
     name: 'Nymymnas',
-    img: 'blue (26).png'
+    img: 'blue_26.png'
   },
   {
     season: 'Spring',
-    cardId: 49,
+    cardId: 33,
     isCreature: false,
-    resourceCost: 5,
+    resourceCost: 7,
     attack: 0,
     health: 0,
-    effect: 'Draw 3 Card',
+    effect: 'Draw 3 cards',
     effectScript: 'ONPLAY DRAW 3',
     name: 'Runes of Calling',
-    img: 'yellow (22).png'
+    img: 'yellow_22.png'
   },
   {
     season: 'Summer',
-    cardId: 50,
+    cardId: 34,
     isCreature: false,
     resourceCost: 6,
     attack: 0,
     health: 0,
-    effect: 'Restore 15 life to all your creatures',
+    effect: 'restore 15 life to all your creatures ',
     effectScript: 'ONPLAY HEAL ALL 15',
     name: 'Call of Health',
-    img: 'green (22).png'
+    img: 'green_22.png'
   },
   {
     season: 'Fall',
-    cardId: 51,
+    cardId: 35,
     isCreature: false,
-    resourceCost: 7,
+    resourceCost: 8,
     attack: 0,
     health: 0,
-    effect: 'Give all your creatures +2ATK',
-    effectScript: 'ONPLAY RAISEATK ALL 2',
+    effect: 'Give all your creatures +2 attack ',
+    effectScript: 'ONPLAY RAISEATK 2 ALL',
     name: 'Hidden Dagger',
-    img: 'yellow (37).png'
+    img: 'yellow_37.png'
   },
   {
     season: 'Winter',
-    cardId: 52,
+    cardId: 36,
     isCreature: false,
     resourceCost: 7,
     attack: 0,
     health: 0,
-    effect: 'Destroy all creatures',
-    effectScript: 'ONPLAY KILL ALL',
+    effect: 'Give all your creatures +2 attack ',
+    effectScript: 'ONPLAY RAISEATK 2 ALL',
     name: 'Seal of Death',
-    img: 'blue (1).png'
+    img: 'blue_1.png'
   },
   {
     season: 'Spring',
-    cardId: 53,
+    cardId: 37,
     isCreature: true,
     resourceCost: 6,
     attack: 5,
     health: 5,
     name: 'Slughorth',
-    img: 'green (27).png'
+    img: 'green_27.png'
   },
   {
     season: 'Summer',
-    cardId: 54,
+    cardId: 38,
     isCreature: true,
     resourceCost: 6,
     attack: 5,
     health: 5,
     name: 'Vrunteghe',
-    img: 'emerald (4).png'
+    img: 'emerald_4.png'
   },
   {
     season: 'Fall',
-    cardId: 55,
+    cardId: 39,
     isCreature: true,
     resourceCost: 6,
     attack: 6,
@@ -619,17 +451,17 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardId: 56,
+    cardId: 40,
     isCreature: true,
     resourceCost: 6,
     attack: 4,
     health: 6,
     name: 'Brethraodduss',
-    img: 'blue (37).png'
+    img: 'blue_37.png'
   },
   {
     season: 'Spring',
-    cardId: 57,
+    cardId: 41,
     isCreature: true,
     resourceCost: 6,
     attack: 3,
@@ -637,11 +469,11 @@ const cardSeed = [
     effect: 'Draw a card',
     effectScript: 'ONPLAY DRAW 1',
     name: 'Wiubhun',
-    img: 'green (18).png'
+    img: 'green_18.png'
   },
   {
     season: 'Summer',
-    cardId: 58,
+    cardId: 42,
     isCreature: true,
     resourceCost: 6,
     attack: 3,
@@ -653,7 +485,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardId: 59,
+    cardId: 43,
     isCreature: true,
     resourceCost: 6,
     attack: 3,
@@ -665,7 +497,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardId: 60,
+    cardId: 44,
     isCreature: true,
     resourceCost: 6,
     attack: 3,
@@ -677,7 +509,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardId: 61,
+    cardId: 45,
     isCreature: true,
     resourceCost: 7,
     attack:5,
@@ -687,7 +519,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardId: 62,
+    cardId: 46,
     isCreature: true,
     resourceCost: 7,
     attack: 5,
@@ -697,7 +529,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardId: 63,
+    cardId: 47,
     isCreature: true,
     resourceCost: 7,
     attack: 5,
@@ -707,7 +539,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardId: 64,
+    cardId: 48,
     isCreature: true,
     resourceCost: 7,
     attack: 5,
@@ -717,7 +549,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardId: 65,
+    cardId: 49,
     isCreature: true,
     resourceCost: 7,
     attack:3,
@@ -729,7 +561,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardId: 66,
+    cardId: 50,
     isCreature: true,
     resourceCost: 7,
     attack: 3,
@@ -741,7 +573,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardId: 67,
+    cardId: 51,
     isCreature: true,
     resourceCost: 7,
     attack: 3,
@@ -753,7 +585,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardId: 68,
+    cardId: 52,
     isCreature: true,
     resourceCost: 7,
     attack: 3,
@@ -761,11 +593,11 @@ const cardSeed = [
     effect: 'When this dies return it to your hand',
     effectScript: 'ONDEATH RTNHND',
     name: 'Volmuloelle',
-    img: 'blue (32).png'
+    img: 'blue_32.png'
   },
   {
     season: 'Spring',
-    cardId: 69,
+    cardId: 53,
     isCreature: true,
     resourceCost: 8,
     attack: 6,
@@ -775,27 +607,27 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardId: 70,
+    cardId: 54,
     isCreature: true,
     resourceCost: 8,
     attack: 6,
     health: 6,
     name: 'Nemastos',
-    img: 'violet (21).png'
+    img: 'violet_21.png'
   },
   {
     season: 'Fall',
-    cardId: 71,
+    cardId: 55,
     isCreature: true,
     resourceCost: 8,
     attack: 6,
     health: 6,
     name: 'Alcinysius',
-    img: 'red (2).png'
+    img: 'red_2.png'
   },
   {
     season: 'Winter',
-    cardId: 72,
+    cardId: 56,
     isCreature: true,
     resourceCost: 8,
     attack: 6,
@@ -805,7 +637,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardId: 73,
+    cardId: 57,
     isCreature: true,
     resourceCost: 8,
     attack:4,
@@ -817,7 +649,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardId: 74,
+    cardId: 58,
     isCreature: true,
     resourceCost: 8,
     attack: 4,
@@ -829,7 +661,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardId: 75,
+    cardId: 59,
     isCreature: true,
     resourceCost: 8,
     attack: 4,
@@ -841,7 +673,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardId: 76,
+    cardId: 60,
     isCreature: true,
     resourceCost: 8,
     attack: 4,
@@ -853,7 +685,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardId: 77,
+    cardId: 61,
     isCreature: false,
     resourceCost: 9,
     attack:0,
@@ -861,11 +693,11 @@ const cardSeed = [
     effect: 'Draw cards until your hand is full',
     effectScript: 'ONPLAY DRAW FULL',
     name: 'Deep Pockets',
-    img: 'gray (5).png'
+    img: 'gray_5.png'
   },
   {
     season: 'Summer',
-    cardId: 78,
+    cardId: 62,
     isCreature: false,
     resourceCost: 9,
     attack: 0,
@@ -873,11 +705,11 @@ const cardSeed = [
     effect: 'Deal 10 damage to an enemy minion or player',
     effectScript: 'ONPLAY DMG 10',
     name: 'Fires of the Divine',
-    img: 'violet (28).png'
+    img: 'violet_28.png'
   },
   {
     season: 'Fall',
-    cardId: 79,
+    cardId: 63,
     isCreature: false,
     resourceCost: 9,
     attack: 0,
@@ -885,11 +717,11 @@ const cardSeed = [
     effect: 'You may play a card from your graveyard for free',
     effectScript: 'ONPLAY ADDEFFECT "ONDEATH RTNHND"',
     name: 'Gravediggers Delight',
-    img: 'emerald (3).png'
+    img: 'emerald_3.png'
   },
   {
     season: 'Winter',
-    cardId: 80,
+    cardId: 64,
     isCreature: false,
     resourceCost: 9,
     attack: 0,
@@ -897,21 +729,21 @@ const cardSeed = [
     effect: 'Give all your minions +4ATK',
     effectScript: 'ONPLAY RAISEATK ALL 4',
     name: 'Winter`s End',
-    img: 'violet (4).png'
+    img: 'violet_4.png'
   },
   {
     season: 'Spring',
-    cardId: 81,
+    cardId: 65,
     isCreature: true,
     resourceCost: 9,
     attack:6,
     health: 7,
     name: 'Sühkgüi',
-    img: 'violet (11).png'
+    img: 'violet_11.png'
   },
   {
     season: 'Summer',
-    cardId: 82,
+    cardId: 66,
     isCreature: true,
     resourceCost: 9,
     attack:6,
@@ -921,17 +753,17 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardId: 83,
+    cardId: 67,
     isCreature: true,
     resourceCost: 9,
     attack:6,
     health: 7,
     name: 'Nertsetseg',
-    img: 'yellow (40).png'
+    img: 'yellow_40.png'
   },
   {
     season: 'Winter',
-    cardId: 84,
+    cardId: 68,
     isCreature: true,
     resourceCost: 9,
     attack:6,
@@ -941,7 +773,7 @@ const cardSeed = [
   },
   {
     season: 'Spring',
-    cardId: 85,
+    cardId: 69,
     isCreature: true,
     resourceCost: 9,
     attack:5,
@@ -953,7 +785,7 @@ const cardSeed = [
   },
   {
     season: 'Summer',
-    cardId: 86,
+    cardId: 70,
     isCreature: true,
     resourceCost: 9,
     attack:5,
@@ -965,7 +797,7 @@ const cardSeed = [
   },
   {
     season: 'Fall',
-    cardId: 87,
+    cardId: 71,
     isCreature: true,
     resourceCost: 9,
     attack:5,
@@ -977,7 +809,7 @@ const cardSeed = [
   },
   {
     season: 'Winter',
-    cardId: 88,
+    cardId: 72,
     isCreature: true,
     resourceCost: 9,
     attack:5,
