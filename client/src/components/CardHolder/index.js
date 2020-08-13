@@ -11,17 +11,25 @@ function CardHolder(props) {
 
   const [, drop] = useDrop({
     accept: ItemTypes.CARD,
-    drop: (item) => cardDraggedToPosition(item.uId, props.id)
+    drop: item => cardDraggedToPosition(item.uId, props.id)
   });
 
   return (
     <div id={props.id} ref={drop}>
       <Card>
-        {playerDeck
-          .filter(card => card.position === props.id)
-          .map(card => {
-            return <GameCard {...card} />;
-          })}
+        {props.override ? (
+          props.card ? (
+            <GameCard {...props.card} />
+          ) : (
+            <></>
+          )
+        ) : (
+          playerDeck
+            .filter(card => card.position === props.id)
+            .map(card => {
+              return <GameCard {...card} />;
+            })
+        )}
       </Card>
     </div>
   );

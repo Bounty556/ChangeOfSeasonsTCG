@@ -16,7 +16,8 @@ const ENDPOINT = 'http://localhost:3001/';
 
 export const GameContext = createContext({
   socket: null,
-  deck: [],
+  gameId: null,
+  deck: null,
   playerNumber: null
 });
 
@@ -296,8 +297,9 @@ class Lobby extends Component {
           <GameContext.Provider
             value={{
               socket: this.socket,
+              gameId: this.state.gameId,
               deck: this.state.deck,
-              player: this.state.playerNumber
+              playerNumber: this.state.playerNumber
             }}
           >
             <Gameboard />
