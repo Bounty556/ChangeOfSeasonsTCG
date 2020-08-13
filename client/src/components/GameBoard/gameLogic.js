@@ -1,4 +1,7 @@
 export default {
+  enemyAtkRows: ['opponentAtt1', 'opponentAtt2'],
+  enemyDefRows: ['opponentDef1', 'opponentDef2', 'opponentDef3'],
+
   shuffleArray: function(array) {
     for (let i = 0; i < 50; i++) {
       // Swap these elements in the array

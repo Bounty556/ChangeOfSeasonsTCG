@@ -91,13 +91,20 @@ function GameBoard(props) {
   }, []);
 
   const cardDraggedToPosition = (cardId, position) => {
-    // Check to see if this is a position that can't hold multiple cards
     if (position !== 'userPlayArea') {
       // Check to see if the position already has a card
       const cardIndex = playerDeck.findIndex(
         card => card.position === position
       );
       if (cardIndex !== -1) {
+        return;
+      }
+
+      // Check to see if this is an enemy position
+      if (
+        GameLogic.enemyAtkRows.includes(position) ||
+        GameLogic.enemyDefRows.includes(position)
+      ) {
         return;
       }
     }
@@ -135,6 +142,7 @@ function GameBoard(props) {
           changeAmount: 1,
           player: playerNumber
         });
+        position = '';
       }
     }
 
@@ -147,9 +155,18 @@ function GameBoard(props) {
       <DndProvider backend={HTML5Backend}>
         <div className='wrapper'>
           <div id='opponentRow'>
-            <OpponentCardHolder id='opponentGrave' cardCount={opponentBoardData.opponentHasGrave ? 1 : 0} />
-            <OpponentCardHolder id='opponentDeck' cardCount={opponentBoardData.opponentHasDeck ? 1 : 0} />
-            <OpponentCardHolder id='opponentPlayArea' cardCount={opponentBoardData.opponentPlayAreaCount} />
+            <OpponentCardHolder
+              id='opponentGrave'
+              cardCount={opponentBoardData.opponentHasGrave ? 1 : 0}
+            />
+            <OpponentCardHolder
+              id='opponentDeck'
+              cardCount={opponentBoardData.opponentHasDeck ? 1 : 0}
+            />
+            <OpponentCardHolder
+              id='opponentPlayArea'
+              cardCount={opponentBoardData.opponentPlayAreaCount}
+            />
           </div>
 
           <div id='opponentDefRow'>
