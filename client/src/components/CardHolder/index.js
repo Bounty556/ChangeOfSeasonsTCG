@@ -7,17 +7,17 @@ import ItemTypes from '../../utils/ItemTypes';
 import GameCard from '../GameCard';
 
 function CardHolder(props) {
-  const { cardDraggedToPosition, cards } = useContext(CardContext);
+  const { cardDraggedToPosition, playerDeck } = useContext(CardContext);
 
   const [, drop] = useDrop({
     accept: ItemTypes.CARD,
-    drop: (item) => cardDraggedToPosition(item.id, props.id)
+    drop: (item) => cardDraggedToPosition(item.uId, props.id)
   });
 
   return (
     <div id={props.id} ref={drop}>
       <Card>
-        {cards
+        {playerDeck
           .filter(card => card.position === props.id)
           .map(card => {
             return <GameCard {...card} />;

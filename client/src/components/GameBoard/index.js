@@ -3,8 +3,10 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import CardHolder from '../CardHolder';
+import { GameContext } from '../../pages/Lobby';
 
 import Parser from './cardScript';
+import GameLogic from './gameLogic';
 
 import './gameboard.css';
 
@@ -12,7 +14,7 @@ import './gameboard.css';
 // A card was dropped on them
 export const CardContext = createContext({
   cardDraggedToPosition: null,
-  cards: null
+  playerDeck: null
 });
 
 // TODO: We definitely need to redo the CSS for all of the cardholders and the cards themselves
@@ -30,7 +32,7 @@ export const CardContext = createContext({
 // }, []);
 
 function GameBoard(props) {
-  const { socket, deck} = useContext(CardContext);
+  const { socket, deck, playerNumber } = useContext(GameContext);
 
   const [cards, setCards] = useState([
     {
@@ -45,18 +47,41 @@ function GameBoard(props) {
       health: 3
     }
   ]);
-  const [playerDeck, setPlayerDeck] = useState([]);
+  const [playerDeck, setPlayerDeck] = useState(
+    deck.map((card, i) => {
+      card.key = i;
+      card.uId = i;
+      card.position = '';
+      return card;
+    }));
+
+  useEffect(() => {
+    // Shuffle player deck
+    const shuffledDeck = GameLogic.shuffleArray(playerDeck);
+    const assignedDeck = GameLogic.assignHand(shuffledDeck);
+    setPlayerDeck(assignedDeck);
+  }, []);
 
   const cardDraggedToPosition = (cardId, position) => {
+
+    // Check to see if this is a position that can't hold multiple cards
+    if (position !== 'userPlayArea') {
+      // Check to see if the position already has a card
+      const cardIndex = playerDeck.findIndex(card => card.position === position);
+      if (cardIndex !== -1) {
+        return;
+      } 
+    }
+
     // Look for the card with the given cardkey
-    const cardIndex = cards.findIndex(card => card.uId === cardId);
-    const cardVal = cards[cardIndex];
+    const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
+    const cardVal = playerDeck[cardIndex];
     cardVal.position = position;
-    setCards([...cards.filter(card => card.uId !== cardId), cardVal]);
+    setCards([...playerDeck.filter(card => card.uId !== cardId), cardVal]);
   };
 
   return (
-    <CardContext.Provider value={{ cardDraggedToPosition, cards }}>
+    <CardContext.Provider value={{ cardDraggedToPosition, playerDeck }}>
       <DndProvider backend={HTML5Backend}>
         <div className='wrapper'>
           <div id='opponentRow'>

@@ -8,7 +8,7 @@ import './GameCard.css';
 
 function GameCard(props) {
   const [, drag, preview] = useDrag({
-    item: { type: ItemTypes.CARD, id: props.uId }
+    item: { type: ItemTypes.CARD, uId: props.uId }
   });
 
   return (
