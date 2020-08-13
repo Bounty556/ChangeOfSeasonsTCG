@@ -112,10 +112,7 @@ function GameBoard(props) {
         position: position,
         player: playerNumber
       });
-    } else if (
-      position === 'userPlayArea' &&
-      cardVal.position !== 'userPlayArea'
-    ) {
+    } else if (cardVal.position !== 'userPlayArea') {
       // Send info to enemy saying we moved a card away from a position
       socket.emit('room', gameId, 'updateOpponentCardPlacement', {
         cardData: null,
