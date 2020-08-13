@@ -7,7 +7,10 @@ import Gameboard from '../../components/GameBoard/index';
 import socketIO from 'socket.io-client';
 import axios from 'axios';
 
+import Modal from 'react-bootstrap/Modal';
+
 import './lobby.css';
+import { ModalBody } from 'react-bootstrap';
 
 const ENDPOINT = 'http://localhost:3001/';
 
@@ -38,7 +41,8 @@ class Lobby extends Component {
       joinedLobby: false,
       playGame: false,
       allJoined: false,
-      playerNumber: -1
+      playerNumber: -1,
+      showModal: false
     };
 
     this.socket = null;
@@ -106,7 +110,9 @@ class Lobby extends Component {
         if (info.data && info.data.length === 0) {
           // TODO: Maybe make some modal displaying this error?
           console.log('Error: you need to select a deck first.');
-          return this.exitGame();
+          return this.setState({
+            showModal: true
+          });
         }
 
         // set our deck
@@ -127,7 +133,9 @@ class Lobby extends Component {
       .catch(err => {
         // TODO: Maybe make some modal displaying this error?
         console.log('Error: could not find deck info');
-        this.exitGame();
+        this.setState({
+          showModal: true
+        });
       });
   };
 
@@ -269,6 +277,19 @@ class Lobby extends Component {
                   </div>
                 </div>
               </div>
+
+              {/* Error Modal */}
+              <Modal className='errorModal' show={this.state.showModal}>
+                {/* Body */}
+                <Modal.Body className='modalBody'>
+                      <p>Looks like you haven't choosen a deck yet. Head to your profile and select "Choose Deck" to play!</p>
+                </Modal.Body>
+
+                {/* Footer */}
+                <Modal.Footer>
+                  <button className='btn btn-primary errorBtn' onClick={() => window.location = '/Profile'}>Head to Profile</button>
+                </Modal.Footer>
+              </Modal>
             </Container>
           </div>
         ) : (
