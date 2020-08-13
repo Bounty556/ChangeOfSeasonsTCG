@@ -162,7 +162,7 @@ class Lobby extends Component {
   // Duplicate user check
   checkUser = () => {
     if (this.state.username1 === this.state.username2) {
-      this.exitGame();
+      // this.exitGame();
     }
   };
 
