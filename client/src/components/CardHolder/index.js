@@ -15,7 +15,7 @@ function CardHolder(props) {
   });
 
   return (
-    <div ref={drop}>
+    <div id={props.id} ref={drop}>
       <Card>
         {cards
           .filter(card => card.position === props.id)
