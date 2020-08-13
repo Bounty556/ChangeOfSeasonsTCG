@@ -63,11 +63,21 @@ function GameBoard(props) {
   }, []);
 
   const cardDraggedToPosition = (cardId, position) => {
+
+    // Check to see if this is a position that can't hold multiple cards
+    if (position !== 'userPlayArea') {
+      // Check to see if the position already has a card
+      const cardIndex = playerDeck.findIndex(card => card.position === position);
+      if (cardIndex !== -1) {
+        return;
+      } 
+    }
+
     // Look for the card with the given cardkey
-    const cardIndex = cards.findIndex(card => card.uId === cardId);
-    const cardVal = cards[cardIndex];
+    const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
+    const cardVal = playerDeck[cardIndex];
     cardVal.position = position;
-    setCards([...cards.filter(card => card.uId !== cardId), cardVal]);
+    setCards([...playerDeck.filter(card => card.uId !== cardId), cardVal]);
   };
 
   return (

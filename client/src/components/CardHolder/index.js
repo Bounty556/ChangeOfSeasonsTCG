@@ -11,7 +11,7 @@ function CardHolder(props) {
 
   const [, drop] = useDrop({
     accept: ItemTypes.CARD,
-    drop: (item) => cardDraggedToPosition(item.id, props.id)
+    drop: (item) => cardDraggedToPosition(item.uId, props.id)
   });
 
   return (

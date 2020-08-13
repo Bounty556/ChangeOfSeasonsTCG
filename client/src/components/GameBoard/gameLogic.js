@@ -23,11 +23,7 @@ export default {
 
     for (let i = 0; i < 5; i++) {
       copy[i].position = 'userPlayArea';
-      console.log(copy[i].position);
-      console.log(copy[i]);
     }
-
-    console.log(copy);
 
     return copy;
   }
