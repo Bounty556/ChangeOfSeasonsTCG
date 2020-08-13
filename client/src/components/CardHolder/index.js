@@ -26,17 +26,17 @@ function CardHolder(props) {
 
   return (
     <div id={props.id} ref={drop}>
-      {props.override ? (
-        props.card ? (
-          <GameCard {...props.card} />
+      <Card>
+        {props.override ? (
+          props.card ? (
+            <GameCard {...props.card} />
+          ) : (
+            <></>
+          )
         ) : (
-          <></>
-        )
-      ) : heldCards.length > 0 ? (
-        heldCards.map(card => <GameCard {...card} />)
-      ) : (
-        <Card />
-      )}
+          heldCards.map(card => <GameCard {...card} />)
+        )}
+      </Card>
     </div>
   );
 }

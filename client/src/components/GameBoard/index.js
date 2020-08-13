@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, createContext } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
+import OpponentCardHolder from '../OpponentCardHolder';
 import CardHolder from '../CardHolder';
 import { GameContext } from '../../pages/Lobby';
 
@@ -130,9 +131,9 @@ function GameBoard(props) {
       <DndProvider backend={HTML5Backend}>
         <div className='wrapper'>
           <div id='opponentRow'>
-            <CardHolder id='opponentGrave' />
-            <CardHolder id='opponentDeck' />
-            <CardHolder id='opponentPlayArea' />
+            <OpponentCardHolder id='opponentGrave' cardCount={1} />
+            <OpponentCardHolder id='opponentDeck' cardCount={1} />
+            <OpponentCardHolder id='opponentPlayArea' cardCount={1} />
           </div>
 
           <div id='opponentDefRow'>
