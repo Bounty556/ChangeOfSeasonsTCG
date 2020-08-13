@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext } from 'react';
+import React, { useState, useEffect, useContext, createContext } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
@@ -22,18 +22,21 @@ export const CardContext = createContext({
 // TODO: When clicking and dragging the GameCard, the preview image is currently just the cards
 //       image, which looks awkward, so we should change that
 
+// useEffect(() => {
+//   const test = Parser.parseScript(
+//     'ONPLAY RAISEATK ATKROW 1 RAISEDEF ATKROW 1 ONDEATH RAISEATK ATKROW -1 RAISEDEF ATKROW -1'
+//   );
+//   console.log(test);
+// }, []);
+
 function GameBoard(props) {
-  useEffect(() => {
-    const test = Parser.parseScript(
-      'ONPLAY RAISEATK ATKROW 1 RAISEDEF ATKROW 1 ONDEATH RAISEATK ATKROW -1 RAISEDEF ATKROW -1'
-    );
-    console.log(test);
-  }, []);
+  const { socket, deck} = useContext(CardContext);
 
   const [cards, setCards] = useState([
     {
-      id: 0,
+      uId: 0,
       key: 0,
+      season: 'Summer',
       position: 'userPlayArea',
       name: 'Gudrun',
       img: 'buddy.png',
@@ -42,13 +45,14 @@ function GameBoard(props) {
       health: 3
     }
   ]);
+  const [playerDeck, setPlayerDeck] = useState([]);
 
   const cardDraggedToPosition = (cardId, position) => {
     // Look for the card with the given cardkey
-    const cardIndex = cards.findIndex(card => card.id === cardId);
+    const cardIndex = cards.findIndex(card => card.uId === cardId);
     const cardVal = cards[cardIndex];
     cardVal.position = position;
-    setCards([...cards.filter(card => card.id !== cardId), cardVal]);
+    setCards([...cards.filter(card => card.uId !== cardId), cardVal]);
   };
 
   return (
