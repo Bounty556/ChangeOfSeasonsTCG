@@ -29,35 +29,31 @@ hr {
     margin: 0 0 45px 0;
 }
 
-#opponentAttRow, #userAttRow {
-    height: 150px;
+/* Width Settings */
+#opponentAtt1, 
+#opponentAtt2, 
+#opponentAtt3, 
+#userAtt1, 
+#userAtt2, 
+#userAtt3,
+#opponentDef1, 
+#opponentDef2, 
+#userDef1, 
+#userDef2,
+#opponentDeck, 
+#userDeck, 
+#userGrave, 
+#opponentGrave {
+    width: 13%;
 }
 
 /* Attack Styling */
 #opponentAtt1, #opponentAtt2, #opponentAtt3, #userAtt1, #userAtt2, #userAtt3 {
-    width: 175px;
+
+    margin-bottom: 50px;
 }
 
-/* Defense Styling */
-#opponentDef1, #opponentDef2, #userDef1, #userDef2 {
-    height: 150px;
-    width: 170px;
-}
-
-/* Grave Styling */
-#opponentGrave, #userGrave {
-    height: 150px;
-    width: 175px;
-}
-
-#userGrave {
-    margin-left: 2%;
-}
-
-/* Deck Styling */
-#opponentDeck, #userDeck {
-    height: 150px;
-    width: 130px;
+#opponentDeck, #userDeck, #userGrave {
     margin-left: 2%;
 }
 
