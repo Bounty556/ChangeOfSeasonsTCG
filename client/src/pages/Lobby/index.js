@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createContext } from 'react';
 
 import Container from '../../components/Container/index';
 import Navbar from '../../components/Navbar/index';
@@ -10,6 +10,12 @@ import axios from 'axios';
 import './lobby.css';
 
 const ENDPOINT = 'http://localhost:3001/';
+
+export const GameContext = createContext({
+  socket: null,
+  deck: [],
+  playerNumber: null
+});
 
 // Socket io works via a back and forth of communication.
 // 1. The user joins a lobby by telling the server to put it in the given room
@@ -25,15 +31,16 @@ class Lobby extends Component {
       username2: 'Waiting for player',
       avatar1: localStorage.getItem('avatar'),
       avatar2: 'blue_15.png',
-      deck1: [],
-      deck2: [],
+      joined1: false,
+      joined2: false,
+      deck: [],
       gameId: 0,
       joinedLobby: false,
       playGame: false,
       allJoined: false,
       playerNumber: -1
     };
- 
+
     this.socket = null;
   }
 
@@ -90,20 +97,24 @@ class Lobby extends Component {
   sendPlayerInfo = () => {
     axios
       .get(
-        '/api/user/' + JSON.parse(localStorage.getItem('authentication'))._id + '/deck'
+        '/api/user/' +
+          JSON.parse(localStorage.getItem('authentication'))._id +
+          '/deck'
       )
       .then(info => {
         // Make sure this user has a deck that isn't empty
         if (info.data && info.data.length === 0) {
           // TODO: Maybe make some modal displaying this error?
           console.log('Error: you need to select a deck first.');
-          this.exitGame();
+          return this.exitGame();
         }
+
+        // set our deck
+        this.setState({ deck: info.data.deck });
 
         const playerInfo = {
           username: localStorage.getItem('username'),
           avatar: localStorage.getItem('avatar'),
-          deck: info.data,
           number: this.state.playerNumber
         };
         this.socket.emit(
@@ -127,12 +138,12 @@ class Lobby extends Component {
         {
           username1: playerInfo.username,
           avatar1: playerInfo.avatar,
-          deck1: playerInfo.deck
+          joined1: true
         },
         () => {
-          if (this.state.deck1.length > 0 && this.state.deck2.length > 0) {
+          if (this.state.joined1 && this.state.joined2) {
             document.getElementById('loadingID').classList.remove('loading');
-           this.setState({ allJoined: true });
+            this.setState({ allJoined: true });
           }
         }
       );
@@ -141,10 +152,10 @@ class Lobby extends Component {
         {
           username2: playerInfo.username,
           avatar2: playerInfo.avatar,
-          deck2: playerInfo.deck
+          joined2: true
         },
         () => {
-          if (this.state.deck1.length > 0 && this.state.deck2.length > 0) {
+          if (this.state.joined1 && this.state.joined2) {
             document.getElementById('loadingID').classList.remove('loading');
             this.setState({ allJoined: true });
           }
@@ -174,12 +185,13 @@ class Lobby extends Component {
   cleanUpPlayer = () => {
     this.setState({
       username1: localStorage.getItem('username'),
-      username2: '',
+      username2: 'Waiting for player',
       avatar1: localStorage.getItem('avatar'),
-      avatar2: '',
-      deck1: [],
-      deck2: [],
-      playerNumber: 1
+      avatar2: 'blue_15.png',
+      deck: [],
+      playerNumber: 1,
+      joined1: true,
+      joined2: false
     });
 
     this.sendPlayerInfo();
@@ -205,7 +217,9 @@ class Lobby extends Component {
                       ></img>
                     </div>
 
-                    {!this.state.joinedLobby ? (<div></div>) : (
+                    {!this.state.joinedLobby ? (
+                      <div></div>
+                    ) : (
                       <div className='players'>
                         <h1 className='vs'>VS</h1>
                         <div className='playerTwo'>
@@ -219,7 +233,6 @@ class Lobby extends Component {
                         </div>
                       </div>
                     )}
-
                   </div>
                   <div className='row'>
                     {!this.state.joinedLobby ? (
@@ -230,8 +243,8 @@ class Lobby extends Component {
                         onChange={this.handleChangeJoinId}
                       ></input>
                     ) : (
-                        <p className='gameIdText'>{this.state.gameId}</p>
-                      )}
+                      <p className='gameIdText'>{this.state.gameId}</p>
+                    )}
                   </div>
                   <div className='row'>
                     {!this.state.allJoined ? (
@@ -244,22 +257,30 @@ class Lobby extends Component {
                         </button>
                       </div>
                     ) : (
-                        <div className='button-col'>
-                          <button className='wood' onClick={this.startMatch}>
-                            Start Match
+                      <div className='button-col'>
+                        <button className='wood' onClick={this.startMatch}>
+                          Start Match
                         </button>
-                          <button className='wood' onClick={this.exitGame}>
-                            Exit Game
+                        <button className='wood' onClick={this.exitGame}>
+                          Exit Game
                         </button>
-                        </div>
-                      )}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
             </Container>
           </div>
         ) : (
-          <Gameboard />
+          <GameContext.Provider
+            value={{
+              socket: this.socket,
+              deck: this.state.deck,
+              player: this.state.playerNumber
+            }}
+          >
+            <Gameboard />
+          </GameContext.Provider>
         )}
       </div>
     );
