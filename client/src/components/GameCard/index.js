@@ -20,6 +20,12 @@ function GameCard(props) {
       <div ref={drag}>
         <Card id='gameCard'>
           <div className='image-container'>
+            <img 
+              src='./images/cardBack/lava_style/card_title/mana_point_lava.png'
+              alt='placeholder'
+              className='mana'
+            />
+            <p className='resource'>{props.resourceCost}</p>
             <img
               src={'/images/cardImg/' + props.img}
               alt='placeholder'

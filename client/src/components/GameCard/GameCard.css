@@ -74,3 +74,18 @@
 .attack {
     margin-right: 7px;
 }
+
+.resource {
+    color: rgb(0, 217, 255);
+    position: absolute;
+    top: 15px;
+    left: 18px;
+    font-size: 15px;
+}
+
+.mana {
+    position: absolute;
+    top: 10px;
+    left: 8px;
+    width: 30px;
+}
