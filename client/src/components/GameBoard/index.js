@@ -23,10 +23,10 @@ export const CardContext = createContext({
 //       So things don't look awful
 // TODO: When we drag a card and hover it over a card slot, it should make the slot go grey or
 //       something similar so the user has some kind of feedback
+// TODO: Show resources for enemies and players
 
 // BACKEND:
-// TODO: Show backs of cards in place of enemy's face down cards
-// TODO: Clean up code!!!!!
+// TODO: Make it so you can't grab enemy cards
 
 // useEffect(() => {
 //   const test = Parser.parseScript(
@@ -83,7 +83,6 @@ function GameBoard(props) {
   }, [opponentBoardData]);
 
   useEffect(() => {
-    // Shuffle player deck
     const copy = playerDeck.map(card => {
       return { ...card };
     });
@@ -91,63 +90,44 @@ function GameBoard(props) {
   }, []);
 
   const cardDraggedToPosition = (cardId, position) => {
-    if (position !== 'userPlayArea') {
-      // Check to see if the position already has a card
-      const cardIndex = playerDeck.findIndex(
-        card => card.position === position
-      );
-      if (cardIndex !== -1) {
-        return;
-      }
-
-      // Check to see if this is an enemy position
-      if (
-        GameLogic.enemyAtkRows.includes(position) ||
-        GameLogic.enemyDefRows.includes(position)
-      ) {
-        return;
-      }
-    }
-
-    // Look for the card with the given cardId
     const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
     const cardVal = playerDeck[cardIndex];
-
+    
     if (position !== 'userPlayArea') {
-      // Send info to enemy saying we moved a card into a position
-      socket.emit('room', gameId, 'updateOpponentCardPlacement', {
-        cardData: cardVal,
-        position: position,
-        player: playerNumber
-      });
+      // Make sure the given position doesn't have a card in it already
+      if (GameLogic.isPositionFilled(position, playerDeck) || GameLogic.inEnemyRows(position)) {
+        return;
+      }
 
-      // If we are moving from the play area, subtract one
+      sendCardPlacement(cardVal, position);
       if (cardVal.position === 'userPlayArea') {
-        socket.emit('room', gameId, 'updateOpponentPlayArea', {
-          changeAmount: -1,
-          player: playerNumber
-        });
+        sendPlayAreaUpdate(-1);
       }
     } else if (cardVal.position !== 'userPlayArea') {
-      // Send info to enemy saying we moved a card away from a position
-      socket.emit('room', gameId, 'updateOpponentCardPlacement', {
-        cardData: null,
-        position: cardVal.position,
-        player: playerNumber
-      });
-
-      // If we are moving to the play area, add one
+      sendCardPlacement(null, cardVal.position);
       if (cardVal.position === 'userPlayArea') {
-        socket.emit('room', gameId, 'updateOpponentPlayArea', {
-          changeAmount: 1,
-          player: playerNumber
-        });
+        sendPlayAreaUpdate(1);
         position = '';
       }
     }
 
     cardVal.position = position;
     setPlayerDeck([...playerDeck.filter(card => card.uId !== cardId), cardVal]);
+  };
+
+  const sendCardPlacement = (card, position) => {
+    socket.emit('room', gameId, 'updateOpponentCardPlacement', {
+      cardData: card,
+      position: position,
+      player: playerNumber
+    });
+  };
+
+  const sendPlayAreaUpdate = changeAmount => {
+    socket.emit('room', gameId, 'updateOpponentPlayArea', {
+      changeAmount: changeAmount,
+      player: playerNumber
+    });
   };
 
   return (

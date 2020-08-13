@@ -27,6 +27,8 @@ export const GameContext = createContext({
 // 3. The client sends a message to the server telling all clients in the room it has successfully connected, and that player info needs to be updated
 // 4. All clients send back their player info to the room via the server, so all clients can update their local player information correctly
 
+// TODO: Make it so only the host can start, and it starts the game for both players
+
 class Lobby extends Component {
   constructor() {
     super();
