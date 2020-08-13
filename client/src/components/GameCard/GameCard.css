@@ -21,8 +21,7 @@
 
 .card-image { 
     background-color: rgba(255, 0, 0, 0.472);
-    height: 151px;
-    width: 202px;
+    width: 100%;
 }
 
 .effect-box { 
@@ -35,7 +34,6 @@
 
 .effect { 
     color: black;
-
 }
 
 .stats-box { 
