@@ -131,9 +131,9 @@ function GameBoard(props) {
       <DndProvider backend={HTML5Backend}>
         <div className='wrapper'>
           <div id='opponentRow'>
-            <OpponentCardHolder id='opponentGrave' cardCount={1} />
-            <OpponentCardHolder id='opponentDeck' cardCount={1} />
-            <OpponentCardHolder id='opponentPlayArea' cardCount={1} />
+            <OpponentCardHolder id='opponentGrave' cardCount={opponentBoardData.opponentHasGrave ? 1 : 0} />
+            <OpponentCardHolder id='opponentDeck' cardCount={opponentBoardData.opponentHasDeck ? 1 : 0} />
+            <OpponentCardHolder id='opponentPlayArea' cardCount={opponentBoardData.opponentPlayAreaCount} />
           </div>
 
           <div id='opponentDefRow'>

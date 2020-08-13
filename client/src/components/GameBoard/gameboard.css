@@ -44,12 +44,11 @@ hr {
 #userDeck, 
 #userGrave, 
 #opponentGrave {
-    width: 13%;
+    width: 9%;
 }
 
 /* Attack Styling */
 #opponentAtt1, #opponentAtt2, #opponentAtt3, #userAtt1, #userAtt2, #userAtt3 {
-
     margin-bottom: 50px;
 }
 
@@ -65,4 +64,14 @@ hr {
 
 #userPlayArea {
     width: 70%;
+}
+
+#playAreaRow {
+    min-height: 65px;
+}
+
+#cardRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
 }

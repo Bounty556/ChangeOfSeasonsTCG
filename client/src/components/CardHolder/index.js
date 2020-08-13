@@ -26,16 +26,22 @@ function CardHolder(props) {
 
   return (
     <div id={props.id} ref={drop}>
-      <Card>
-        {props.override ? (
-          props.card ? (
-            <GameCard {...props.card} />
+      <Card bodyId='playAreaRow'>
+        <div id='cardRow'>
+          {props.override ? (
+            props.card ? (
+              <GameCard {...props.card} />
+            ) : (
+              <></>
+            )
           ) : (
-            <></>
-          )
-        ) : (
-          heldCards.map(card => <GameCard {...card} />)
-        )}
+            playerDeck
+              .filter(card => card.position === props.id)
+              .map(card => {
+                return <GameCard {...card} />;
+              })
+          )}
+        </div>
       </Card>
     </div>
   );
