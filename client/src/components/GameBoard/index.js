@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, createContext } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
+import OpponentCardHolder from '../OpponentCardHolder';
 import CardHolder from '../CardHolder';
 import { GameContext } from '../../pages/Lobby';
 
@@ -101,7 +102,7 @@ function GameBoard(props) {
       }
     }
 
-    // Look for the card with the given cardkey
+    // Look for the card with the given cardId
     const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
     const cardVal = playerDeck[cardIndex];
 
@@ -112,16 +113,29 @@ function GameBoard(props) {
         position: position,
         player: playerNumber
       });
-    } else if (
-      position === 'userPlayArea' &&
-      cardVal.position !== 'userPlayArea'
-    ) {
+
+      // If we are moving from the play area, subtract one
+      if (cardVal.position === 'userPlayArea') {
+        socket.emit('room', gameId, 'updateOpponentPlayArea', {
+          changeAmount: -1,
+          player: playerNumber
+        });
+      }
+    } else if (cardVal.position !== 'userPlayArea') {
       // Send info to enemy saying we moved a card away from a position
       socket.emit('room', gameId, 'updateOpponentCardPlacement', {
         cardData: null,
         position: cardVal.position,
         player: playerNumber
       });
+
+      // If we are moving to the play area, add one
+      if (cardVal.position === 'userPlayArea') {
+        socket.emit('room', gameId, 'updateOpponentPlayArea', {
+          changeAmount: 1,
+          player: playerNumber
+        });
+      }
     }
 
     cardVal.position = position;
@@ -133,9 +147,9 @@ function GameBoard(props) {
       <DndProvider backend={HTML5Backend}>
         <div className='wrapper'>
           <div id='opponentRow'>
-            <CardHolder id='opponentGrave' />
-            <CardHolder id='opponentDeck' />
-            <CardHolder id='opponentPlayArea' />
+            <OpponentCardHolder id='opponentGrave' cardCount={opponentBoardData.opponentHasGrave ? 1 : 0} />
+            <OpponentCardHolder id='opponentDeck' cardCount={opponentBoardData.opponentHasDeck ? 1 : 0} />
+            <OpponentCardHolder id='opponentPlayArea' cardCount={opponentBoardData.opponentPlayAreaCount} />
           </div>
 
           <div id='opponentDefRow'>
