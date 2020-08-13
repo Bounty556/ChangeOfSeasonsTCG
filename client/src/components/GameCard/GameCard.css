@@ -1,40 +1,45 @@
 #gameCard { 
+    border: none;
+    box-shadow: 4px 4px 5px -3px #444;
+    left: 0px;
+    margin: 0;
     max-height: 281px;
     max-width: 187px;
-    justify-content: center;
-    background-image: url(./Images/frame_title_lava.png);
-    background-repeat: no-repeat;
-    background-size: contain;
-    margin: 0;
-    position: static;
-    left: 0px;
     top: 0px;
-    z-index: 0;
+    margin-bottom: 10px;
 }
 
-.card-name { 
-    justify-content: center;
-    text-align: center;
+.card-name {
+    bottom: 25px;
+    color: whitesmoke;
     font-family: 'Trade Winds', cursive;
-    color: pink;
+    font-size: 17px;
+    position: relative;
+    text-align: center;
     transform: rotate(-4deg);
-    margin-bottom: 20px;
 }
 
-.image-container { 
-justify-content: center;
-height: 175px;
-width: 160px
+.card-body {
+    border: none;
+    outline: none;
+    padding: 5px;
+}
+
+.image-container {
+    background-color: rgb(36, 2, 58);
+    width: 100%
 }
 
 .card-image { 
     width: 100%;
-    height: 100%;
     margin-bottom: 0;
-    position: relative;
-    left: 0px;
-    top: 0px;
-    z-index: 1;
+}
+
+.card-frame {
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
 }
 
 .effect-box { 
@@ -45,17 +50,27 @@ width: 160px
     color: black;
 }
 
-.stats-box { 
+.stats-box {
+    position: relative;
     display: flex;
     flex-direction: row;
-    justify-content: space-between !important;
+    justify-content: space-evenly !important;
 }
 
-
-
- .attack, .health, .resourse { 
+ .attack, .health { 
     text-align: center;
     background-position: center;
     font-size: larger;
-    color: red
-} 
+    color: red;
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+
+.health {
+    color: rgb(13, 180, 13);
+    margin-left: 110px;
+}
+
+.attack {
+    margin-right: 7px;
+}
