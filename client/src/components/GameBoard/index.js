@@ -102,7 +102,7 @@ function GameBoard(props) {
       }
     }
 
-    // Look for the card with the given cardkey
+    // Look for the card with the given cardId
     const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
     const cardVal = playerDeck[cardIndex];
 
@@ -113,6 +113,14 @@ function GameBoard(props) {
         position: position,
         player: playerNumber
       });
+
+      // If we are moving from the play area, subtract one
+      if (cardVal.position === 'userPlayArea') {
+        socket.emit('room', gameId, 'updateOpponentPlayArea', {
+          changeAmount: -1,
+          player: playerNumber
+        });
+      }
     } else if (cardVal.position !== 'userPlayArea') {
       // Send info to enemy saying we moved a card away from a position
       socket.emit('room', gameId, 'updateOpponentCardPlacement', {
@@ -120,6 +128,14 @@ function GameBoard(props) {
         position: cardVal.position,
         player: playerNumber
       });
+
+      // If we are moving to the play area, add one
+      if (cardVal.position === 'userPlayArea') {
+        socket.emit('room', gameId, 'updateOpponentPlayArea', {
+          changeAmount: 1,
+          player: playerNumber
+        });
+      }
     }
 
     cardVal.position = position;

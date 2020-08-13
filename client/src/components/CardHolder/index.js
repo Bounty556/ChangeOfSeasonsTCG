@@ -35,11 +35,7 @@ function CardHolder(props) {
               <></>
             )
           ) : (
-            playerDeck
-              .filter(card => card.position === props.id)
-              .map(card => {
-                return <GameCard {...card} />;
-              })
+            heldCards.map(card => <GameCard {...card} />)
           )}
         </div>
       </Card>
