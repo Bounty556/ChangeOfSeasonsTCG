@@ -165,7 +165,7 @@ class Lobby extends Component {
   };
 
   startMatch = () => {
-    this.checkUser();
+    // this.checkUser();
 
     this.setState({ playGame: true });
   };
