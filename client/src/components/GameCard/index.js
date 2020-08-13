@@ -41,7 +41,7 @@ function GameCard(props) {
           <h5 className='card-name'>{props.name.trim()}</h5>
           </div>
           <div className='effect-box'>
-            <p className='effect'></p>
+            <p className='effect'>{props.effect}</p>
           </div>
           <div className='stats-box row'>
             <p className='attack'>{props.attack}</p>
