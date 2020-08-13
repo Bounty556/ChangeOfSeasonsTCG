@@ -110,7 +110,7 @@ class Lobby extends Component {
         }
 
         // set our deck
-        this.setState({ deck: info.data.deck });
+        this.setState({ deck: info.data });
 
         const playerInfo = {
           username: localStorage.getItem('username'),
