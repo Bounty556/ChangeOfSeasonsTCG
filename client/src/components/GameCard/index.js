@@ -19,8 +19,6 @@ function GameCard(props) {
       />
       <div ref={drag}>
         <Card id='gameCard'>
-          <h5 className='card-name'>{props.name}</h5>
-
           <div className='image-container'>
             <img
               src={'/images/cardImg/' + props.img}
@@ -28,7 +26,9 @@ function GameCard(props) {
               className='card-image'
             />
           </div>
-
+          <div className='name-container'>
+          <h5 className='card-name'>{props.name}</h5>
+          </div>
           <div className='effect-box'>
             <p className='effect'></p>
           </div>
