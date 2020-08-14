@@ -18,6 +18,7 @@ function CardHolder(props) {
     if (!props.override) {
       setHeldCards(playerDeck.filter(card => card.position === props.id));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playerDeck]);
 
   const [, drop] = useDrop({

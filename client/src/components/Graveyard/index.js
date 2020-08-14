@@ -8,14 +8,14 @@ function Graveyard(props) {
 
   useEffect(() => {
     if (props.recent) {
-      if (graveStack.length > 0 && graveStack[graveStack.length - 1].uId != props.recent.uId) {
+      if (graveStack.length > 0 && graveStack[graveStack.length - 1].uId !== props.recent.uId) {
         setGraveStack([...graveStack, props.recent]);
       }
       else if (graveStack.length === 0) {
         setGraveStack([...graveStack, props.recent]);
       }
     }
-  }, [props.recent]);
+  }, [props.recent, graveStack]);
 
   return (
     <div id={props.id}>

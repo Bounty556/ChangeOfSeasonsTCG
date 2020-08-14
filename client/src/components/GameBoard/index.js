@@ -92,6 +92,7 @@ function GameBoard(props) {
         setOpponentBoardData(boardData);
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opponentBoardData]);
 
   useEffect(() => {
@@ -117,11 +118,13 @@ function GameBoard(props) {
         }
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playerDeck, playerData]);
 
   useEffect(() => {
     const copy = GameLogic.copyArray(playerDeck);
     setPlayerDeck(GameLogic.assignHand(GameLogic.shuffleArray(copy)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const cardDraggedToPosition = (cardId, position) => {
