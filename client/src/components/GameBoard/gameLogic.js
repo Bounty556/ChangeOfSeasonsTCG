@@ -59,13 +59,31 @@ export default {
   },
 
   damageCard: function(position, damage, deck) {
+    let cardDied = null;
     for (let i = 0; i < deck.length; i++) {
       if (deck[i].position === position) {
         deck[i].health -= damage;
+
+        if (deck[i].health <= 0) {
+          deck[i].position = 'userGrave';
+          cardDied = {...deck[i]};
+        }
+
         break;
       }
     }
 
-    return deck;
+    return [deck, cardDied];
+  },
+
+  isOpponentCardInPlay: function(cardId, opponentData) {
+    const keys = Object.keys(opponentData);
+    for (let i = 0; i < keys.length; i++) {
+      if (opponentData[keys[i]] && opponentData[keys[i]].uId === cardId) {
+        return keys[i];
+      }
+    }
+
+    return null;
   }
 };

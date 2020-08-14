@@ -2,7 +2,9 @@ import React from 'react';
 
 import Card from '../Card/index';
 
-function EnemyCard(props) {
+// Info card is just like Game Card, except it is not draggable
+
+function InfoCard(props) {
   return (
     <div>
       <Card id='gameCard'>
@@ -39,4 +41,4 @@ function EnemyCard(props) {
   );
 }
 
-export default EnemyCard;
+export default InfoCard;
