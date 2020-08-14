@@ -19,9 +19,11 @@ function Graveyard(props) {
     <div id={props.id}>
       <Card bodyId='playAreaRow'>
         <div id='cardRow'>
-          {heldCards.map(card => (
-            <EnemyCard {...card} />
-          ))}
+          {heldCards.length > 0 ? (
+            <EnemyCard {...heldCards[heldCards.length - 1]} />
+          ) : (
+            <></>
+          )}
         </div>
       </Card>
     </div>
