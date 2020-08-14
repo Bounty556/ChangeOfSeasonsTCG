@@ -6,10 +6,10 @@ import OpponentCardHolder from '../OpponentCardHolder';
 import CardHolder from '../CardHolder';
 import { GameContext } from '../../pages/Lobby';
 
-import Parser from './cardScript';
 import GameLogic from './gameLogic';
 
 import './gameboard.css';
+import Graveyard from '../Graveyard';
 
 // Give this function to the children of this component so they can tell us when
 // A card was dropped on them
@@ -18,19 +18,24 @@ export const CardContext = createContext({
   playerDeck: null
 });
 
-// FRONTEND:
 // TODO: We definitely need to redo the CSS for all of the cardholders and the cards themselves
 //       So things don't look awful
 // TODO: When we drag a card and hover it over a card slot, it should make the slot go grey or
 //       something similar so the user has some kind of feedback
 // TODO: Show resources for enemies and players
-
-// useEffect(() => {
-//   const test = Parser.parseScript(
-//     'ONPLAY RAISEATK ATKROW 1 RAISEDEF ATKROW 1 ONDEATH RAISEATK ATKROW -1 RAISEDEF ATKROW -1'
-//   );
-//   console.log(test);
-// }, []);
+// TODO: Be able to kill enemy cards
+// TODO: See enemy cards go into their graveyard
+// TODO: See your cards go into their graveyard
+// TODO: Add in the concept of turns
+// TODO: Draw a card and gain a resource each turn
+// TODO: Add a resource counter for both the user and the opponent
+// TODO: Make the card shuffling better, so users aren't getting top tier cards immediately
+// TODO: Make cards only be able to target their intended minions
+// TODO: Make effects work
+// TODO: Be able to attack the opponent when his defense row is down
+// TODO: Show the opponents health
+// TODO: Be able to only attack with the attack row, and have defense units retaliate
+// TODO: Implement defense
 
 function GameBoard(props) {
   const { socket, gameId, deck, playerNumber } = useContext(GameContext);
@@ -75,14 +80,32 @@ function GameBoard(props) {
         }
       }
     );
+    socket.on('updateOpponentGrave', ({ hasGrave, fromPlayer }) => {
+      if (fromPlayer !== playerNumber) {
+        const boardData = { ...opponentBoardData };
+        boardData.opponentHasGrave = hasGrave;
+        setOpponentBoardData(boardData);
+      }
+    });
   }, [opponentBoardData]);
 
   useEffect(() => {
     socket.off('receiveAttack');
     socket.on('receiveAttack', ({ position, damage, fromPlayer }) => {
       if (fromPlayer !== playerNumber) {
-        const deck = GameLogic.damageCard(position, damage, GameLogic.copyArray(playerDeck));
+        const [deck, cardDied] = GameLogic.damageCard(
+          position,
+          damage,
+          GameLogic.copyArray(playerDeck)
+        );
         setPlayerDeck(deck);
+
+        if (cardDied) {
+          socket.emit('room', gameId, 'updateOpponentGrave', {
+            hasGrave: true,
+            fromPlayer: playerNumber
+          });
+        }
       }
     });
   });
@@ -95,7 +118,7 @@ function GameBoard(props) {
   const cardDraggedToPosition = (cardId, position) => {
     const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
     const cardVal = playerDeck[cardIndex];
-    
+
     if (position !== 'userPlayArea') {
       // Make sure the given position doesn't have a card in it already
       if (GameLogic.isPositionFilled(position, playerDeck)) {
@@ -145,6 +168,11 @@ function GameBoard(props) {
     position = position.replace('opponent', 'user');
     const boardData = { ...opponentBoardData };
     boardData[position].health -= damage;
+
+    if (boardData[position].health <= 0) {
+      boardData[position] = null;
+    }
+
     setOpponentBoardData(boardData);
 
     socket.emit('room', gameId, 'receiveAttack', {
@@ -152,7 +180,7 @@ function GameBoard(props) {
       damage: damage,
       fromPlayer: playerNumber
     });
-  }
+  };
 
   return (
     <CardContext.Provider value={{ cardDraggedToPosition, playerDeck }}>
@@ -220,7 +248,7 @@ function GameBoard(props) {
           </div>
 
           <div id='userRow'>
-            <CardHolder id='userGrave' />
+            <Graveyard id='userGrave' />
             <CardHolder id='userDeck' />
             <CardHolder id='userPlayArea' />
           </div>

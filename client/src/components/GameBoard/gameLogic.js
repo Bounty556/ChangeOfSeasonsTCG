@@ -59,13 +59,20 @@ export default {
   },
 
   damageCard: function(position, damage, deck) {
+    let cardDied = false;
     for (let i = 0; i < deck.length; i++) {
       if (deck[i].position === position) {
         deck[i].health -= damage;
+
+        if (deck[i].health <= 0) {
+          deck[i].position = 'userGrave';
+          cardDied = true;
+        }
+
         break;
       }
     }
 
-    return deck;
+    return [deck, cardDied];
   }
 };
