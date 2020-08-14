@@ -1,12 +1,9 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Card from '../Card';
-import { CardContext } from '../GameBoard';
 import InfoCard from '../InfoCard';
 
 function Graveyard(props) {
-  const { playerDeck } = useContext(CardContext);
-
   const [graveStack, setGraveStack] = useState([]);
 
   useEffect(() => {
