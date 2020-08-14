@@ -74,5 +74,16 @@ export default {
     }
 
     return [deck, cardDied];
+  },
+
+  isOpponentCardInPlay: function(cardId, opponentData) {
+    const keys = Object.keys(opponentData);
+    for (let i = 0; i < keys.length; i++) {
+      if (opponentData[keys[i]] && opponentData[keys[i]].uId === cardId) {
+        return keys[i];
+      }
+    }
+
+    return null;
   }
 };

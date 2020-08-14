@@ -23,8 +23,8 @@ export const CardContext = createContext({
 // TODO: When we drag a card and hover it over a card slot, it should make the slot go grey or
 //       something similar so the user has some kind of feedback
 
+// TODO: Show player deck
 // TODO: Show resources for enemies and players
-// TODO: Add in the concept of turns
 // TODO: Draw a card and gain a resource each turn
 // TODO: Make the card shuffling better, so users aren't getting top tier cards immediately
 // TODO: Make cards only be able to target their intended minions
@@ -84,6 +84,11 @@ function GameBoard(props) {
       ({ cardData, position, fromPlayer }) => {
         if (fromPlayer !== playerNumber) {
           const boardData = { ...opponentBoardData };
+          // see if this card was already in play
+          const isInPlay = GameLogic.isOpponentCardInPlay(cardData.uId, opponentBoardData);
+          if (isInPlay) {
+            boardData[isInPlay] = null;
+          }
           boardData[position] = cardData;
           setOpponentBoardData(boardData);
         }
