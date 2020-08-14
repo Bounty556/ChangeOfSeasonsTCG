@@ -2,8 +2,6 @@ import React from 'react';
 
 import Card from '../Card/index';
 
-import './EnemyCard.css';
-
 function EnemyCard(props) {
   return (
     <div>
