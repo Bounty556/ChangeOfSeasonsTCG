@@ -4,7 +4,7 @@ html, body, #root {
 html {
     /* background-color: rgb(40, 90, 40); */
     
-    background-image: linear-gradient(45deg, #1a5581, rgb(105, 68, 0), #1a2e69, #2a184e, #184e2d);
+    background-image: linear-gradient(#00518f, #2a0c70 );
     background-repeat: no-repeat;
     background-size: 100%;
 }

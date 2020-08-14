@@ -111,12 +111,13 @@ function UserProfile() {
                     <div className='card-body row'>
 
                         <div className='user-avatar col-4'>
-                            <h2>{username}</h2>
-                            <div>
-                                <img src={`./images/cardImg/${avatar}`} alt="Player's Chosen Avatar" className='avatar' />
+                            <h2 className='profileUserName'>{username}</h2>
+                            <div className='avatarContainer'>
+                                <img src={`./images/cardImg/${avatar}`} alt="Player's Chosen Avatar" className='avatarUserProfile' />
+                                <button className='chooseAvatar' onClick={handleShowAvatar}>Change Avatar</button>
                             </div>
                             {/* open the modal to select an Avatar */}
-                            <button className='chooseAvatar' onClick={handleShowAvatar}>Change Avatar</button>
+                           
                             <div >
                                 <p className='stats-div'>Wins: {wins} Losses: {losses} </p>
                             </div>
@@ -124,10 +125,10 @@ function UserProfile() {
 
                         <div className='user-links col-4 my-auto'>
                             <div className='button-col'>
-                                <button className='wood' onClick={handleShowDeck}>Choose Deck</button>
+                                <button className='woodProfileButton' onClick={handleShowDeck}>Choose Deck</button>
                                 <br></br>
                                 <br></br>
-                                <button className='wood' onClick={goToLobby}>Play Match</button>
+                                <button className='woodProfileButton' onClick={goToLobby}>Play Match</button>
                             </div>
                         </div>
 

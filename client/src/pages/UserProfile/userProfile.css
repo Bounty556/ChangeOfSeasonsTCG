@@ -9,23 +9,21 @@
     justify-content: center;
 }
 
-.col-lg-3 {
-    padding-left: 9px;
-    margin-bottom: 10px;
-}
-
-h2 { 
+.profileUserName { 
     justify-content: center;
     margin-bottom: 5px;
     font-family: 'Trade Winds', cursive;
     font-weight: bolder;
-    color: whitesmoke
+    color: whitesmoke; 
+    font-size: 40px;
 }
 
 p { 
     font-family: 'Trade Winds', cursive;
     font-weight: bolder;
-    color: whitesmoke
+    color: whitesmoke;
+    font-size: 20px;
+    margin-bottom: 10px;
 }
 
 button {
@@ -38,10 +36,10 @@ button {
     opacity: 0.5;
 }
 
-.wood { 
+.woodProfileButton { 
     background-image: url(./Images/woodsign.png) !important;
-    width: 300px;
-    height: 150px;
+    width: 400px;
+    height: 200px;
     background-size: contain;
     background-repeat: no-repeat;
     background-color:transparent ;
@@ -71,6 +69,20 @@ button {
 
 .stats-div {
     margin-left: 5px;
+}
+
+.avatarUserProfile { 
+    background-color: rgba(46, 0, 98, 0.835);
+    display: block;
+    border: 10px solid transparent;
+    border-image-source: url(https://media1.giphy.com/media/5vidmSHUsyoybSYNN0/giphy.gif?cid=ecf05e47ta00vpixh6lraija5cpo2bhvvsif55qgx61zmlkl&rid=giphy.gif);
+    border-image-repeat: stretch;
+    border-image-slice: 30;
+    border-image-width: 10px;       
+    box-shadow: 1px 1px 1px 1px black;
+    height: 325px;
+    width: 325px;
+    margin-bottom: 5px;
 }
 
 .chooseAvatar { 
