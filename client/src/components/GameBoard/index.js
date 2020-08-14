@@ -35,6 +35,7 @@ export const CardContext = createContext({
 // TODO: Implement defense
 
 // TODO: Cleanup socket registering code
+// TODO: Fix bug with cards moving between card areas on opponents board
 
 function GameBoard(props) {
   const { socket, gameId, deck, playerNumber } = useContext(GameContext);
@@ -68,6 +69,9 @@ function GameBoard(props) {
   useEffect(() => {
     socket.off('updateOpponentPlayArea');
     socket.off('updateOpponentCardPlacement');
+    socket.off('updateOpponentGrave');
+    socket.off('receiveAttack');
+    socket.off('endOpponentsTurn');
     socket.on('updateOpponentPlayArea', ({ changeAmount, fromPlayer }) => {
       if (fromPlayer !== playerNumber) {
         const boardData = { ...opponentBoardData };
@@ -92,11 +96,6 @@ function GameBoard(props) {
         setOpponentBoardData(boardData);
       }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [opponentBoardData]);
-
-  useEffect(() => {
-    socket.off('receiveAttack');
     socket.on('receiveAttack', ({ position, damage, fromPlayer }) => {
       if (fromPlayer !== playerNumber) {
         const [deck, cardDied] = GameLogic.damageCard(
@@ -118,16 +117,30 @@ function GameBoard(props) {
         }
       }
     });
+    socket.on('endOpponentsTurn', ({ fromPlayer }) => {
+      if (fromPlayer !== playerNumber) {
+        // Set it to be our turn
+        setPlayerData(prevState => ({ ...prevState, isPlayersTurn: true }));
+      }
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playerDeck, playerData]);
+  }, [opponentBoardData, playerDeck, playerData]);
 
   useEffect(() => {
+    setPlayerData(prevState => ({
+      ...prevState,
+      isPlayersTurn: playerNumber === 1 ? true : false
+    }));
     const copy = GameLogic.copyArray(playerDeck);
     setPlayerDeck(GameLogic.assignHand(GameLogic.shuffleArray(copy)));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const cardDraggedToPosition = (cardId, position) => {
+    if (!playerData.isPlayersTurn) {
+      return;
+    }
+
     const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
     const cardVal = playerDeck[cardIndex];
 
@@ -166,6 +179,8 @@ function GameBoard(props) {
       position: position,
       fromPlayer: playerNumber
     });
+
+    sendTurnChange();
   };
 
   const sendPlayAreaUpdate = changeAmount => {
@@ -176,19 +191,29 @@ function GameBoard(props) {
   };
 
   const sendAttack = (position, damage) => {
+    // Need to replace opponent with user here to match the opponentBoardData object
     position = position.replace('opponent', 'user');
     const boardData = { ...opponentBoardData };
     boardData[position].health -= damage;
-
     if (boardData[position].health <= 0) {
       boardData[position] = null;
     }
-
     setOpponentBoardData(boardData);
 
     socket.emit('room', gameId, 'receiveAttack', {
       position: position,
       damage: damage,
+      fromPlayer: playerNumber
+    });
+
+    sendTurnChange();
+  };
+
+  const sendTurnChange = () => {
+    // End our turn
+    setPlayerData(prevState => ({ ...prevState, isPlayersTurn: false }));
+
+    socket.emit('room', gameId, 'endOpponentsTurn', {
       fromPlayer: playerNumber
     });
   };
@@ -259,7 +284,7 @@ function GameBoard(props) {
           </div>
 
           <div id='userRow'>
-            <Graveyard id='userGrave' recent={playerData.recentCardDeath}/>
+            <Graveyard id='userGrave' recent={playerData.recentCardDeath} />
             <CardHolder id='userDeck' />
             <CardHolder id='userPlayArea' />
           </div>
