@@ -2,25 +2,30 @@ import React, { useContext, useState, useEffect } from 'react';
 
 import Card from '../Card';
 import { CardContext } from '../GameBoard';
-import EnemyCard from '../EnemyCard';
+import InfoCard from '../InfoCard';
 
 function Graveyard(props) {
   const { playerDeck } = useContext(CardContext);
 
-  const [heldCards, setHeldCards] = useState(
-    playerDeck.filter(card => card.position === props.id)
-  );
+  const [graveStack, setGraveStack] = useState([]);
 
   useEffect(() => {
-    setHeldCards(playerDeck.filter(card => card.position === props.id));
-  }, [playerDeck]);
+    if (props.recent) {
+      if (graveStack.length > 0 && graveStack[graveStack.length - 1].uId != props.recent.uId) {
+        setGraveStack([...graveStack, props.recent]);
+      }
+      else if (graveStack.length === 0) {
+        setGraveStack([...graveStack, props.recent]);
+      }
+    }
+  }, [props.recent]);
 
   return (
     <div id={props.id}>
       <Card bodyId='playAreaRow'>
         <div id='cardRow'>
-          {heldCards.length > 0 ? (
-            <EnemyCard {...heldCards[heldCards.length - 1]} />
+          {graveStack.length > 0 ? (
+            <InfoCard {...graveStack[graveStack.length - 1]} />
           ) : (
             <></>
           )}

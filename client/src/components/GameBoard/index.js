@@ -23,9 +23,6 @@ export const CardContext = createContext({
 // TODO: When we drag a card and hover it over a card slot, it should make the slot go grey or
 //       something similar so the user has some kind of feedback
 // TODO: Show resources for enemies and players
-// TODO: Be able to kill enemy cards
-// TODO: See enemy cards go into their graveyard
-// TODO: See your cards go into their graveyard
 // TODO: Add in the concept of turns
 // TODO: Draw a card and gain a resource each turn
 // TODO: Add a resource counter for both the user and the opponent
@@ -36,6 +33,8 @@ export const CardContext = createContext({
 // TODO: Show the opponents health
 // TODO: Be able to only attack with the attack row, and have defense units retaliate
 // TODO: Implement defense
+
+// TODO: Cleanup socket registering code
 
 function GameBoard(props) {
   const { socket, gameId, deck, playerNumber } = useContext(GameContext);
@@ -48,6 +47,12 @@ function GameBoard(props) {
       return card;
     })
   );
+
+  const [playerData, setPlayerData] = useState({
+    isPlayersTurn: true,
+    recentCardDeath: null,
+    currentMana: 3
+  });
 
   const [opponentBoardData, setOpponentBoardData] = useState({
     opponentPlayAreaCount: 5,
@@ -101,6 +106,10 @@ function GameBoard(props) {
         setPlayerDeck(deck);
 
         if (cardDied) {
+          setPlayerData(prevState => ({
+            ...prevState,
+            recentCardDeath: cardDied
+          }));
           socket.emit('room', gameId, 'updateOpponentGrave', {
             hasGrave: true,
             fromPlayer: playerNumber
@@ -108,7 +117,7 @@ function GameBoard(props) {
         }
       }
     });
-  });
+  }, [playerDeck, playerData]);
 
   useEffect(() => {
     const copy = GameLogic.copyArray(playerDeck);
@@ -248,7 +257,7 @@ function GameBoard(props) {
           </div>
 
           <div id='userRow'>
-            <Graveyard id='userGrave' />
+            <Graveyard id='userGrave' recent={playerData.recentCardDeath}/>
             <CardHolder id='userDeck' />
             <CardHolder id='userPlayArea' />
           </div>

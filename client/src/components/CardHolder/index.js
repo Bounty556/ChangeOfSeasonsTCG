@@ -5,7 +5,7 @@ import { CardContext } from '../GameBoard';
 import { useDrop } from 'react-dnd';
 import ItemTypes from '../../utils/ItemTypes';
 import GameCard from '../GameCard';
-import EnemyCard from '../EnemyCard';
+import InfoCard from '../InfoCard';
 
 function CardHolder(props) {
   const { cardDraggedToPosition, playerDeck } = useContext(CardContext);
@@ -31,7 +31,7 @@ function CardHolder(props) {
         <div id='cardRow'>
           {props.override ? (
             props.card ? (
-              <EnemyCard {...props.card} />
+              <InfoCard {...props.card} />
             ) : (
               <></>
             )
