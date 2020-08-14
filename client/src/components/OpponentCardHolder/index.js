@@ -11,6 +11,7 @@ function OpponentCardHolder(props) {
             <Card id='opponentCard' key={i}>
               <img
                 src='/images/cardBack/lava_style/back/back_lava.png'
+                alt='opponent player card'
                 className='opponentCard'
               />
             </Card>

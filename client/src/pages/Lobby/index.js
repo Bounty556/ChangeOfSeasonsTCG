@@ -10,7 +10,6 @@ import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 
 import './lobby.css';
-import { ModalBody } from 'react-bootstrap';
 
 const ENDPOINT = 'http://localhost:3001/';
 

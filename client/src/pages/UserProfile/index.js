@@ -22,7 +22,7 @@ function UserProfile() {
 
     //used for when a user is selecting a new avatar 
     const [selectAvatar, setSelectAvatar] = useState('');
-    const [selectDeck, setSelectDeck] = useState('');
+    const [, setSelectDeck] = useState('');
     const [wins,] = useState(0);
     const [losses,] = useState(0);
     const history = useHistory();
@@ -64,10 +64,6 @@ function UserProfile() {
 
     function changeFunc(event) {
         setSelectAvatar(event.target.getAttribute('data'));
-    };
-
-    function deckFunc(event) {
-        setSelectDeck(event.target.getAttribute('data'));
     };
 
     //saves the users Avatar from the selection 
@@ -194,10 +190,10 @@ function UserProfile() {
 
                     <Modal.Body className='modalBody'>
                         <Container className='modalContainer'>
-                            <button  className='wood springButton' onClick={selectSpring}>🌱 Spring 🌱</button>
-                            <button  className='wood summerButton' onClick={selectSummer}>☀️ Summer ☀️</button>
-                            <button  className='wood fallButton' onClick={selectFall}>🍂 Fall 🍂</button>
-                            <button  className='wood winterButton' onClick={selectWinter}>❄️ Winter ❄️</button>
+                            <button  className='wood springButton' onClick={selectSpring}><span role='img' aria-label='Spring emoji'>🌱</span> Spring <span role='img' aria-label='Spring emoji'>🌱</span></button>
+                            <button  className='wood summerButton' onClick={selectSummer}><span role='img' aria-label='Sun emoji'>☀️</span> Summer <span role='img' aria-label='☀️'></span></button>
+                            <button  className='wood fallButton' onClick={selectFall}><span role='img' aria-label='Leaf emoji'>🍂</span> Fall <span role='img' aria-label='Leaf emoji'>🍂</span></button>
+                            <button  className='wood winterButton' onClick={selectWinter}><span role='img' aria-label='Snowflake emoji'>❄️</span> Winter <span role='img' aria-label='Snowflake emoji'>❄️</span></button>
                         </Container>
                     </Modal.Body>
 
