@@ -25,9 +25,6 @@ export const CardContext = createContext({
 //       something similar so the user has some kind of feedback
 // TODO: Show resources for enemies and players
 
-// BACKEND:
-// TODO: Make it so you can't grab enemy cards
-
 // useEffect(() => {
 //   const test = Parser.parseScript(
 //     'ONPLAY RAISEATK ATKROW 1 RAISEDEF ATKROW 1 ONDEATH RAISEATK ATKROW -1 RAISEDEF ATKROW -1'
@@ -59,33 +56,39 @@ function GameBoard(props) {
   });
 
   useEffect(() => {
-    // If we had previous listeners, remove those
     socket.off('updateOpponentPlayArea');
     socket.off('updateOpponentCardPlacement');
-    // Set up our socket
-    socket.on('updateOpponentPlayArea', ({ changeAmount, player }) => {
-      if (player !== playerNumber) {
+    socket.on('updateOpponentPlayArea', ({ changeAmount, fromPlayer }) => {
+      if (fromPlayer !== playerNumber) {
         const boardData = { ...opponentBoardData };
         boardData.opponentPlayAreaCount += changeAmount;
-        setOpponentBoardData(prevState => ({ ...prevState, ...boardData }));
+        setOpponentBoardData(boardData);
       }
     });
     socket.on(
       'updateOpponentCardPlacement',
-      ({ cardData, position, player }) => {
-        if (player !== playerNumber) {
+      ({ cardData, position, fromPlayer }) => {
+        if (fromPlayer !== playerNumber) {
           const boardData = { ...opponentBoardData };
           boardData[position] = cardData;
-          setOpponentBoardData(prevState => ({ ...prevState, ...boardData }));
+          setOpponentBoardData(boardData);
         }
       }
     );
   }, [opponentBoardData]);
 
   useEffect(() => {
-    const copy = playerDeck.map(card => {
-      return { ...card };
+    socket.off('receiveAttack');
+    socket.on('receiveAttack', ({ position, damage, fromPlayer }) => {
+      if (fromPlayer !== playerNumber) {
+        const deck = GameLogic.damageCard(position, damage, GameLogic.copyArray(playerDeck));
+        setPlayerDeck(deck);
+      }
     });
+  });
+
+  useEffect(() => {
+    const copy = GameLogic.copyArray(playerDeck);
     setPlayerDeck(GameLogic.assignHand(GameLogic.shuffleArray(copy)));
   }, []);
 
@@ -95,8 +98,16 @@ function GameBoard(props) {
     
     if (position !== 'userPlayArea') {
       // Make sure the given position doesn't have a card in it already
-      if (GameLogic.isPositionFilled(position, playerDeck) || GameLogic.inEnemyRows(position)) {
+      if (GameLogic.isPositionFilled(position, playerDeck)) {
         return;
+      }
+
+      if (GameLogic.inOpponentRows(position)) {
+        if (GameLogic.isOpponentPositionFilled(position, opponentBoardData)) {
+          return sendAttack(position, cardVal.attack);
+        } else {
+          return;
+        }
       }
 
       sendCardPlacement(cardVal, position);
@@ -119,16 +130,29 @@ function GameBoard(props) {
     socket.emit('room', gameId, 'updateOpponentCardPlacement', {
       cardData: card,
       position: position,
-      player: playerNumber
+      fromPlayer: playerNumber
     });
   };
 
   const sendPlayAreaUpdate = changeAmount => {
     socket.emit('room', gameId, 'updateOpponentPlayArea', {
       changeAmount: changeAmount,
-      player: playerNumber
+      fromPlayer: playerNumber
     });
   };
+
+  const sendAttack = (position, damage) => {
+    position = position.replace('opponent', 'user');
+    const boardData = { ...opponentBoardData };
+    boardData[position].health -= damage;
+    setOpponentBoardData(boardData);
+
+    socket.emit('room', gameId, 'receiveAttack', {
+      position: position,
+      damage: damage,
+      fromPlayer: playerNumber
+    });
+  }
 
   return (
     <CardContext.Provider value={{ cardDraggedToPosition, playerDeck }}>

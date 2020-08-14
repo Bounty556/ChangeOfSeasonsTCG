@@ -1,6 +1,14 @@
 export default {
-  enemyAtkRows: ['opponentAtt1', 'opponentAtt2'],
-  enemyDefRows: ['opponentDef1', 'opponentDef2', 'opponentDef3'],
+  enemyAtkRows: ['opponentAtt1', 'opponentAtt2', 'opponentAtt3'],
+  enemyDefRows: ['opponentDef1', 'opponentDef2'],
+
+  copyArray: function(array) {
+    const copy = array.map(el => {
+      return { ...el };
+    });
+
+    return copy;
+  },
 
   shuffleArray: function (array) {
     for (let i = 0; i < 50; i++) {
@@ -27,7 +35,7 @@ export default {
     return deck;
   },
 
-  inEnemyRows: function (position) {
+  inOpponentRows: function (position) {
     return (
       this.enemyAtkRows.includes(position) ||
       this.enemyDefRows.includes(position)
@@ -42,5 +50,22 @@ export default {
     }
     
     return false;
+  },
+
+  isOpponentPositionFilled: function (position, opponentData) {
+    position = position.replace('opponent', 'user');
+
+    return opponentData[position];
+  },
+
+  damageCard: function(position, damage, deck) {
+    for (let i = 0; i < deck.length; i++) {
+      if (deck[i].position === position) {
+        deck[i].health -= damage;
+        break;
+      }
+    }
+
+    return deck;
   }
 };
