@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, createContext } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
+import OpponentCardHolder from '../OpponentCardHolder';
 import CardHolder from '../CardHolder';
 import { GameContext } from '../../pages/Lobby';
 
@@ -22,10 +23,7 @@ export const CardContext = createContext({
 //       So things don't look awful
 // TODO: When we drag a card and hover it over a card slot, it should make the slot go grey or
 //       something similar so the user has some kind of feedback
-
-// BACKEND:
-// TODO: Show backs of cards in place of enemy's face down cards
-// TODO: Clean up code!!!!!
+// TODO: Show resources for enemies and players
 
 // useEffect(() => {
 //   const test = Parser.parseScript(
@@ -58,84 +56,121 @@ function GameBoard(props) {
   });
 
   useEffect(() => {
-    // If we had previous listeners, remove those
     socket.off('updateOpponentPlayArea');
     socket.off('updateOpponentCardPlacement');
-    // Set up our socket
-    socket.on('updateOpponentPlayArea', ({ changeAmount, player }) => {
-      if (player !== playerNumber) {
+    socket.on('updateOpponentPlayArea', ({ changeAmount, fromPlayer }) => {
+      if (fromPlayer !== playerNumber) {
         const boardData = { ...opponentBoardData };
         boardData.opponentPlayAreaCount += changeAmount;
-        setOpponentBoardData(prevState => ({ ...prevState, ...boardData }));
+        setOpponentBoardData(boardData);
       }
     });
     socket.on(
       'updateOpponentCardPlacement',
-      ({ cardData, position, player }) => {
-        if (player !== playerNumber) {
+      ({ cardData, position, fromPlayer }) => {
+        if (fromPlayer !== playerNumber) {
           const boardData = { ...opponentBoardData };
           boardData[position] = cardData;
-          setOpponentBoardData(prevState => ({ ...prevState, ...boardData }));
+          setOpponentBoardData(boardData);
         }
       }
     );
   }, [opponentBoardData]);
 
   useEffect(() => {
-    // Shuffle player deck
-    const copy = playerDeck.map(card => {
-      return { ...card };
+    socket.off('receiveAttack');
+    socket.on('receiveAttack', ({ position, damage, fromPlayer }) => {
+      if (fromPlayer !== playerNumber) {
+        const deck = GameLogic.damageCard(position, damage, GameLogic.copyArray(playerDeck));
+        setPlayerDeck(deck);
+      }
     });
+  });
+
+  useEffect(() => {
+    const copy = GameLogic.copyArray(playerDeck);
     setPlayerDeck(GameLogic.assignHand(GameLogic.shuffleArray(copy)));
   }, []);
 
   const cardDraggedToPosition = (cardId, position) => {
-    // Check to see if this is a position that can't hold multiple cards
-    if (position !== 'userPlayArea') {
-      // Check to see if the position already has a card
-      const cardIndex = playerDeck.findIndex(
-        card => card.position === position
-      );
-      if (cardIndex !== -1) {
-        return;
-      }
-    }
-
-    // Look for the card with the given cardkey
     const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
     const cardVal = playerDeck[cardIndex];
-
+    
     if (position !== 'userPlayArea') {
-      // Send info to enemy saying we moved a card into a position
-      socket.emit('room', gameId, 'updateOpponentCardPlacement', {
-        cardData: cardVal,
-        position: position,
-        player: playerNumber
-      });
-    } else if (
-      position === 'userPlayArea' &&
-      cardVal.position !== 'userPlayArea'
-    ) {
-      // Send info to enemy saying we moved a card away from a position
-      socket.emit('room', gameId, 'updateOpponentCardPlacement', {
-        cardData: null,
-        position: cardVal.position,
-        player: playerNumber
-      });
+      // Make sure the given position doesn't have a card in it already
+      if (GameLogic.isPositionFilled(position, playerDeck)) {
+        return;
+      }
+
+      if (GameLogic.inOpponentRows(position)) {
+        if (GameLogic.isOpponentPositionFilled(position, opponentBoardData)) {
+          return sendAttack(position, cardVal.attack);
+        } else {
+          return;
+        }
+      }
+
+      sendCardPlacement(cardVal, position);
+      if (cardVal.position === 'userPlayArea') {
+        sendPlayAreaUpdate(-1);
+      }
+    } else if (cardVal.position !== 'userPlayArea') {
+      sendCardPlacement(null, cardVal.position);
+      if (cardVal.position === 'userPlayArea') {
+        sendPlayAreaUpdate(1);
+        position = '';
+      }
     }
 
     cardVal.position = position;
     setPlayerDeck([...playerDeck.filter(card => card.uId !== cardId), cardVal]);
   };
 
+  const sendCardPlacement = (card, position) => {
+    socket.emit('room', gameId, 'updateOpponentCardPlacement', {
+      cardData: card,
+      position: position,
+      fromPlayer: playerNumber
+    });
+  };
+
+  const sendPlayAreaUpdate = changeAmount => {
+    socket.emit('room', gameId, 'updateOpponentPlayArea', {
+      changeAmount: changeAmount,
+      fromPlayer: playerNumber
+    });
+  };
+
+  const sendAttack = (position, damage) => {
+    position = position.replace('opponent', 'user');
+    const boardData = { ...opponentBoardData };
+    boardData[position].health -= damage;
+    setOpponentBoardData(boardData);
+
+    socket.emit('room', gameId, 'receiveAttack', {
+      position: position,
+      damage: damage,
+      fromPlayer: playerNumber
+    });
+  }
+
   return (
     <CardContext.Provider value={{ cardDraggedToPosition, playerDeck }}>
       <DndProvider backend={HTML5Backend}>
         <div className='wrapper'>
           <div id='opponentRow'>
-            <CardHolder id='opponentGrave' />
-            <CardHolder id='opponentDeck' />
-            <CardHolder id='opponentPlayArea' />
+            <OpponentCardHolder
+              id='opponentGrave'
+              cardCount={opponentBoardData.opponentHasGrave ? 1 : 0}
+            />
+            <OpponentCardHolder
+              id='opponentDeck'
+              cardCount={opponentBoardData.opponentHasDeck ? 1 : 0}
+            />
+            <OpponentCardHolder
+              id='opponentPlayArea'
+              cardCount={opponentBoardData.opponentPlayAreaCount}
+            />
           </div>
 
           <div id='opponentDefRow'>

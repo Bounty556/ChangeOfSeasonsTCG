@@ -1,13 +1,24 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 
 import Card from '../Card';
 import { CardContext } from '../GameBoard';
 import { useDrop } from 'react-dnd';
 import ItemTypes from '../../utils/ItemTypes';
 import GameCard from '../GameCard';
+import EnemyCard from '../EnemyCard';
 
 function CardHolder(props) {
   const { cardDraggedToPosition, playerDeck } = useContext(CardContext);
+
+  const [heldCards, setHeldCards] = useState(
+    playerDeck.filter(card => card.position === props.id)
+  );
+
+  useEffect(() => {
+    if (!props.override) {
+      setHeldCards(playerDeck.filter(card => card.position === props.id));
+    }
+  }, [playerDeck]);
 
   const [, drop] = useDrop({
     accept: ItemTypes.CARD,
@@ -20,16 +31,12 @@ function CardHolder(props) {
         <div id='cardRow'>
           {props.override ? (
             props.card ? (
-              <GameCard {...props.card} />
+              <EnemyCard {...props.card} />
             ) : (
               <></>
             )
           ) : (
-            playerDeck
-              .filter(card => card.position === props.id)
-              .map(card => {
-                return <GameCard {...card} />;
-              })
+            heldCards.map(card => <GameCard {...card} />)
           )}
         </div>
       </Card>

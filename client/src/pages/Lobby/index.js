@@ -10,7 +10,6 @@ import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 
 import './lobby.css';
-import { ModalBody } from 'react-bootstrap';
 
 const ENDPOINT = 'http://localhost:3001/';
 
@@ -26,6 +25,8 @@ export const GameContext = createContext({
 // 2. The server then returns the playerNumber back to the client, and the client records this, as well as that it has successfully disconnected
 // 3. The client sends a message to the server telling all clients in the room it has successfully connected, and that player info needs to be updated
 // 4. All clients send back their player info to the room via the server, so all clients can update their local player information correctly
+
+// TODO: Make it so only the host can start, and it starts the game for both players
 
 class Lobby extends Component {
   constructor() {

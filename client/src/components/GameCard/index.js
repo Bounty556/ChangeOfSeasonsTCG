@@ -32,21 +32,24 @@ function GameCard(props) {
               className='card-image'
             />
           </div>
-          <img
-            src='./images/cardBack/lava_style/card_title/frame_title_lava.png'
-            alt='placeholder'
-            className='card-frame'
-          />
-          <div className='name-container'>
-          <h5 className='card-name'>{props.name.trim()}</h5>
-          </div>
-          <div className='effect-box'>
-            <p className='effect'>{props.effect}</p>
-          </div>
-          <div className='stats-box row'>
-            <p className='attack'>{props.attack}</p>
-            <p className='health'>{props.health}</p>
-          </div>
+            <img
+              src='./images/cardBack/lava_style/card_title/frame_title_lava.png'
+              alt='placeholder'
+              className='card-frame'
+            />
+
+            <div className='name-container'>
+              <h5 className='card-name'>{props.name.trim()}</h5>
+            </div>
+
+            <div className='effect-box'>
+              <p className='effect'>{props.effect}</p>
+            </div>
+
+            <div className='stats-box row'>
+              <p className='attack'>{props.attack}</p>
+              <p className='health'>{props.health}</p>
+            </div>
         </Card>
       </div>
     </>
