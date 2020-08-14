@@ -22,10 +22,10 @@ export const CardContext = createContext({
 //       So things don't look awful
 // TODO: When we drag a card and hover it over a card slot, it should make the slot go grey or
 //       something similar so the user has some kind of feedback
+
 // TODO: Show resources for enemies and players
 // TODO: Add in the concept of turns
 // TODO: Draw a card and gain a resource each turn
-// TODO: Add a resource counter for both the user and the opponent
 // TODO: Make the card shuffling better, so users aren't getting top tier cards immediately
 // TODO: Make cards only be able to target their intended minions
 // TODO: Make effects work
@@ -151,9 +151,8 @@ function GameBoard(props) {
       }
     } else if (cardVal.position !== 'userPlayArea') {
       sendCardPlacement(null, cardVal.position);
-      if (cardVal.position === 'userPlayArea') {
+      if (position === 'userPlayArea') {
         sendPlayAreaUpdate(1);
-        position = '';
       }
     }
 
