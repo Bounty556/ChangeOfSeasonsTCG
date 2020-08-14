@@ -1,11 +1,20 @@
 
 
-h1 {
+.cosHome {
     color: white;
     margin: 50px;
     text-align: center;
     font-size: 100px;
     font-family: 'Trade Winds', cursive;
+
+    text-shadow:
+    0 0 1px #fff,
+    0 0 1px #fff,
+    0 0 2px #fff,
+    0 0 4px rgb(183, 0, 255),
+    0 0 8px rgb(183, 0, 255),
+    0 0 80px rgb(183, 0, 255),
+    0 0 100px rgb(183, 0, 255);
 }
 
 .home-card {

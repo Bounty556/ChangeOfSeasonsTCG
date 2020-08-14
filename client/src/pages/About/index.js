@@ -1,32 +1,24 @@
 import React from 'react';
-// import { Link } from 'react-router-dom';
 
-import Container from '../../components/Container/index';
-// import Navbar from '../../components/Navbar/index';
 
 import './about.css';
 
 function About() {
     return (
+      
         <div>
-            <Container>
-                <div className='card gameCard'>
-                    <div className='card-body'>
-                        <h5 className='card-name'>Yōsei</h5>
-                            <div className = 'image-container'>
-                                <img src='./images/buddy.png' alt='placeholder' className='card-image'></img>
-                            </div>
-                            <div className = 'effect-box'>
-                                <p className = 'effect'></p>
-                            </div>
-                                <div className = 'stats-box row'>  
-                                <p className = 'attack'>3</p>
-                                <p className = 'resourse'>3</p>
-                                <p className = 'health'>3</p>
-                            </div>
-                    </div>
-                </div>
-            </Container>
+            <div>
+                <span class="resourceCircle" id='resource1'></span>
+                <span class="resourceCircle" id='resource2'></span>
+                <span class="resourceCircle" id='resource3'></span>
+                <span class="resourceCircle" id='resource4'></span>
+                <span class="resourceCircle" id='resource5'></span>
+                <span class="resourceCircle" id='resource6'></span>
+                <span class="resourceCircle" id='resource7'></span>
+                <span class="resourceCircle" id='resource8'></span>
+                <span class="resourceCircle" id='resource9'></span>
+           
+            </div>
         </div>
     )
 }

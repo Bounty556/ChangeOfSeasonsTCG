@@ -12,7 +12,7 @@ function Homepage() {
         <div>
             <Navbar />
             <Container>
-                <h1 className='animate__animated animate__slideInDown'>Change of Seasons</h1>
+                <h1 className=' cosHome animate__animated animate__slideInDown'>Change of Seasons</h1>
                 
                 <div className='card animate__animated animate__slideInDown home-card'>
                     <div className='card-body'>

@@ -333,7 +333,7 @@ const cardSeed = [
     effect: 'Gain an extra resource',
     effectScript: 'ONPLAY RES SELF 1',
     name: 'Rynia',
-    img: 'emerald_13.png'
+    img: 'green_13.png'
   },
   {
     season: 'Summer',
