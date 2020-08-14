@@ -44,7 +44,7 @@ hr {
 #userDeck, 
 #userGrave, 
 #opponentGrave {
-    width: 9%;
+    width: 12%;
 }
 
 /* Attack Styling */
@@ -84,4 +84,23 @@ hr {
 
 #opponentCard {
     border: none;
+}
+
+@media (max-width: 1500px) {
+    #opponentAtt1, 
+    #opponentAtt2, 
+    #opponentAtt3, 
+    #userAtt1, 
+    #userAtt2, 
+    #userAtt3,
+    #opponentDef1, 
+    #opponentDef2, 
+    #userDef1, 
+    #userDef2,
+    #opponentDeck, 
+    #userDeck, 
+    #userGrave, 
+    #opponentGrave {
+        width: 16%;
+    }
 }
