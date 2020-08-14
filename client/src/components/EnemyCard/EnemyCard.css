@@ -1,0 +1,96 @@
+#gameCard { 
+    border: none;
+    box-shadow: 4px 4px 5px -3px #444;
+    left: 0px;
+    margin: 0;
+    max-height: 281px;
+    max-width: 187px;
+    top: 0px;
+    margin-bottom: 7px;
+}
+
+.card-name {
+    bottom: 25px;
+    color: whitesmoke;
+    font-family: 'Trade Winds', cursive;
+    font-size: 17px;
+    position: relative;
+    text-align: center;
+    transform: rotate(-4deg);
+}
+
+.card-body {
+    border: none;
+    outline: none;
+    padding: 5px;
+}
+
+.image-container {
+    background-color: rgb(36, 2, 58);
+    width: 100%
+}
+
+.card-image { 
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.card-frame {
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.effect-box {
+    position: absolute;
+    bottom: 12px;
+}
+
+.effect {
+    text-align: center;
+    color: white;
+    font-size: 12px;
+    margin-right: 5px;
+}
+
+.stats-box {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly !important;
+    margin-top: 17px;
+}
+
+ .attack, .health { 
+    text-align: center;
+    background-position: center;
+    font-size: larger;
+    color: red;
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+
+.health {
+    color: rgb(13, 180, 13);
+    margin-left: 110px;
+}
+
+.attack {
+    margin-right: 7px;
+}
+
+.resource {
+    color: rgb(0, 217, 255);
+    position: absolute;
+    top: 15px;
+    left: 18px;
+    font-size: 15px;
+}
+
+.mana {
+    position: absolute;
+    top: 10px;
+    left: 8px;
+    width: 30px;
+}
