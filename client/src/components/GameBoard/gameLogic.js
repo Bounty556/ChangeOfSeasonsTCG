@@ -15,7 +15,7 @@ export default {
     for (let i = 0; i < tempDeck.length; i++) {
       for (let j = 0; j < array.length; j++) {
         if (array[j].cardId === tempDeck[i]) {
-          newDeck.push({...array[j], uId: i}); // Give this card a unique Id
+          newDeck.push({ ...array[j], uId: i }); // Give this card a unique Id
           break;
         }
       }
@@ -133,5 +133,15 @@ export default {
     }
 
     return null;
+  },
+
+  hasAvailableCards: function (deck) {
+    for (let i = 0; i < deck.length; i++) {
+      if (deck[i].position === '') {
+        return true;
+      }
+    }
+
+    return false;
   }
 };
