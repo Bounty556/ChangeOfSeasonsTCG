@@ -35,6 +35,10 @@ export const CardContext = createContext({
 // TODO: Be able to only attack with the attack row, and have defense units retaliate
 // TODO: Implement defense
 
+// TODO: Make cards only be able to be moved from the play area to the playing field
+// TODO: Make only minion cards playable on the field
+// TODO: Spell cards should only trigger their effect
+
 function GameBoard(props) {
   const { socket, gameId, deck, playerNumber } = useContext(GameContext);
 
@@ -49,7 +53,7 @@ function GameBoard(props) {
       card.onAttackEffect = [];
       
       // Parse the effect on this card if applicable
-      const tokens = Parser.tokenize(card.effect);
+      const tokens = Parser.tokenize(card.effectScript);
 
       for (let i = 0; i < tokens.length; i++) {
         switch (tokens[i].trigger) {
@@ -163,6 +167,8 @@ function GameBoard(props) {
   }, []);
 
   const cardDraggedToPosition = (cardId, position) => {
+    // TODO: Behave differently if we're casting an effect
+
     if (!playerData.isPlayersTurn) {
       return;
     }
@@ -184,19 +190,14 @@ function GameBoard(props) {
         }
       }
 
-      sendCardPlacement(cardVal, position);
+      // Make sure we're moving from the play area to the field
       if (cardVal.position === 'userPlayArea') {
         sendPlayAreaUpdate(-1);
-      }
-    } else if (cardVal.position !== 'userPlayArea') {
-      sendCardPlacement(null, cardVal.position);
-      if (position === 'userPlayArea') {
-        sendPlayAreaUpdate(1);
+        sendCardPlacement(cardVal, position);
+        cardVal.position = position;
+        setPlayerDeck([...playerDeck.filter(card => card.uId !== cardId), cardVal]);
       }
     }
-
-    cardVal.position = position;
-    setPlayerDeck([...playerDeck.filter(card => card.uId !== cardId), cardVal]);
   };
 
   const sendCardPlacement = (card, position) => {
@@ -242,11 +243,6 @@ function GameBoard(props) {
     socket.emit('room', gameId, 'endOpponentsTurn', {
       fromPlayer: playerNumber
     });
-  };
-
-  const castEffect = (effectTokens) => {
-    // For each token, do the thing
-    const positions;
   };
 
   return (

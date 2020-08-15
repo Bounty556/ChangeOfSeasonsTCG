@@ -45,6 +45,10 @@ export default {
      }
    */
   tokenize: function (string) {
+    if (!string || string.length === 0) {
+      return [];
+    }
+
     const splitString = string.trim().split(' ');
 
     // Group all TRIGGERS and their OPERATORS into objects
