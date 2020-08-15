@@ -43,7 +43,16 @@ function GameCard(props) {
             </div>
 
             <div className='effect-box'>
-              <p className='effect'>{props.effect}</p>
+              {props.effect.length > 40 ? (
+                <p className='effect' style={{
+                  marginBottom: '0',
+                  position: 'relative',
+                  top: '4px',
+                  fontSize: '11.5px'
+                }}>{props.effect}</p>
+              ) : (
+                <p className='effect'>{props.effect}</p>
+              )}
             </div>
 
             <div className='stats-box row'>

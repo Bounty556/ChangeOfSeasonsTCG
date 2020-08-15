@@ -29,8 +29,6 @@ hr {
     margin: 0 0 45px 0;
 }
 
-
-
 /* Width Settings */
 #opponentAtt1, 
 #opponentAtt2, 
@@ -109,10 +107,9 @@ hr {
     margin: 5px; 
     border-width: 2px;
     border-color: rgb(0, 110, 161);
- 
-  }
+}
 
-  .resourceCircle:hover { 
+.resourceCircle:hover { 
     background-color: rgb(54, 0, 202);
     box-shadow:
     0 0 1px #fff,
@@ -123,7 +120,7 @@ hr {
     0 0 40px rgb(20, 130, 220),
     0 0 50px rgb(20, 130, 220),
     0 0 60px rgb(20, 130, 220);  
-  }
+}
 
 @media (max-width: 1500px) {
     #opponentAtt1, 

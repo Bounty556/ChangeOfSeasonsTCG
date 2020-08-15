@@ -264,6 +264,7 @@ function GameBoard(props) {
             <span className='resourceCircle' id='resource8'></span>
             <span className='resourceCircle' id='resource9'></span>
           </div>
+        
           <div id='opponentRow'>
             <OpponentCardHolder
               id='opponentGrave'
