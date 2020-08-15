@@ -35,8 +35,6 @@ export const CardContext = createContext({
 // TODO: Be able to only attack with the attack row, and have defense units retaliate
 // TODO: Implement defense
 
-// TODO: Make cards only be able to be moved from the play area to the playing field
-// TODO: Make only minion cards playable on the field
 // TODO: Spell cards should only trigger their effect
 
 function GameBoard(props) {
@@ -168,13 +166,12 @@ function GameBoard(props) {
 
   const cardDraggedToPosition = (cardId, position) => {
     // TODO: Behave differently if we're casting an effect
-
-    if (!playerData.isPlayersTurn) {
-      return;
-    }
-
     const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
     const cardVal = playerDeck[cardIndex];
+    
+    if (!playerData.isPlayersTurn || !cardVal.isCreature) {
+      return;
+    }
 
     if (position !== 'userPlayArea') {
       // Make sure the given position doesn't have a card in it already
