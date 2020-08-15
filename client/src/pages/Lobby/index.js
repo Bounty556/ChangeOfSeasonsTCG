@@ -26,7 +26,8 @@ export const GameContext = createContext({
 // 3. The client sends a message to the server telling all clients in the room it has successfully connected, and that player info needs to be updated
 // 4. All clients send back their player info to the room via the server, so all clients can update their local player information correctly
 
-// TODO: Make it so only the host can start, and it starts the game for both players
+// TODO: Make the start button start the game for both users in the lobby
+// TODO: Fix bug when player leaves lobby that makes the spinny animation not happen
 
 class Lobby extends Component {
   constructor() {
@@ -257,7 +258,7 @@ class Lobby extends Component {
                     )}
                   </div>
                   <div className='row'>
-                    {!this.state.allJoined ? (
+                    {!this.state.joinedLobby ? (
                       <div className='button-col'>
                         <button className='wood' onClick={this.joinLobby}>
                           Join Match
@@ -267,10 +268,14 @@ class Lobby extends Component {
                         </button>
                       </div>
                     ) : (
-                      <div className='button-col'>
-                        <button className='wood' onClick={this.startMatch}>
-                          Start Match
-                        </button>
+                      <div className='button=col'>
+                        {this.state.playerNumber === 1 ? (
+                          <button className='wood' onClick={this.startMatch}>
+                            Start Match
+                          </button>
+                        ) : (
+                          <></>
+                        )}
                         <button className='wood' onClick={this.exitGame}>
                           Exit Game
                         </button>
@@ -284,12 +289,20 @@ class Lobby extends Component {
               <Modal className='errorModal' show={this.state.showModal}>
                 {/* Body */}
                 <Modal.Body className='modalBody'>
-                      <p>Looks like you haven't choosen a deck yet. Head to your profile and select "Choose Deck" to play!</p>
+                  <p>
+                    Looks like you haven't choosen a deck yet. Head to your
+                    profile and select "Choose Deck" to play!
+                  </p>
                 </Modal.Body>
 
                 {/* Footer */}
                 <Modal.Footer>
-                  <button className='btn btn-primary errorBtn' onClick={() => window.location = '/Profile'}>Head to Profile</button>
+                  <button
+                    className='btn btn-primary errorBtn'
+                    onClick={() => (window.location = '/Profile')}
+                  >
+                    Head to Profile
+                  </button>
                 </Modal.Footer>
               </Modal>
             </Container>
