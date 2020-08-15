@@ -52,6 +52,7 @@ hr {
 /* Attack Styling */
 #opponentAtt1, #opponentAtt2, #opponentAtt3, #userAtt1, #userAtt2, #userAtt3 {
     margin-bottom: 50px;
+    
 }
 
 #opponentDeck, #userDeck, #userGrave {

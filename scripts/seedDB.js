@@ -64,7 +64,7 @@ const cardSeed = [
     resourceCost: 2,
     attack: 1,
     health: 4,
-    name: 'Obasi of the Deep',
+    name: 'Obasi',
     img: 'hound.png'
   },
   {
@@ -164,7 +164,7 @@ const cardSeed = [
     health: 0,
     effect: 'Gain 2 resource spots ',
     effectScript: 'ONPLAY RES 2',
-    name: 'Concentration of Nature',
+    name: 'Vivifcate',
     img: 'emerald_9.png'
   },
   {
@@ -176,8 +176,8 @@ const cardSeed = [
     health: 0,
     effect: 'give attack row 1 extra attack ',
     effectScript: 'ONPLAY RAISEATK ATKROW 1 ALL',
-    name: 'Assault of Nature',
-    img: 'green_11.png'
+    name: 'Solstice',
+    img: 'green_9.png'
   },
   {
     season: 'Fall',
@@ -188,8 +188,8 @@ const cardSeed = [
     health: 0,
     effect: 'Destroy 1 of your own minions - give the rest 1 attack',
     effectScript: 'ONPLAY KILL TARGET SELF ATKROW 1 ALL',
-    name: 'Mystic Typhoon',
-    img: 'blue_25.png'
+    name: 'indignity',
+    img: 'violet_3.png'
   },
   {
     season: 'Winter',
@@ -200,7 +200,7 @@ const cardSeed = [
     health: 0,
     effect: 'Give defense row 2 extra health ',
     effectScript: 'ONPLAY RAISEDEF 2 ALL',
-    name: 'Phantom Form',
+    name: 'Dark Shell',
     img: 'violet_11.png'
   },
   {
@@ -240,7 +240,7 @@ const cardSeed = [
     resourceCost: 4,
     attack: 0,
     health: 7,
-    name: 'Wall of Swords',
+    name: 'Bastille',
     img: 'red_34.png'
   },
   {
@@ -300,7 +300,7 @@ const cardSeed = [
     resourceCost: 5,
     attack: 5,
     health: 4,
-    name: 'Vegnessss',
+    name: 'Vegness',
     img: 'lizardman_01.png'
   },
   {
@@ -380,7 +380,7 @@ const cardSeed = [
     health: 0,
     effect: 'Draw 3 cards',
     effectScript: 'ONPLAY DRAW 3',
-    name: 'Runes of Calling',
+    name: 'Siphon',
     img: 'yellow_22.png'
   },
   {
@@ -392,19 +392,19 @@ const cardSeed = [
     health: 0,
     effect: 'restore 15 life to all your creatures ',
     effectScript: 'ONPLAY HEAL ALL 15',
-    name: 'Call of Health',
+    name: 'Gaea`s Cure',
     img: 'green_22.png'
   },
   {
     season: 'Fall',
     cardId: 35,
     isCreature: false,
-    resourceCost: 8,
+    resourceCost: 7,
     attack: 0,
     health: 0,
     effect: 'Give all your creatures +2 attack ',
     effectScript: 'ONPLAY RAISEATK 2 ALL',
-    name: 'Hidden Dagger',
+    name: 'Dark Ambush',
     img: 'yellow_37.png'
   },
   {
@@ -416,7 +416,7 @@ const cardSeed = [
     health: 0,
     effect: 'Give all your creatures +2 attack ',
     effectScript: 'ONPLAY RAISEATK 2 ALL',
-    name: 'Seal of Death',
+    name: 'Frosts` Bite',
     img: 'blue_1.png'
   },
   {
@@ -456,7 +456,7 @@ const cardSeed = [
     resourceCost: 6,
     attack: 4,
     health: 6,
-    name: 'Brethraodduss',
+    name: 'Brethraod',
     img: 'blue_37.png'
   },
   {
@@ -556,7 +556,7 @@ const cardSeed = [
     health: 5,
     effect: 'When this enters give your atk row +3 attack',
     effectScript: 'ONPLAY RAISEATK ATKROW 3',
-    name: 'Dilbuggraulm',
+    name: 'Buggraulm',
     img: 'demon_05.png'
   },
   {
@@ -704,7 +704,7 @@ const cardSeed = [
     health: 0,
     effect: 'Deal 10 damage to an enemy minion or player',
     effectScript: 'ONPLAY DMG 10',
-    name: 'Fires of the Divine',
+    name: 'Sun Flare',
     img: 'violet_28.png'
   },
   {
@@ -716,7 +716,7 @@ const cardSeed = [
     health: 0,
     effect: 'You may play a card from your graveyard for free',
     effectScript: 'ONPLAY ADDEFFECT "ONDEATH RTNHND"',
-    name: 'Gravediggers Delight',
+    name: 'Endless Death',
     img: 'emerald_3.png'
   },
   {
