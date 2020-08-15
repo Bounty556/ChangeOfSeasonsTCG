@@ -49,7 +49,7 @@ function GameBoard(props) {
       card.onPlayEffect = [];
       card.onDeathEffect = [];
       card.onAttackEffect = [];
-      
+
       // Parse the effect on this card if applicable
       const tokens = Parser.tokenize(card.effectScript);
 
@@ -66,7 +66,7 @@ function GameBoard(props) {
             break;
         }
       }
-      
+
       return card;
     })
   );
@@ -86,7 +86,7 @@ function GameBoard(props) {
     userAtt1: null,
     userAtt2: null,
     userAtt3: null,
-    userResources: 1,
+    userResources: 1
   });
 
   useEffect(() => {
@@ -108,7 +108,10 @@ function GameBoard(props) {
         if (fromPlayer !== playerNumber) {
           const boardData = { ...opponentBoardData };
           // see if this card was already in play
-          const isInPlay = GameLogic.isOpponentCardInPlay(cardData.uId, opponentBoardData);
+          const isInPlay = GameLogic.isOpponentCardInPlay(
+            cardData.uId,
+            opponentBoardData
+          );
           if (isInPlay) {
             boardData[isInPlay] = null;
           }
@@ -165,10 +168,11 @@ function GameBoard(props) {
   }, []);
 
   const cardDraggedToPosition = (cardId, position) => {
-    // TODO: Behave differently if we're casting an effect
     const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
-    const cardVal = playerDeck[cardIndex];
-    
+    const cardVal = playerDeck[cardIndex]; // The card we're dragging
+
+    // TODO: Behave differently if we're casting an effect
+
     if (!playerData.isPlayersTurn || !cardVal.isCreature) {
       return;
     }
@@ -192,7 +196,10 @@ function GameBoard(props) {
         sendPlayAreaUpdate(-1);
         sendCardPlacement(cardVal, position);
         cardVal.position = position;
-        setPlayerDeck([...playerDeck.filter(card => card.uId !== cardId), cardVal]);
+        setPlayerDeck([
+          ...playerDeck.filter(card => card.uId !== cardId),
+          cardVal
+        ]);
       }
     }
   };
@@ -246,16 +253,16 @@ function GameBoard(props) {
     <CardContext.Provider value={{ cardDraggedToPosition, playerDeck }}>
       <DndProvider backend={HTML5Backend}>
         <div className='wrapper'>
-        <div className='userResourceRow'>
-          <span className="resourceCircle" id='resource1'></span>
-                <span className="resourceCircle" id='resource2'></span>
-                <span className="resourceCircle" id='resource3'></span>
-                <span className="resourceCircle" id='resource4'></span>
-                <span className="resourceCircle" id='resource5'></span>
-                <span className="resourceCircle" id='resource6'></span>
-                <span className="resourceCircle" id='resource7'></span>
-                <span className="resourceCircle" id='resource8'></span>
-                <span className="resourceCircle" id='resource9'></span>
+          <div className='userResourceRow'>
+            <span className='resourceCircle' id='resource1'></span>
+            <span className='resourceCircle' id='resource2'></span>
+            <span className='resourceCircle' id='resource3'></span>
+            <span className='resourceCircle' id='resource4'></span>
+            <span className='resourceCircle' id='resource5'></span>
+            <span className='resourceCircle' id='resource6'></span>
+            <span className='resourceCircle' id='resource7'></span>
+            <span className='resourceCircle' id='resource8'></span>
+            <span className='resourceCircle' id='resource9'></span>
           </div>
           <div id='opponentRow'>
             <OpponentCardHolder
@@ -324,15 +331,15 @@ function GameBoard(props) {
             <CardHolder id='userPlayArea' />
           </div>
           <div className='userResourceRow'>
-                <span className="resourceCircle" id='resource1'></span>
-                <span className="resourceCircle" id='resource2'></span>
-                <span className="resourceCircle" id='resource3'></span>
-                <span className="resourceCircle" id='resource4'></span>
-                <span className="resourceCircle" id='resource5'></span>
-                <span className="resourceCircle" id='resource6'></span>
-                <span className="resourceCircle" id='resource7'></span>
-                <span className="resourceCircle" id='resource8'></span>
-                <span className="resourceCircle" id='resource9'></span>
+            <span className='resourceCircle' id='resource1'></span>
+            <span className='resourceCircle' id='resource2'></span>
+            <span className='resourceCircle' id='resource3'></span>
+            <span className='resourceCircle' id='resource4'></span>
+            <span className='resourceCircle' id='resource5'></span>
+            <span className='resourceCircle' id='resource6'></span>
+            <span className='resourceCircle' id='resource7'></span>
+            <span className='resourceCircle' id='resource8'></span>
+            <span className='resourceCircle' id='resource9'></span>
           </div>
         </div>
       </DndProvider>
