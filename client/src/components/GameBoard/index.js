@@ -229,15 +229,15 @@ function GameBoard(props) {
       <DndProvider backend={HTML5Backend}>
         <div className='wrapper'>
         <div className='userResourceRow'>
-          <span class="resourceCircle" id='resource1'></span>
-                <span class="resourceCircle" id='resource2'></span>
-                <span class="resourceCircle" id='resource3'></span>
-                <span class="resourceCircle" id='resource4'></span>
-                <span class="resourceCircle" id='resource5'></span>
-                <span class="resourceCircle" id='resource6'></span>
-                <span class="resourceCircle" id='resource7'></span>
-                <span class="resourceCircle" id='resource8'></span>
-                <span class="resourceCircle" id='resource9'></span>
+          <span className="resourceCircle" id='resource1'></span>
+                <span className="resourceCircle" id='resource2'></span>
+                <span className="resourceCircle" id='resource3'></span>
+                <span className="resourceCircle" id='resource4'></span>
+                <span className="resourceCircle" id='resource5'></span>
+                <span className="resourceCircle" id='resource6'></span>
+                <span className="resourceCircle" id='resource7'></span>
+                <span className="resourceCircle" id='resource8'></span>
+                <span className="resourceCircle" id='resource9'></span>
           </div>
           <div id='opponentRow'>
             <OpponentCardHolder
@@ -306,15 +306,15 @@ function GameBoard(props) {
             <CardHolder id='userPlayArea' />
           </div>
           <div className='userResourceRow'>
-          <span class="resourceCircle" id='resource1'></span>
-                <span class="resourceCircle" id='resource2'></span>
-                <span class="resourceCircle" id='resource3'></span>
-                <span class="resourceCircle" id='resource4'></span>
-                <span class="resourceCircle" id='resource5'></span>
-                <span class="resourceCircle" id='resource6'></span>
-                <span class="resourceCircle" id='resource7'></span>
-                <span class="resourceCircle" id='resource8'></span>
-                <span class="resourceCircle" id='resource9'></span>
+                <span className="resourceCircle" id='resource1'></span>
+                <span className="resourceCircle" id='resource2'></span>
+                <span className="resourceCircle" id='resource3'></span>
+                <span className="resourceCircle" id='resource4'></span>
+                <span className="resourceCircle" id='resource5'></span>
+                <span className="resourceCircle" id='resource6'></span>
+                <span className="resourceCircle" id='resource7'></span>
+                <span className="resourceCircle" id='resource8'></span>
+                <span className="resourceCircle" id='resource9'></span>
           </div>
         </div>
       </DndProvider>
