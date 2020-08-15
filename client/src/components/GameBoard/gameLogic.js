@@ -25,16 +25,27 @@ winterDeck: [4, 4, 8, 8, 12, 16, 20, 20, 24, 24, 28, 28, 32, 32, 36, 36, 40, 40,
   },
 
   shuffleArray: function (array) {
-    for (let i = 0; i < 50; i++) {
-      // Swap these elements in the array
-      const randomIndex1 = Math.floor(Math.random() * array.length);
-      const randomIndex2 = Math.floor(Math.random() * array.length);
+    var max = (array.length/4)
+    var min = 0
+    for (let i = 0; i < 4; i++) {
+      //Randomly generate a random index number
+      console.log(min);
+      console.log(max);
 
+      for (let j = 0; j < 7; j++) {
+      const randomIndex1 = Math.floor(Math.random() * (max - min) + min);
+      const randomIndex2 = Math.floor(Math.random() * (max - min) + min);
+      // Swap these elements in the array
       if (randomIndex1 !== randomIndex2) {
         const tempElement = array[randomIndex1];
         array[randomIndex1] = array[randomIndex2];
         array[randomIndex2] = tempElement;
       }
+    }
+    max +=(array.length/4)
+    min +=(array.length/4)
+  
+      console.log(array)
     }
 
     return array;
