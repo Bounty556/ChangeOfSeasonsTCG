@@ -82,7 +82,7 @@ function GameBoard(props) {
   const [playerData, setPlayerData] = useState({
     isPlayersTurn: true,
     recentCardDeath: null,
-    currentResources: 3
+    currentResource: 2
   });
 
   const [opponentBoardData, setOpponentBoardData] = useState({
@@ -94,8 +94,12 @@ function GameBoard(props) {
     userAtt1: null,
     userAtt2: null,
     userAtt3: null,
-    userResources: 1
+    userResource: 2,
   });
+
+  useEffect(() => {
+    socket.emit('room', gameId, 'updateOpponentResource',{resourceUpdate: playerData.currentResource, fromPlayer: playerNumber}
+    )},[playerData.currentResource])
 
   useEffect(() => {
     socket.off('updateOpponentPlayArea');
@@ -103,6 +107,8 @@ function GameBoard(props) {
     socket.off('updateOpponentGrave');
     socket.off('receiveAttack');
     socket.off('endOpponentsTurn');
+    socket.off('updateOpponentResource')
+
     socket.on('updateOpponentPlayArea', ({ changeAmount, fromPlayer }) => {
       if (fromPlayer !== playerNumber) {
         const boardData = { ...opponentBoardData };
@@ -110,6 +116,16 @@ function GameBoard(props) {
         setOpponentBoardData(boardData);
       }
     });
+
+    //updates resources 
+    socket.on('updateOpponentResource', ({ resourceUpdate, fromPlayer }) => {
+      if (fromPlayer !== playerNumber) {
+        const boardData = {...boardData}
+        boardData.userResource = resourceUpdate
+        setOpponentBoardData(boardData)
+      }
+    })
+
     socket.on(
       'updateOpponentCardPlacement',
       ({ cardData, position, fromPlayer }) => {
@@ -162,6 +178,8 @@ function GameBoard(props) {
         setPlayerData(prevState => ({ ...prevState, isPlayersTurn: true }));
       }
     });
+
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opponentBoardData, playerDeck, playerData]);
 
@@ -171,7 +189,7 @@ function GameBoard(props) {
       isPlayersTurn: playerNumber === 1 ? true : false
     }));
     const copy = GameLogic.copyArray(playerDeck);
-    
+
     setPlayerDeck(GameLogic.assignHand(GameLogic.shuffleArray(GameLogic.deckChoice(copy))));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -263,17 +281,11 @@ function GameBoard(props) {
       <DndProvider backend={HTML5Backend}>
         <div className='wrapper'>
           <div className='userResourceRow'>
-            <span className='resourceCircle' id='resource1'></span>
-            <span className='resourceCircle' id='resource2'></span>
-            <span className='resourceCircle' id='resource3'></span>
-            <span className='resourceCircle' id='resource4'></span>
-            <span className='resourceCircle' id='resource5'></span>
-            <span className='resourceCircle' id='resource6'></span>
-            <span className='resourceCircle' id='resource7'></span>
-            <span className='resourceCircle' id='resource8'></span>
-            <span className='resourceCircle' id='resource9'></span>
+          {[...Array(opponentBoardData.userResource)].map((resource, i) => (
+           <span className='resourceCircle activeResource'></span>
+          ))}
           </div>
-        
+
           <div id='opponentRow'>
             <CardPlaceHolder
               id='opponentGrave'
@@ -341,15 +353,9 @@ function GameBoard(props) {
             <CardHolder id='userPlayArea' />
           </div>
           <div className='userResourceRow'>
-            <span className='resourceCircle' id='resource1'></span>
-            <span className='resourceCircle' id='resource2'></span>
-            <span className='resourceCircle' id='resource3'></span>
-            <span className='resourceCircle' id='resource4'></span>
-            <span className='resourceCircle' id='resource5'></span>
-            <span className='resourceCircle' id='resource6'></span>
-            <span className='resourceCircle' id='resource7'></span>
-            <span className='resourceCircle' id='resource8'></span>
-            <span className='resourceCircle' id='resource9'></span>
+          {[...Array(playerData.currentResource)].map((resource, i) => (
+           <span className='resourceCircle activeResource'></span>
+          ))}
           </div>
         </div>
       </DndProvider>
