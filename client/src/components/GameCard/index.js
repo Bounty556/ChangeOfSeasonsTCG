@@ -20,7 +20,7 @@ function GameCard(props) {
       <div ref={drag}>
         <Card id='gameCard'>
           <div className='image-container'>
-            <img 
+            <img
               src='./images/cardBack/lava_style/card_title/mana_point_lava.png'
               alt='placeholder'
               className='mana'
@@ -32,33 +32,42 @@ function GameCard(props) {
               className='card-image'
             />
           </div>
-            <img
-              src='./images/cardBack/lava_style/card_title/frame_title_lava.png'
-              alt='placeholder'
-              className='card-frame'
-            />
+          <img
+            src='./images/cardBack/lava_style/card_title/frame_title_lava.png'
+            alt='placeholder'
+            className='card-frame'
+          />
 
-            <div className='name-container'>
-              <h5 className='card-name'>{props.name.trim()}</h5>
-            </div>
+          <div className='name-container'>
+            <h5 className='card-name'>{props.name.trim()}</h5>
+          </div>
 
-            <div className='effect-box'>
-              {props.effect.length > 40 ? (
-                <p className='effect' style={{
+          <div className='effect-box'>
+            {props.effect.length > 40 ? (
+              <p
+                className='effect'
+                style={{
                   marginBottom: '0',
                   position: 'relative',
                   top: '4px',
                   fontSize: '11.5px'
-                }}>{props.effect}</p>
-              ) : (
-                <p className='effect'>{props.effect}</p>
-              )}
-            </div>
+                }}
+              >
+                {props.effect}
+              </p>
+            ) : (
+              <p className='effect'>{props.effect}</p>
+            )}
+          </div>
 
+          {props.isCreature ? (
             <div className='stats-box row'>
               <p className='attack'>{props.attack}</p>
               <p className='health'>{props.health}</p>
             </div>
+          ) : (
+            <></>
+          )}
         </Card>
       </div>
     </>
