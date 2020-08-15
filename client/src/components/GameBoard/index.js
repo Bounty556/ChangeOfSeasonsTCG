@@ -4,12 +4,13 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import OpponentCardHolder from '../OpponentCardHolder';
 import CardHolder from '../CardHolder';
+import Graveyard from '../Graveyard';
 import { GameContext } from '../../pages/Lobby';
 
 import GameLogic from './gameLogic';
+import Parser from './cardScript';
 
 import './gameboard.css';
-import Graveyard from '../Graveyard';
 
 // Give this function to the children of this component so they can tell us when
 // A card was dropped on them
@@ -34,8 +35,7 @@ export const CardContext = createContext({
 // TODO: Be able to only attack with the attack row, and have defense units retaliate
 // TODO: Implement defense
 
-// TODO: Cleanup socket registering code
-// TODO: Fix bug with cards moving between card areas on opponents board
+// TODO: Spell cards should only trigger their effect
 
 function GameBoard(props) {
   const { socket, gameId, deck, playerNumber } = useContext(GameContext);
@@ -45,6 +45,28 @@ function GameBoard(props) {
       card.key = i;
       card.uId = i;
       card.position = '';
+      card.defense = 0;
+      card.onPlayEffect = [];
+      card.onDeathEffect = [];
+      card.onAttackEffect = [];
+
+      // Parse the effect on this card if applicable
+      const tokens = Parser.tokenize(card.effectScript);
+
+      for (let i = 0; i < tokens.length; i++) {
+        switch (tokens[i].trigger) {
+          case 'ONPLAY':
+            card.onPlayEffect.push(tokens[i]);
+            break;
+          case 'ONDEATH':
+            card.onDeathEffect.push(tokens[i]);
+            break;
+          case 'ONATK':
+            card.onAttackEffect.push(tokens[i]);
+            break;
+        }
+      }
+
       return card;
     })
   );
@@ -52,7 +74,7 @@ function GameBoard(props) {
   const [playerData, setPlayerData] = useState({
     isPlayersTurn: true,
     recentCardDeath: null,
-    currentMana: 3
+    currentResources: 3
   });
 
   const [opponentBoardData, setOpponentBoardData] = useState({
@@ -64,7 +86,7 @@ function GameBoard(props) {
     userAtt1: null,
     userAtt2: null,
     userAtt3: null,
-    userMana: 1,
+    userResources: 1
   });
 
   useEffect(() => {
@@ -86,7 +108,10 @@ function GameBoard(props) {
         if (fromPlayer !== playerNumber) {
           const boardData = { ...opponentBoardData };
           // see if this card was already in play
-          const isInPlay = GameLogic.isOpponentCardInPlay(cardData.uId, opponentBoardData);
+          const isInPlay = GameLogic.isOpponentCardInPlay(
+            cardData.uId,
+            opponentBoardData
+          );
           if (isInPlay) {
             boardData[isInPlay] = null;
           }
@@ -144,12 +169,14 @@ function GameBoard(props) {
   }, []);
 
   const cardDraggedToPosition = (cardId, position) => {
-    if (!playerData.isPlayersTurn) {
+    const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
+    const cardVal = playerDeck[cardIndex]; // The card we're dragging
+
+    // TODO: Behave differently if we're casting an effect
+
+    if (!playerData.isPlayersTurn || !cardVal.isCreature) {
       return;
     }
-
-    const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
-    const cardVal = playerDeck[cardIndex];
 
     if (position !== 'userPlayArea') {
       // Make sure the given position doesn't have a card in it already
@@ -165,19 +192,17 @@ function GameBoard(props) {
         }
       }
 
-      sendCardPlacement(cardVal, position);
+      // Make sure we're moving from the play area to the field
       if (cardVal.position === 'userPlayArea') {
         sendPlayAreaUpdate(-1);
-      }
-    } else if (cardVal.position !== 'userPlayArea') {
-      sendCardPlacement(null, cardVal.position);
-      if (position === 'userPlayArea') {
-        sendPlayAreaUpdate(1);
+        sendCardPlacement(cardVal, position);
+        cardVal.position = position;
+        setPlayerDeck([
+          ...playerDeck.filter(card => card.uId !== cardId),
+          cardVal
+        ]);
       }
     }
-
-    cardVal.position = position;
-    setPlayerDeck([...playerDeck.filter(card => card.uId !== cardId), cardVal]);
   };
 
   const sendCardPlacement = (card, position) => {
