@@ -110,9 +110,5 @@ export default {
     }
 
     return [];
-  },
-
-  parseScript: function (script) {
-    return this.tokenize(script);
   }
 };
