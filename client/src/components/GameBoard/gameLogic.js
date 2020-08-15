@@ -1,23 +1,26 @@
 export default {
   enemyAtkRows: ['opponentAtt1', 'opponentAtt2', 'opponentAtt3'],
   enemyDefRows: ['opponentDef1', 'opponentDef2'],
-  dupDeck: [],
+  // prettier-ignore
   springDeck: [1, 1, 5, 9, 9, 13, 17, 17, 21, 21, 25, 25, 29, 29, 33, 33, 37, 37, 41, 41, 45, 45, 49, 49, 53, 53, 57, 61, 65, 69],
+  // prettier-ignore
   summerDeck: [2, 2, 6, 6, 10, 14, 18, 18, 22, 22, 26, 26, 30, 30, 34, 34, 38, 38, 42, 42, 46, 46, 50, 50, 54, 54, 58, 62, 66, 70],
+  // prettier-ignore
   fallDeck: [3, 3, 7, 11, 11, 15, 19, 19, 23, 23, 27, 27, 31, 31, 35, 35, 39, 39, 43, 43, 47, 47, 51, 51, 55, 55, 59, 63, 67, 71],
+  // prettier-ignore
   winterDeck: [4, 4, 8, 8, 12, 16, 20, 20, 24, 24, 28, 28, 32, 32, 36, 36, 40, 40, 44, 44, 48, 48, 52, 52, 56, 56, 60, 64, 68, 72],
 
   duplicate: function (array, tempDeck) {
     const newDeck = [];
-    console.log("tempDeck", tempDeck);
     for (let i = 0; i < tempDeck.length; i++) {
       for (let j = 0; j < array.length; j++) {
         if (array[j].cardId === tempDeck[i]) {
-          newDeck.push(array[j])
+          newDeck.push({...array[j], uId: i}); // Give this card a unique Id
+          break;
         }
       }
     }
-    this.dupDeck = [...newDeck];
+    return newDeck;
   },
 
   copyArray: function (array) {
@@ -30,34 +33,29 @@ export default {
 
   // chooses the correct array to duplicate
   deckChoice: function (array) {
-    let deckC
+    let deckC;
     switch (array[0].cardId) {
       case 1:
         deckC = this.springDeck;
-        this.duplicate(array, deckC);
         break;
       case 2:
         deckC = this.summerDeck;
-        this.duplicate(array, deckC);
         break;
       case 3:
         deckC = this.fallDeck;
-        this.duplicate(array, deckC);
         break;
       case 4:
         deckC = this.winterDeck;
-        this.duplicate(array, deckC);
         break;
       default:
-        console.log('You do not have a deck')
+        console.log('You do not have a deck');
     }
-    return this.dupDeck;
-
+    return this.duplicate(array, deckC);
   },
 
   shuffleArray: function (array) {
-    var max = (array.length / 4)
-    var min = 0
+    var max = array.length / 4;
+    var min = 0;
     for (let i = 0; i < 4; i++) {
       //Randomly generate a random index number
       for (let j = 0; j < 20; j++) {
@@ -70,9 +68,8 @@ export default {
           array[randomIndex2] = tempElement;
         }
       }
-      max += (array.length / 4)
-      min += (array.length / 4)
-
+      max += array.length / 4;
+      min += array.length / 4;
     }
     return array;
   },
@@ -138,5 +135,3 @@ export default {
     return null;
   }
 };
-
-

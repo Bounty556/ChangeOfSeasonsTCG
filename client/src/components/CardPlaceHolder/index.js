@@ -2,7 +2,7 @@ import React from 'react';
 
 import Card from '../Card';
 
-function OpponentCardHolder(props) {
+function CardPlaceHolder(props) {
   return (
     <div id={props.id}>
       <Card bodyId='playAreaRow'>
@@ -11,7 +11,7 @@ function OpponentCardHolder(props) {
             <Card id='opponentCard' key={i}>
               <img
                 src='/images/cardBack/lava_style/back/back_lava.png'
-                alt='opponent player card'
+                alt='Back of card'
                 className='opponentCard'
               />
             </Card>
@@ -22,4 +22,4 @@ function OpponentCardHolder(props) {
   );
 }
 
-export default OpponentCardHolder;
+export default CardPlaceHolder;
