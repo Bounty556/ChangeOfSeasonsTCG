@@ -182,7 +182,7 @@ const cardSeed = [
   {
     season: 'Fall',
     cardId: 15,
-    isCreature: true,
+    isCreature: false,
     resourceCost: 3,
     attack: 0,
     health: 0,
@@ -194,7 +194,7 @@ const cardSeed = [
   {
     season: 'Winter',
     cardId: 16,
-    isCreature: true,
+    isCreature: false,
     resourceCost: 4,
     attack: 0,
     health: 0,
@@ -260,7 +260,7 @@ const cardSeed = [
     resourceCost: 4,
     attack: 5,
     health: 2,
-    name: 'Cursed Dromaeo',
+    name: 'Dromaeo',
     img: 'demon_05.png'
   },
   {
@@ -270,7 +270,7 @@ const cardSeed = [
     resourceCost: 4,
     attack: 6,
     health: 1,
-    name: 'Thuolond the unsuspecting Jin',
+    name: 'Thuolond',
     img: 'jin.png'
   },
   {
