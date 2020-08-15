@@ -26,7 +26,6 @@ export const GameContext = createContext({
 // 3. The client sends a message to the server telling all clients in the room it has successfully connected, and that player info needs to be updated
 // 4. All clients send back their player info to the room via the server, so all clients can update their local player information correctly
 
-// TODO: Make the start button start the game for both users in the lobby
 // TODO: Fix bug when player leaves lobby that makes the spinny animation not happen
 
 class Lobby extends Component {
@@ -62,7 +61,7 @@ class Lobby extends Component {
     this.socket.on('receivePlayerInfo', this.updatePlayerInfo);
     this.socket.on('playerLeft', this.cleanUpPlayer);
   }
-
+  
   componentWillUnmount() {
     // Check if we're connected
     if (this.state.joinedLobby) {
@@ -72,32 +71,36 @@ class Lobby extends Component {
         this.state.gameId,
         'playerLeft',
         this.state.playerNumber
-      );
-
-      this.socket.disconnect();
+        );
+        
+        this.socket.disconnect();
+      }
     }
-  }
-
-  handleChangeJoinId = event => {
-    this.setState({ gameId: parseInt(event.target.value || 0) });
-  };
-
-  createNewGame = () => {
-    // Create a unique Socket.IO Room
-    const room = Math.ceil(Math.random() * 100000);
-    this.setState({ gameId: room }, () => this.joinLobby());
-  };
-
-  joinLobby = () => {
-    // Make sure we're authenticated
-    if (localStorage.getItem('authentication')) {
-      this.socket.emit('joinRoom', this.state.gameId, this.setThisPlayersInfo);
-    }
-  };
-
-  setThisPlayersInfo = playerNumber => {
-    this.setState({ joinedLobby: true, playerNumber: playerNumber }, () =>
-      this.socket.emit('room', this.state.gameId, 'requestPlayerInfo')
+    
+    handleChangeJoinId = event => {
+      this.setState({ gameId: parseInt(event.target.value || 0) });
+    };
+    
+    createNewGame = () => {
+      // Create a unique Socket.IO Room
+      const room = Math.ceil(Math.random() * 100000);
+      this.setState({ gameId: room }, () => this.joinLobby());
+    };
+    
+    joinLobby = () => {
+      // Make sure we're authenticated
+      if (localStorage.getItem('authentication')) {
+        this.socket.emit('joinRoom', this.state.gameId, this.setThisPlayersInfo);
+      }
+    };
+    
+    setThisPlayersInfo = playerNumber => {
+      this.setState({ joinedLobby: true, playerNumber: playerNumber }, () => {
+        if (playerNumber === 2) {
+          this.socket.on('startGame', this.startMatch);
+        }
+        this.socket.emit('room', this.state.gameId, 'requestPlayerInfo')
+      }
     );
   };
 
@@ -178,6 +181,10 @@ class Lobby extends Component {
   startMatch = () => {
     // this.checkUser();
 
+    // If we're hosting we need to let the other player's browser know to start the game too
+    if (this.state.playerNumber === 1) {
+      this.socket.emit('room', this.state.gameId, 'startGame')
+    }
     this.setState({ playGame: true });
   };
 
@@ -204,6 +211,10 @@ class Lobby extends Component {
       joined1: true,
       joined2: false
     });
+
+    // We need to add back the class that makes the spinny animation here
+
+    this.socket.off('startGame');
 
     this.sendPlayerInfo();
   };
