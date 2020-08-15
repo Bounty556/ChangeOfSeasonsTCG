@@ -12,14 +12,14 @@ TRIGGERS:
 OPERATORS:
    DRAW # - If FULL, give cards until hand is full
    RES TARGET # - SELF, OPP - gives target resources
-   DMG #
+   DMG # - Implied 'ALL' target
    HEAL TARGET # - SINGLE, ALL, DEFROW
    KILL TARGET - SELF, OPP, ALL, OPPDEFROW
    RTNHND - Moves the card back to the players hand
    RAISEATK TARGET # - ALL, ATKROW, DEFROW
    RAISEDEF TARGET # - ALL, ATKROW, DEFROW
    SETATK TARGET # - OPPATKROW
-   ADDEFFECT "..."
+   ADDEFFECT "..." - Implied 'ALL' target
 */
 
 mongoose.connect(

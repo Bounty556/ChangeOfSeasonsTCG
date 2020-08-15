@@ -1,6 +1,6 @@
 export default {
-  TRIGGERS: ['ONPLAY', 'ONDEATH', 'ONATK'],
-  OPERATORS: [
+  triggers: ['ONPLAY', 'ONDEATH', 'ONATK'],
+  operators: [
     'DRAW',
     'RES',
     'DMG',
@@ -11,6 +11,25 @@ export default {
     'RAISEDEF',
     'SETATK',
     'ADDEFFECT'
+  ],
+  targettingOperators: [
+    'HEAL',
+    'KILL',
+    'RAISEATK',
+    'RAISEDEF',
+    'SETATK'
+  ],
+  positions: [
+    'userAtt1',
+    'userAtt2',
+    'userAtt3',
+    'userDef1',
+    'userDef2',
+    'opponentAtt1',
+    'opponentAtt2',
+    'opponentAtt3',
+    'opponentDef1',
+    'opponentDef2'
   ],
 
   // Puts all TRIGGERS into individual objects describing their behavior
@@ -25,7 +44,7 @@ export default {
        ]
      }
    */
-  tokenize: function(string) {
+  tokenize: function (string) {
     const splitString = string.trim().split(' ');
 
     // Group all TRIGGERS and their OPERATORS into objects
@@ -37,7 +56,7 @@ export default {
       let word = splitString[i];
 
       // Check to see if this is a new token
-      if (this.TRIGGERS.includes(word)) {
+      if (this.triggers.includes(word)) {
         tokens.push({
           trigger: word,
           operations: []
@@ -45,22 +64,55 @@ export default {
         currentToken++;
         currentOperator = -1;
         currentParameter = 0;
-      } else if (this.OPERATORS.includes(word)) { // Check to see if this is an operator
+      } else if (this.operators.includes(word)) {
+        // Check to see if this is an operator
         tokens[currentToken].operations.push({
           op: word
         });
         currentOperator++;
         currentParameter = 0;
-      } else { // This is a parameter
+      } else {
+        // This is a parameter
         currentParameter++;
-        tokens[currentToken].operations[currentOperator]['param' + currentParameter] = word;
+        tokens[currentToken].operations[currentOperator][
+          'param' + currentParameter
+        ] = word;
       }
     }
 
     return tokens;
   },
 
-  parseScript: function(script) {
+  getScriptTargets: function (token) {
+    // TODO: We need to be able to target the enemy player/hero
+
+    // The targetting parameter should be the first param, make sure it exists
+    if (!token || !token.operations || !token.operations.param1) {
+      return [];
+    }
+
+    const target = token.operations.param1;
+
+    if (target === 'SELF') {
+      return this.positions.slice(0, 5);
+    } else if (target === 'OPP') {
+      return this.positions.slice(5);
+    } else if (target === 'ALL') {
+      return this.positions.slice(0);
+    } else if (target === 'DEFROW') {
+      return this.positions.slice(3, 5);
+    } else if (target === 'ATKROW') {
+      return this.positions.slice(0, 3);
+    } else if (target === 'OPPATKROW') {
+      return this.positions.slice(5, 8);
+    } else if (target === 'OPPDEFROW') {
+      return this.positions.slice(8);
+    }
+
+    return [];
+  },
+
+  parseScript: function (script) {
     return this.tokenize(script);
   }
 };

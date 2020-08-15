@@ -112,7 +112,6 @@ class Lobby extends Component {
       .then(info => {
         // Make sure this user has a deck that isn't empty
         if (info.data && info.data.length === 0) {
-          // TODO: Maybe make some modal displaying this error?
           console.log('Error: you need to select a deck first.');
           return this.setState({
             showModal: true
@@ -134,8 +133,7 @@ class Lobby extends Component {
           playerInfo
         );
       })
-      .catch(err => {
-        // TODO: Maybe make some modal displaying this error?
+      .catch(() => {
         console.log('Error: could not find deck info');
         this.setState({
           showModal: true
