@@ -138,7 +138,8 @@ function GameBoard(props) {
       isPlayersTurn: playerNumber === 1 ? true : false
     }));
     const copy = GameLogic.copyArray(playerDeck);
-    setPlayerDeck(GameLogic.assignHand(GameLogic.shuffleArray(copy)));
+    
+    setPlayerDeck(GameLogic.assignHand(GameLogic.shuffleArray(GameLogic.deckChoice(copy))));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
