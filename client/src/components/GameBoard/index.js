@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, createContext } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-import OpponentCardHolder from '../OpponentCardHolder';
+import CardPlaceHolder from '../CardPlaceHolder';
 import CardHolder from '../CardHolder';
 import Graveyard from '../Graveyard';
 import { GameContext } from '../../pages/Lobby';
@@ -24,18 +24,27 @@ export const CardContext = createContext({
 // TODO: When we drag a card and hover it over a card slot, it should make the slot go grey or
 //       something similar so the user has some kind of feedback
 
-// TODO: Show player deck
 // TODO: Show resources for enemies and players
 // TODO: Draw a card and gain a resource each turn
-// TODO: Make the card shuffling better, so users aren't getting top tier cards immediately
-// TODO: Make cards only be able to target their intended minions
 // TODO: Make effects work
 // TODO: Be able to attack the opponent when his defense row is down
 // TODO: Show the opponents health
-// TODO: Be able to only attack with the attack row, and have defense units retaliate
+// TODO: Be able to only attack with the attack row
+// TODO: Have all units retaliate
 // TODO: Implement defense
 
 // TODO: Spell cards should only trigger their effect
+
+// TODO: Make cards in the def row not be able to attack
+// TODO: Make cards retaliate
+// TODO: When cards don't have any attack, don't use up their turn
+// TODO: Cards should not show health in the graveyard
+// TODO: Cards should keep track of their original attack and health
+
+// TODO: Make 'end turn' button. Turns shouldn't end on one action
+// TODO: Players should only be able to play one card per turn, but use every card on the field in the atk row
+
+// TODO: Make cards cost resources
 
 function GameBoard(props) {
   const { socket, gameId, deck, playerNumber } = useContext(GameContext);
@@ -43,7 +52,6 @@ function GameBoard(props) {
   const [playerDeck, setPlayerDeck] = useState(
     deck.map((card, i) => {
       card.key = i;
-      card.uId = i;
       card.position = '';
       card.defense = 0;
       card.onPlayEffect = [];
@@ -279,15 +287,15 @@ function GameBoard(props) {
           </div>
 
           <div id='opponentRow'>
-            <OpponentCardHolder
+            <CardPlaceHolder
               id='opponentGrave'
               cardCount={opponentBoardData.opponentHasGrave ? 1 : 0}
             />
-            <OpponentCardHolder
+            <CardPlaceHolder
               id='opponentDeck'
               cardCount={opponentBoardData.opponentHasDeck ? 1 : 0}
             />
-            <OpponentCardHolder
+            <CardPlaceHolder
               id='opponentPlayArea'
               cardCount={opponentBoardData.opponentPlayAreaCount}
             />
@@ -341,7 +349,7 @@ function GameBoard(props) {
 
           <div id='userRow'>
             <Graveyard id='userGrave' recent={playerData.recentCardDeath} />
-            <CardHolder id='userDeck' />
+            <CardPlaceHolder id='userDeck' cardCount={(GameLogic.hasAvailableCards(playerDeck)) ? 1 : 0} />
             <CardHolder id='userPlayArea' />
           </div>
           <div className='userResourceRow'>
