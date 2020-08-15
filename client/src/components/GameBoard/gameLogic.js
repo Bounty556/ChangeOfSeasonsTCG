@@ -42,7 +42,7 @@ winterDeck: [4, 4, 8, 8, 12, 16, 20, 20, 24, 24, 28, 28, 32, 32, 36, 36, 40, 40,
         array[randomIndex2] = tempElement;
       }
     }
-    max +=(array.length/4)
+    max +=(array.length/4) 
     min +=(array.length/4)
   
       console.log(array)
