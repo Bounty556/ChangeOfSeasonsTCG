@@ -60,7 +60,7 @@ hr {
     background-image: url(./playAreaImages/Rain/Rain_part_05.png);
     background-size: contain;
     background-repeat: repeat-x;
-    border: 2px solid #444;
+    border: 2px solid rgb(27, 27, 27);
     box-shadow: 2px 4px 5px -3px black;
     margin-right: 5px;
 }
@@ -72,20 +72,16 @@ hr {
     background-image: url(./cardbackground.jpg);
 }
 
-#userPlayArea .card {
+#userPlayArea .card, #opponentPlayArea #playAreaRow {
     background-image: url(./playAreaImages/Night/Night_part_03.png);
     background-repeat: repeat-x;
     background-size: contain;
-    border: 2px solid #444;
+    border: 2px solid rgb(32, 32, 32);
     box-shadow: 2px 4px 5px -3px black;
 }
 
 #opponentPlayArea #playAreaRow {
-    background-image: url(./playAreaImages/Boss-Time/Final-Boss_part_03.png);
-    background-repeat: repeat-x;
-    background-size: contain;
-    border: 2px solid #444;
-    box-shadow: 2px 4px 5px -3px black;   
+    background-image: url(./playAreaImages/Boss-Time/Final-Boss_part_03.png); 
 }
 
 #opponentPlayArea .card {
