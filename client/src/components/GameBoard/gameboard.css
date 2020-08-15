@@ -109,7 +109,7 @@ hr {
     border-color: rgb(0, 110, 161);
 }
 
-.resourceCircle:hover { 
+.activeResource { 
     background-color: rgb(54, 0, 202);
     box-shadow:
     0 0 1px #fff,
