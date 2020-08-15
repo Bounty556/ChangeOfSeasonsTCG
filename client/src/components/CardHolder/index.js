@@ -7,6 +7,8 @@ import ItemTypes from '../../utils/ItemTypes';
 import GameCard from '../GameCard';
 import InfoCard from '../InfoCard';
 
+import './style.css';
+
 function CardHolder(props) {
   const { cardDraggedToPosition, playerDeck } = useContext(CardContext);
 
@@ -27,8 +29,8 @@ function CardHolder(props) {
   });
 
   return (
-    <div id={props.id} ref={drop}>
-      <Card bodyId='playAreaRow'>
+    <div id={props.id} ref={drop} >
+      <Card bodyId='playAreaRow' className='cardHolder'>
         <div id='cardRow'>
           {props.override ? (
             props.card ? (

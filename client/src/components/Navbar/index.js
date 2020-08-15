@@ -40,7 +40,7 @@ function Navbar() {
     
     return (
         <nav>
-            <Link to='/profile'>
+            <Link to='/'>
                 <h3>Change of Seasons</h3>
             </Link>
                 {auth ? (

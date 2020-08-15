@@ -20,8 +20,6 @@
     
 }
 
-
-
 .avatar {
     background-color: rgba(148, 79, 0, 0.835);
     display: block;
@@ -40,16 +38,8 @@
     animation: rotation 4s infinite linear;
     border: none;
     border-radius: 50%;
-
-    box-shadow:
-    0 0 1px #fff,
-    0 0 1px #fff,
-    0 0 2px #fff,
-    0 0 4px rgb(0, 153, 255),
-    0 0 8px rgb(0, 153, 255),
-    0 0 80px rgb(0, 153, 255),
-    0 0 100px rgb(0, 153, 255),
-    0 0 120px rgb(0, 153, 255);
+    box-shadow: 0 0 20px 4px rgb(0, 153, 255);
+    margin-top: 10px;
 }
 
 @keyframes rotation {
@@ -77,7 +67,7 @@ button {
     margin-right: 25px;
 }
 
-.wood{ 
+.wood { 
     background-image: url(./Images/woodsign.png) !important;
     width: 300px;
     height: 150px;
@@ -107,6 +97,9 @@ button {
     0 0 80px rgb(0, 153, 255),
     0 0 100px rgb(0, 153, 255),
     0 0 120px rgb(0, 153, 255);
+
+    font-size: 150px;
+    margin: 50px 150px;
 }
 
 .gameIdText { 
