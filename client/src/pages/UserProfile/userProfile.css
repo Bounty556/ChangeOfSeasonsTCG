@@ -51,10 +51,20 @@ button {
     color: rgb(255, 246, 217);
 }
 
-.wood:hover {
+.woodProfileButton:hover {
     transition: ease-in-out 0.2s !important;
     transform: scale(1.05) !important;
+
+    text-shadow:
+    0 0 1px #fff,
+    0 0 1px #fff,
+    0 0 2px #fff,
+    0 0 4px rgb(0, 153, 255),
+    0 0 8px rgb(0, 153, 255),
+    0 0 80px rgb(0, 153, 255),
+    0 0 100px rgb(0, 153, 255);
 }
+
 
 .row { 
     justify-content: center;
