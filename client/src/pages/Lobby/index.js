@@ -26,8 +26,6 @@ export const GameContext = createContext({
 // 3. The client sends a message to the server telling all clients in the room it has successfully connected, and that player info needs to be updated
 // 4. All clients send back their player info to the room via the server, so all clients can update their local player information correctly
 
-// TODO: Fix bug when player leaves lobby that makes the spinny animation not happen
-
 class Lobby extends Component {
   constructor() {
     super();
@@ -212,10 +210,8 @@ class Lobby extends Component {
       joined2: false
     });
 
-    // We need to add back the class that makes the spinny animation here
-
+    document.getElementById('loadingID').classList.add('loading');
     this.socket.off('startGame');
-
     this.sendPlayerInfo();
   };
 
