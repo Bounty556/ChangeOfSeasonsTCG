@@ -37,6 +37,10 @@ export const CardContext = createContext({
 
 // TODO: Spell cards should only trigger their effect
 
+// TODO: Make cards in the def row not be able to attack
+// TODO: Make cards retaliate
+// TODO: When cards don't have any attack, don't use up their turn
+
 function GameBoard(props) {
   const { socket, gameId, deck, playerNumber } = useContext(GameContext);
 
@@ -250,6 +254,16 @@ function GameBoard(props) {
     });
   };
 
+  const hasAvailableCards = () => {
+    for (let i = 0; i < playerDeck.length; i++) {
+      if (playerDeck[i].position === '') {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   return (
     <CardContext.Provider value={{ cardDraggedToPosition, playerDeck }}>
       <DndProvider backend={HTML5Backend}>
@@ -329,7 +343,7 @@ function GameBoard(props) {
 
           <div id='userRow'>
             <Graveyard id='userGrave' recent={playerData.recentCardDeath} />
-            <CardHolder id='userDeck' />
+            <OpponentCardHolder id='userDeck' cardCount={(hasAvailableCards()) ? 1 : 0} />
             <CardHolder id='userPlayArea' />
           </div>
           <div className='userResourceRow'>
