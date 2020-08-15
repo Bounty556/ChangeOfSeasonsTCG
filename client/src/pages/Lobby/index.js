@@ -26,8 +26,6 @@ export const GameContext = createContext({
 // 3. The client sends a message to the server telling all clients in the room it has successfully connected, and that player info needs to be updated
 // 4. All clients send back their player info to the room via the server, so all clients can update their local player information correctly
 
-// TODO: Make it so only the host can start, and it starts the game for both players
-
 class Lobby extends Component {
   constructor() {
     super();
@@ -61,7 +59,7 @@ class Lobby extends Component {
     this.socket.on('receivePlayerInfo', this.updatePlayerInfo);
     this.socket.on('playerLeft', this.cleanUpPlayer);
   }
-
+  
   componentWillUnmount() {
     // Check if we're connected
     if (this.state.joinedLobby) {
@@ -71,32 +69,36 @@ class Lobby extends Component {
         this.state.gameId,
         'playerLeft',
         this.state.playerNumber
-      );
-
-      this.socket.disconnect();
+        );
+        
+        this.socket.disconnect();
+      }
     }
-  }
-
-  handleChangeJoinId = event => {
-    this.setState({ gameId: parseInt(event.target.value || 0) });
-  };
-
-  createNewGame = () => {
-    // Create a unique Socket.IO Room
-    const room = Math.ceil(Math.random() * 100000);
-    this.setState({ gameId: room }, () => this.joinLobby());
-  };
-
-  joinLobby = () => {
-    // Make sure we're authenticated
-    if (localStorage.getItem('authentication')) {
-      this.socket.emit('joinRoom', this.state.gameId, this.setThisPlayersInfo);
-    }
-  };
-
-  setThisPlayersInfo = playerNumber => {
-    this.setState({ joinedLobby: true, playerNumber: playerNumber }, () =>
-      this.socket.emit('room', this.state.gameId, 'requestPlayerInfo')
+    
+    handleChangeJoinId = event => {
+      this.setState({ gameId: parseInt(event.target.value || 0) });
+    };
+    
+    createNewGame = () => {
+      // Create a unique Socket.IO Room
+      const room = Math.ceil(Math.random() * 100000);
+      this.setState({ gameId: room }, () => this.joinLobby());
+    };
+    
+    joinLobby = () => {
+      // Make sure we're authenticated
+      if (localStorage.getItem('authentication')) {
+        this.socket.emit('joinRoom', this.state.gameId, this.setThisPlayersInfo);
+      }
+    };
+    
+    setThisPlayersInfo = playerNumber => {
+      this.setState({ joinedLobby: true, playerNumber: playerNumber }, () => {
+        if (playerNumber === 2) {
+          this.socket.on('startGame', this.startMatch);
+        }
+        this.socket.emit('room', this.state.gameId, 'requestPlayerInfo')
+      }
     );
   };
 
@@ -177,6 +179,10 @@ class Lobby extends Component {
   startMatch = () => {
     // this.checkUser();
 
+    // If we're hosting we need to let the other player's browser know to start the game too
+    if (this.state.playerNumber === 1) {
+      this.socket.emit('room', this.state.gameId, 'startGame')
+    }
     this.setState({ playGame: true });
   };
 
@@ -204,6 +210,8 @@ class Lobby extends Component {
       joined2: false
     });
 
+    document.getElementById('loadingID').classList.add('loading');
+    this.socket.off('startGame');
     this.sendPlayerInfo();
   };
 
@@ -257,7 +265,7 @@ class Lobby extends Component {
                     )}
                   </div>
                   <div className='row'>
-                    {!this.state.allJoined ? (
+                    {!this.state.joinedLobby ? (
                       <div className='button-col'>
                         <button className='wood' onClick={this.joinLobby}>
                           Join Match
@@ -267,10 +275,14 @@ class Lobby extends Component {
                         </button>
                       </div>
                     ) : (
-                      <div className='button-col'>
-                        <button className='wood' onClick={this.startMatch}>
-                          Start Match
-                        </button>
+                      <div className='button=col'>
+                        {this.state.playerNumber === 1 ? (
+                          <button className='wood' onClick={this.startMatch}>
+                            Start Match
+                          </button>
+                        ) : (
+                          <></>
+                        )}
                         <button className='wood' onClick={this.exitGame}>
                           Exit Game
                         </button>
@@ -284,12 +296,20 @@ class Lobby extends Component {
               <Modal className='errorModal' show={this.state.showModal}>
                 {/* Body */}
                 <Modal.Body className='modalBody'>
-                      <p>Looks like you haven't choosen a deck yet. Head to your profile and select "Choose Deck" to play!</p>
+                  <p>
+                    Looks like you haven't choosen a deck yet. Head to your
+                    profile and select "Choose Deck" to play!
+                  </p>
                 </Modal.Body>
 
                 {/* Footer */}
                 <Modal.Footer>
-                  <button className='btn btn-primary errorBtn' onClick={() => window.location = '/Profile'}>Head to Profile</button>
+                  <button
+                    className='btn btn-primary errorBtn'
+                    onClick={() => (window.location = '/Profile')}
+                  >
+                    Head to Profile
+                  </button>
                 </Modal.Footer>
               </Modal>
             </Container>
