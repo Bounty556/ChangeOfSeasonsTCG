@@ -63,7 +63,8 @@ function GameBoard(props) {
     userDef2: null,
     userAtt1: null,
     userAtt2: null,
-    userAtt3: null
+    userAtt3: null,
+    userMana: 1,
   });
 
   useEffect(() => {
