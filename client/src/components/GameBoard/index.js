@@ -31,7 +31,6 @@ export const CardContext = createContext({
 
 // TODO: Spell cards should only trigger their effect
 
-// TODO: Make 'end turn' button. Turns shouldn't end on one action
 // TODO: Players should only be able to play one card per turn, but use every card on the field in the atk row
 
 // TODO: Make cards cost resources
@@ -40,18 +39,19 @@ export const CardContext = createContext({
 // TODO: Investigate error with dragging cards outside chrome
 // TODO: Replace opponents grave with player to attack
 
+// TODO: Sometimes effects get stuck
+
 function GameBoard() {
   const { socket, gameId, deck, playerNumber } = useContext(GameContext);
 
   const [playerDeck, setPlayerDeck] = useState(
     deck.map(card => {
       card.position = '';
-      card.defense = 0;
       card.baseAttack = card.attack;
       card.baseHealth = card.health;
-      card.onPlayEffect = [];
-      card.onDeathEffect = [];
-      card.onAttackEffect = [];
+      card.onPlayEffects = [];
+      card.onDeathEffects = [];
+      card.onAttackEffects = [];
 
       // Parse the effect on this card if applicable
       const tokens = Parser.tokenize(card.effectScript);
@@ -59,13 +59,13 @@ function GameBoard() {
       for (let i = 0; i < tokens.length; i++) {
         switch (tokens[i].trigger) {
           case 'ONPLAY':
-            card.onPlayEffect.push(tokens[i]);
+            card.onPlayEffects.push(tokens[i]);
             break;
           case 'ONDEATH':
-            card.onDeathEffect.push(tokens[i]);
+            card.onDeathEffects.push(tokens[i]);
             break;
           case 'ONATK':
-            card.onAttackEffect.push(tokens[i]);
+            card.onAttackEffects.push(tokens[i]);
             break;
         }
       }
@@ -80,6 +80,10 @@ function GameBoard() {
     currentResource: 2
   });
 
+  const [updateSwitch, setUpdateSwitch] = useState(false); // This swings between true and false every time we need to update
+
+  const [effectData, setEffectData] = useState(null);
+
   const [opponentBoardData, setOpponentBoardData] = useState({
     opponentPlayAreaCount: 5,
     opponentHasDeck: true,
@@ -92,84 +96,93 @@ function GameBoard() {
   });
 
   useEffect(() => {
-    socket.emit('room', gameId, 'updateOpponentResource', {
-      resourceCount: playerData.currentResource,
-      fromPlayer: playerNumber
+    socket.emit('room', gameId, 'updateBoard', {
+      otherDeck: playerDeck,
+      otherData: playerData,
+      ourData: opponentBoardData,
+      player: playerNumber
     });
-  }, [playerData.currentResource]);
+  }, [updateSwitch]);
 
   useEffect(() => {
-    socket.off('updateOpponentPlayArea');
-    socket.off('updateOpponentCardPlacement');
-    socket.off('receiveAttack');
-    socket.off('opponentTurnEnded');
-    socket.off('updateOpponentResource');
-    socket.off('updateOpponentDeck');
-    socket.on('updateOpponentPlayArea', ({ changeAmount, fromPlayer }) => {
-      if (fromPlayer !== playerNumber) {
-        const boardData = { ...opponentBoardData };
-        boardData.opponentPlayAreaCount += changeAmount;
-        setOpponentBoardData(boardData);
+    socket.off('updateBoard');
+    socket.on('updateBoard', ({ otherDeck, otherData, ourData, player }) => {
+      if (player === playerNumber) {
+        return;
       }
-    });
-    socket.on(
-      'updateOpponentCardPlacement',
-      ({ cardData, position, fromPlayer }) => {
-        if (fromPlayer !== playerNumber) {
-          const boardData = { ...opponentBoardData };
-          boardData[position] = cardData;
-          setOpponentBoardData(boardData);
+
+      // Update our opponent board data
+      const boardData = { ...opponentBoardData };
+      boardData.userDef1 = boardData.userDef2 = boardData.userAtt1 = boardData.userAtt2 = boardData.userAtt3 = null;
+      boardData.userResource = otherData.currentResource;
+
+      const opponentCards = GameLogic.getPlayedCards(otherDeck);
+      for (let i = 0; i < opponentCards.length; i++) {
+        boardData[opponentCards[i].position] = opponentCards[i];
+      }
+
+      let playAreaCount = 0;
+      for (let i = 0; i < otherDeck.length; i++) {
+        if (otherDeck[i].position === 'userPlayArea') {
+          playAreaCount++;
+        }
+        if (otherDeck[i].position === '') {
+          boardData.opponentHasDeck = true;
         }
       }
-    );
-    socket.on('receiveAttack', ({ position, damage, fromPlayer }) => {
-      if (fromPlayer !== playerNumber) {
-        receiveAttack(position, damage);
+      boardData.opponentPlayAreaCount = playAreaCount;
+
+      // Update our board data
+      let ourDeck = GameLogic.copyDeck(playerDeck);
+      let deadCards = [null, null, null, null, null];
+      [deadCards[0], ourDeck] = GameLogic.compareCards('userDef1', ourData, ourDeck);
+      [deadCards[1], ourDeck] = GameLogic.compareCards('userDef2', ourData, ourDeck);
+      [deadCards[2], ourDeck] = GameLogic.compareCards('userAtt1', ourData, ourDeck);
+      [deadCards[3], ourDeck] = GameLogic.compareCards('userAtt2', ourData, ourDeck);
+      [deadCards[4], ourDeck] = GameLogic.compareCards('userAtt3', ourData, ourDeck);
+
+      for (let i = 0; i < deadCards.length; i++) {
+        if (deadCards[i]) {
+          setPlayerData(prevState => ({
+            ...prevState,
+            recentCardDeath: deadCards[i]
+          }));
+          break;
+        }
       }
+
+      setOpponentBoardData(boardData);
+      setPlayerDeck(ourDeck);
     });
-    socket.on('opponentTurnEnded', ({ fromPlayer }) => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playerDeck, playerData, opponentBoardData]);
+
+  useEffect(() => {
+    socket.off('ourTurn');
+    socket.on('ourTurn', ({ fromPlayer }) => {
       if (fromPlayer !== playerNumber) {
-        // Set it to be our turn
+        setPlayerData(prevState => ({ ...prevState, isPlayersTurn: true }));
+      } else {
         const tempData = { ...playerData };
-        tempData.isPlayersTurn = true;
-        if (playerData.currentResource <= 8) {
+        tempData.isPlayersTurn = false;
+        if (tempData.currentResource <= 8) {
           tempData.currentResource += 1;
         }
         setPlayerData(tempData);
-
-        // Also draw a card for this turn
         drawCards(1);
       }
     });
-    socket.on('updateOpponentResource', ({ resourceCount, fromPlayer }) => {
-      if (fromPlayer !== playerNumber) {
-        setOpponentBoardData(prevState => ({
-          ...prevState,
-          userResource: resourceCount
-        }));
-      }
-    });
-    socket.on('updateOpponentDeck', ({ hasDeck, fromPlayer }) => {
-      if (fromPlayer !== playerNumber) {
-        setOpponentBoardData(prevState => ({
-          ...prevState,
-          opponentHasDeck: hasDeck
-        }));
-      }
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [opponentBoardData, playerDeck, playerData]);
+  }, [updateSwitch, playerData, playerDeck]);
 
   useEffect(() => {
     setPlayerData(prevState => ({
       ...prevState,
       isPlayersTurn: playerNumber === 1 ? true : false
     }));
-    const copy = GameLogic.copyArray(playerDeck);
+    const copy = GameLogic.copyDeck(playerDeck);
 
-    setPlayerDeck(
-      GameLogic.assignHand(GameLogic.shuffleArray(GameLogic.deckChoice(copy)))
-    );
+    setPlayerDeck(GameLogic.assignHand(GameLogic.shuffleArray(GameLogic.deckChoice(copy))));
+    setUpdateSwitch(!updateSwitch);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -177,36 +190,64 @@ function GameBoard() {
     const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
     const cardVal = { ...playerDeck[cardIndex] }; // The card we're dragging
 
-    // TODO: Behave differently if we're casting an effect or spell
+    if (!playerData.isPlayersTurn || !cardVal.isCreature) {
+      return;
+    }
+    
+    moveCard(destinationPosition, cardVal);
+    // if (effectData) {
+    //   castEffect(destinationPosition, cardVal);
+    // } else {
+    // }
+  };
 
-    if (
-      !playerData.isPlayersTurn ||
-      GameLogic.isInDefenseRow(cardVal.position) ||
-      !cardVal.isCreature
-    ) {
+  const castEffect = (destinationPosition, cardVal) => {
+    if (cardVal.uId !== effectData.cardUId || destinationPosition === 'userPlayArea') {
       return;
     }
 
+    // Check to see if the destination position is in the effect target
+    const effect = effectData.effects[effectData.currentEffect];
+    const allowedDestinations = Parser.getScriptTargets(effect);
+    if (allowedDestinations.includes(destinationPosition)) {
+      // Do the effect and end the turn
+      switch (effect.operations[0].op) {
+        case 'HEAL':
+          if (GameLogic.inOpponentRows(destinationPosition)) {
+            console.log('enemy');
+          } else {
+            console.log('fren');
+            const destinationCard = playerDeck.find(card => card.position === destinationPosition);
+            destinationCard.health += parseInt(effect.operations[0].param2);
+            setPlayerDeck([
+              ...playerDeck.filter(card => card.position !== destinationCard.position),
+              destinationCard
+            ]);
+            setEffectData(null);
+            setUpdateSwitch(!updateSwitch);
+          }
+          break;
+      }
+    }
+  };
+
+  const moveCard = (destinationPosition, cardVal) => {
     if (destinationPosition !== 'userPlayArea') {
       // Make sure the given position doesn't have a card in it already
-      if (GameLogic.isPositionFilled(destinationPosition, playerDeck)) {
+      if (
+        GameLogic.isInDefenseRow(cardVal.position) ||
+        GameLogic.isPositionFilled(destinationPosition, playerDeck)
+      ) {
         return;
       }
 
       if (GameLogic.inOpponentRows(destinationPosition)) {
         if (
-          GameLogic.isOpponentPositionFilled(
-            destinationPosition,
-            opponentBoardData
-          ) &&
+          GameLogic.isOpponentPositionFilled(destinationPosition, opponentBoardData) &&
           cardVal.position !== 'userPlayArea' &&
           cardVal.attack > 0
         ) {
-          return sendAttack(
-            cardVal.position,
-            destinationPosition,
-            cardVal.attack
-          );
+          return attackCard(cardVal, destinationPosition);
         } else {
           return;
         }
@@ -214,69 +255,51 @@ function GameBoard() {
 
       if (cardVal.position === 'userPlayArea') {
         // Make sure we're moving from the play area to the field
-        sendPlayAreaUpdate(-1);
-        sendCardPlacement(cardVal, destinationPosition);
         cardVal.position = destinationPosition;
-        setPlayerDeck([
-          ...playerDeck.filter(card => card.uId !== cardId),
-          cardVal
-        ]);
+        setPlayerDeck([...playerDeck.filter(card => card.uId !== cardVal.uId), cardVal]);
+
+        setUpdateSwitch(!updateSwitch);
+
+        // Set that we're now starting an effect if this card has one
+        if (cardVal.onPlayEffects.length > 0) {
+          setEffectData({
+            cardUId: cardVal.uId,
+            effects: cardVal.onPlayEffects,
+            currentEffect: 0
+          });
+        }
       }
     }
   };
 
-  const sendCardPlacement = (card, position) => {
-    socket.emit('room', gameId, 'updateOpponentCardPlacement', {
-      cardData: card,
-      position: position,
-      fromPlayer: playerNumber
-    });
-    //commenting out to work on end turn button 
-    // sendTurnChange();
-  };
-
-  const sendPlayAreaUpdate = changeAmount => {
-    socket.emit('room', gameId, 'updateOpponentPlayArea', {
-      changeAmount: changeAmount,
-      fromPlayer: playerNumber
-    });
-  };
-
-  const sendAttack = (attackingFromPosition, attackedPosition, damage) => {
+  const attackCard = (attackingCard, attackedPosition) => {
     // Need to replace opponent with user here to match the opponentBoardData object
     attackedPosition = attackedPosition.replace('opponent', 'user');
     const boardData = { ...opponentBoardData };
-    boardData[attackedPosition].health -= damage;
+    boardData[attackedPosition].health -= attackingCard.attack;
 
-    // Get retaliated on
-    const attackingFromCard = {
-      ...GameLogic.getCardInPosition(attackingFromPosition, playerDeck)
-    };
-    attackingFromCard.health -= boardData[attackedPosition].attack;
-    receiveAttack(attackingFromPosition, boardData[attackedPosition].attack);
+    // Retaliation
+    attackingCard.health -= boardData[attackedPosition].attack;
+    if (attackingCard.health <= 0) {
+      attackingCard.health = 0;
+      attackingCard.position = 'userGrave';
+      setPlayerData(prevState => ({
+        ...prevState,
+        recentCardDeath: attackingCard
+      }));
+    }
+    setPlayerDeck([...playerDeck.filter(card => card.uId !== attackingCard.uId), attackingCard]);
 
     if (boardData[attackedPosition].health <= 0) {
       boardData[attackedPosition] = null;
     }
+
     setOpponentBoardData(boardData);
-
-    socket.emit('room', gameId, 'receiveAttack', {
-      position: attackedPosition,
-      damage: damage,
-      fromPlayer: playerNumber
-    });
-
-    if (attackingFromCard.health <= 0) {
-      sendCardPlacement(null, attackingFromPosition);
-    } else {
-      sendCardPlacement(attackingFromCard, attackingFromPosition);
-    }
+    setUpdateSwitch(!updateSwitch);
   };
 
   const sendTurnChange = () => {
-    // End our turn
-    setPlayerData(prevState => ({ ...prevState, isPlayersTurn: false }));
-    socket.emit('room', gameId, 'opponentTurnEnded', {
+    socket.emit('room', gameId, 'ourTurn', {
       fromPlayer: playerNumber
     });
   };
@@ -287,40 +310,10 @@ function GameBoard() {
     for (let i = 0; i < indices.length; i++) {
       const cardVal = { ...playerDeck[indices[i]] };
       cardVal.position = 'userPlayArea';
-      setPlayerDeck([
-        ...playerDeck.filter(card => card.uId !== cardVal.uId),
-        cardVal
-      ]);
+      setPlayerDeck([...playerDeck.filter(card => card.uId !== cardVal.uId), cardVal]);
     }
 
-    socket.emit('room', gameId, 'updateOpponentPlayArea', {
-      changeAmount: indices.length,
-      fromPlayer: playerNumber
-    });
-
-    // Ran out of cards
-    if (!GameLogic.hasAvailableCards(playerDeck)) {
-      socket.emit('room', gameId, 'updateOpponentDeck', {
-        hasDeck: false,
-        fromPlayer: playerNumber
-      });
-    }
-  };
-
-  const receiveAttack = (position, damage) => {
-    const [deck, cardDied] = GameLogic.damageCard(
-      position,
-      damage,
-      GameLogic.copyArray(playerDeck)
-    );
-    setPlayerDeck(deck);
-
-    if (cardDied) {
-      setPlayerData(prevState => ({
-        ...prevState,
-        recentCardDeath: cardDied
-      }));
-    }
+    setUpdateSwitch(!updateSwitch);
   };
 
   return (
@@ -329,10 +322,7 @@ function GameBoard() {
         <div className='wrapper'>
           <div className='userResourceRow'>
             {[...Array(opponentBoardData.userResource)].map((resource, i) => (
-              <span
-                className='resourceCircle activeResource'
-                key={'resourceOpponent' + i}
-              ></span>
+              <span className='resourceCircle activeResource' key={'resourceOpponent' + i}></span>
             ))}
           </div>
 
@@ -348,34 +338,14 @@ function GameBoard() {
           </div>
 
           <div id='opponentDefRow'>
-            <CardHolder
-              id='opponentDef1'
-              override={true}
-              card={opponentBoardData.userDef1}
-            />
-            <CardHolder
-              id='opponentDef2'
-              override={true}
-              card={opponentBoardData.userDef2}
-            />
+            <CardHolder id='opponentDef1' override={true} card={opponentBoardData.userDef1} />
+            <CardHolder id='opponentDef2' override={true} card={opponentBoardData.userDef2} />
           </div>
 
           <div id='opponentAttRow'>
-            <CardHolder
-              id='opponentAtt1'
-              override={true}
-              card={opponentBoardData.userAtt1}
-            />
-            <CardHolder
-              id='opponentAtt2'
-              override={true}
-              card={opponentBoardData.userAtt2}
-            />
-            <CardHolder
-              id='opponentAtt3'
-              override={true}
-              card={opponentBoardData.userAtt3}
-            />
+            <CardHolder id='opponentAtt1' override={true} card={opponentBoardData.userAtt1} />
+            <CardHolder id='opponentAtt2' override={true} card={opponentBoardData.userAtt2} />
+            <CardHolder id='opponentAtt3' override={true} card={opponentBoardData.userAtt3} />
           </div>
         </div>
 
@@ -403,21 +373,19 @@ function GameBoard() {
           </div>
           <div className='userResourceRow'>
             {[...Array(playerData.currentResource)].map((resource, i) => (
-              <span
-                className='resourceCircle activeResource'
-                key={'resourcePlayer' + i}
-              ></span>
+              <span className='resourceCircle activeResource' key={'resourcePlayer' + i}></span>
             ))}
           </div>
         </div>
-        { playerData.isPlayersTurn ? 
-        (<div className='endTurnRow'> 
-        <button className='woodEndButton' onClick={sendTurnChange}>End Turn</button>
-        </div>) 
-        : 
-        ( <div></div>)
-       
-        }
+        {playerData.isPlayersTurn ? (
+          <div className='endTurnRow'>
+            <button className='woodEndButton' onClick={sendTurnChange}>
+              End Turn
+            </button>
+          </div>
+        ) : (
+          <div></div>
+        )}
       </DndProvider>
     </CardContext.Provider>
   );
