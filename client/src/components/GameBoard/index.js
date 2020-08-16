@@ -83,7 +83,6 @@ function GameBoard() {
 
   const [opponentBoardData, setOpponentBoardData] = useState({
     opponentPlayAreaCount: 5,
-    opponentHasGrave: false,
     opponentHasDeck: true,
     userDef1: null,
     userDef2: null,
@@ -103,7 +102,6 @@ function GameBoard() {
   useEffect(() => {
     socket.off('updateOpponentPlayArea');
     socket.off('updateOpponentCardPlacement');
-    socket.off('updateOpponentGrave');
     socket.off('receiveAttack');
     socket.off('opponentTurnEnded');
     socket.off('updateOpponentResource');
@@ -132,13 +130,6 @@ function GameBoard() {
         }
       }
     );
-    socket.on('updateOpponentGrave', ({ hasGrave, fromPlayer }) => {
-      if (fromPlayer !== playerNumber) {
-        const boardData = { ...opponentBoardData };
-        boardData.opponentHasGrave = hasGrave;
-        setOpponentBoardData(boardData);
-      }
-    });
     socket.on('receiveAttack', ({ position, damage, fromPlayer }) => {
       if (fromPlayer !== playerNumber) {
         receiveAttack(position, damage);
@@ -334,10 +325,6 @@ function GameBoard() {
           </div>
 
           <div id='opponentRow'>
-            <CardPlaceHolder
-              id='opponentGrave'
-              cardCount={opponentBoardData.opponentHasGrave ? 1 : 0}
-            />
             <CardPlaceHolder
               id='opponentDeck'
               cardCount={opponentBoardData.opponentHasDeck ? 1 : 0}
