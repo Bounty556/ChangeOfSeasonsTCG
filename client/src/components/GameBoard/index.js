@@ -98,8 +98,9 @@ function GameBoard(props) {
   });
 
   useEffect(() => {
-    socket.emit('room', gameId, 'updateOpponentResource',{resourceUpdate: playerData.currentResource, fromPlayer: playerNumber}
-    )},[playerData.currentResource])
+    socket.emit('room', gameId, 'updateOpponentResource', { resourceUpdate: playerData.currentResource, fromPlayer: playerNumber }
+    )
+  }, [playerData.currentResource])
 
   useEffect(() => {
     socket.off('updateOpponentPlayArea');
@@ -120,7 +121,7 @@ function GameBoard(props) {
     //updates resources 
     socket.on('updateOpponentResource', ({ resourceUpdate, fromPlayer }) => {
       if (fromPlayer !== playerNumber) {
-        const boardData = {...boardData}
+        const boardData = { ...opponentBoardData }
         boardData.userResource = resourceUpdate
         setOpponentBoardData(boardData)
       }
@@ -178,8 +179,6 @@ function GameBoard(props) {
         setPlayerData(prevState => ({ ...prevState, isPlayersTurn: true }));
       }
     });
-
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opponentBoardData, playerDeck, playerData]);
 
@@ -270,20 +269,26 @@ function GameBoard(props) {
   const sendTurnChange = () => {
     // End our turn
     setPlayerData(prevState => ({ ...prevState, isPlayersTurn: false }));
+    // increase resource
+    // setPlayerData((prevState) => ({ ...prevState, ...{ userResource: playerData.currentResource =+ 1 } }));
+    const tempData = { ...playerData };
+    tempData.currentResource += 1;
+    setPlayerData(tempData);
 
     socket.emit('room', gameId, 'endOpponentsTurn', {
       fromPlayer: playerNumber
     });
   };
 
+
   return (
     <CardContext.Provider value={{ cardDraggedToPosition, playerDeck }}>
       <DndProvider backend={HTML5Backend}>
         <div className='wrapper'>
           <div className='userResourceRow'>
-          {[...Array(opponentBoardData.userResource)].map((resource, i) => (
-           <span className='resourceCircle activeResource'></span>
-          ))}
+            {[...Array(opponentBoardData.userResource)].map((resource, i) => (
+              <span className='resourceCircle activeResource'></span>
+            ))}
           </div>
 
           <div id='opponentRow'>
@@ -353,9 +358,9 @@ function GameBoard(props) {
             <CardHolder id='userPlayArea' />
           </div>
           <div className='userResourceRow'>
-          {[...Array(playerData.currentResource)].map((resource, i) => (
-           <span className='resourceCircle activeResource'></span>
-          ))}
+            {[...Array(playerData.currentResource)].map((resource, i) => (
+              <span className='resourceCircle activeResource'></span>
+            ))}
           </div>
         </div>
       </DndProvider>
