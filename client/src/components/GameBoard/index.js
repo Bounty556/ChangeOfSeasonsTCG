@@ -27,7 +27,7 @@ export const CardContext = createContext({
 // TODO: Make effects work
 // TODO: Be able to attack the opponent when his defense row is down
 // TODO: Show the opponents health
-// TODO: Be able to only attack with the attack row
+// TODO: Make cards not be able to attack from the play area
 // TODO: Have all units retaliate
 // TODO: Implement defense
 
@@ -203,7 +203,7 @@ function GameBoard(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const cardDraggedToPosition = (cardId, position) => {
+  const cardDraggedToPosition = (cardId, destinationPosition) => {
     const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
     const cardVal = { ...playerDeck[cardIndex] }; // The card we're dragging
 
@@ -217,25 +217,31 @@ function GameBoard(props) {
       return;
     }
 
-    if (position !== 'userPlayArea') {
+    if (destinationPosition !== 'userPlayArea') {
       // Make sure the given position doesn't have a card in it already
-      if (GameLogic.isPositionFilled(position, playerDeck)) {
+      if (GameLogic.isPositionFilled(destinationPosition, playerDeck)) {
         return;
       }
 
-      if (GameLogic.inOpponentRows(position)) {
-        if (GameLogic.isOpponentPositionFilled(position, opponentBoardData)) {
-          return sendAttack(position, cardVal.attack);
+      if (GameLogic.inOpponentRows(destinationPosition)) {
+        if (
+          GameLogic.isOpponentPositionFilled(
+            destinationPosition,
+            opponentBoardData
+          ) &&
+          cardVal.position !== 'userPlayArea'
+        ) {
+          return sendAttack(destinationPosition, cardVal.attack);
         } else {
           return;
         }
       }
 
-      // Make sure we're moving from the play area to the field
       if (cardVal.position === 'userPlayArea') {
+        // Make sure we're moving from the play area to the field
         sendPlayAreaUpdate(-1);
-        sendCardPlacement(cardVal, position);
-        cardVal.position = position;
+        sendCardPlacement(cardVal, destinationPosition);
+        cardVal.position = destinationPosition;
         setPlayerDeck([
           ...playerDeck.filter(card => card.uId !== cardId),
           cardVal
