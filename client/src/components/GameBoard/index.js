@@ -24,8 +24,7 @@ export const CardContext = createContext({
 // TODO: When we drag a card and hover it over a card slot, it should make the slot go grey or
 //       something similar so the user has some kind of feedback
 
-// TODO: Show resources for enemies and players
-// TODO: Draw a card and gain a resource each turn
+// TODO: Draw a card each turn
 // TODO: Make effects work
 // TODO: Be able to attack the opponent when his defense row is down
 // TODO: Show the opponents health
@@ -94,21 +93,23 @@ function GameBoard(props) {
     userAtt1: null,
     userAtt2: null,
     userAtt3: null,
-    userResource: 2,
+    userResource: 2
   });
 
   useEffect(() => {
-    socket.emit('room', gameId, 'updateOpponentResource', { resourceUpdate: playerData.currentResource, fromPlayer: playerNumber }
-    )
-  }, [playerData.currentResource])
+    socket.emit('room', gameId, 'updateOpponentResource', {
+      resourceUpdate: playerData.currentResource,
+      fromPlayer: playerNumber
+    });
+  }, [playerData.currentResource]);
 
   useEffect(() => {
     socket.off('updateOpponentPlayArea');
     socket.off('updateOpponentCardPlacement');
     socket.off('updateOpponentGrave');
     socket.off('receiveAttack');
-    socket.off('endOpponentsTurn');
-    socket.off('updateOpponentResource')
+    socket.off('opponentTurnEnded');
+    socket.off('updateOpponentResource');
 
     socket.on('updateOpponentPlayArea', ({ changeAmount, fromPlayer }) => {
       if (fromPlayer !== playerNumber) {
@@ -118,14 +119,14 @@ function GameBoard(props) {
       }
     });
 
-    //updates resources 
+    //updates resources
     socket.on('updateOpponentResource', ({ resourceUpdate, fromPlayer }) => {
       if (fromPlayer !== playerNumber) {
-        const boardData = { ...opponentBoardData }
-        boardData.userResource = resourceUpdate
-        setOpponentBoardData(boardData)
+        const boardData = { ...opponentBoardData };
+        boardData.userResource = resourceUpdate;
+        setOpponentBoardData(boardData);
       }
-    })
+    });
 
     socket.on(
       'updateOpponentCardPlacement',
@@ -173,10 +174,17 @@ function GameBoard(props) {
         }
       }
     });
-    socket.on('endOpponentsTurn', ({ fromPlayer }) => {
+    socket.on('opponentTurnEnded', ({ fromPlayer }) => {
       if (fromPlayer !== playerNumber) {
         // Set it to be our turn
-        setPlayerData(prevState => ({ ...prevState, isPlayersTurn: true }));
+        console.log('our turn');
+        const tempData = { ...playerData };
+        tempData.isPlayersTurn = true;
+        if (playerData.currentResource <= 8) {
+          tempData.currentResource += 1;
+        }
+        setPlayerData(tempData);
+        // Draw another card
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -189,7 +197,9 @@ function GameBoard(props) {
     }));
     const copy = GameLogic.copyArray(playerDeck);
 
-    setPlayerDeck(GameLogic.assignHand(GameLogic.shuffleArray(GameLogic.deckChoice(copy))));
+    setPlayerDeck(
+      GameLogic.assignHand(GameLogic.shuffleArray(GameLogic.deckChoice(copy)))
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -197,7 +207,7 @@ function GameBoard(props) {
     const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
     const cardVal = playerDeck[cardIndex]; // The card we're dragging
 
-    // TODO: Behave differently if we're casting an effect
+    // TODO: Behave differently if we're casting an effect or spell
 
     if (!playerData.isPlayersTurn || !cardVal.isCreature) {
       return;
@@ -269,20 +279,10 @@ function GameBoard(props) {
   const sendTurnChange = () => {
     // End our turn
     setPlayerData(prevState => ({ ...prevState, isPlayersTurn: false }));
-
-    // increase resource
-    if(playerData.currentResource <= 8 ){
-    const tempData = { ...playerData };
-    tempData.currentResource += 1;
-    setPlayerData(tempData);
-    console.log('MANA' +   playerData.currentResource)
-    }
-
-    socket.emit('room', gameId, 'endOpponentsTurn', {
+    socket.emit('room', gameId, 'opponentTurnEnded', {
       fromPlayer: playerNumber
     });
   };
-
 
   return (
     <CardContext.Provider value={{ cardDraggedToPosition, playerDeck }}>
@@ -357,7 +357,10 @@ function GameBoard(props) {
 
           <div id='userRow'>
             <Graveyard id='userGrave' recent={playerData.recentCardDeath} />
-            <CardPlaceHolder id='userDeck' cardCount={(GameLogic.hasAvailableCards(playerDeck)) ? 1 : 0} />
+            <CardPlaceHolder
+              id='userDeck'
+              cardCount={GameLogic.hasAvailableCards(playerDeck) ? 1 : 0}
+            />
             <CardHolder id='userPlayArea' />
           </div>
           <div className='userResourceRow'>
