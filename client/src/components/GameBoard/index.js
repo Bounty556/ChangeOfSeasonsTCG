@@ -50,7 +50,6 @@ function GameBoard(props) {
 
   const [playerDeck, setPlayerDeck] = useState(
     deck.map((card, i) => {
-      card.key = i;
       card.position = '';
       card.defense = 0;
       card.onPlayEffect = [];
@@ -290,7 +289,10 @@ function GameBoard(props) {
         <div className='wrapper'>
           <div className='userResourceRow'>
             {[...Array(opponentBoardData.userResource)].map((resource, i) => (
-              <span className='resourceCircle activeResource'></span>
+              <span
+                className='resourceCircle activeResource'
+                key={'manaOpponent' + i}
+              ></span>
             ))}
           </div>
 
@@ -365,7 +367,10 @@ function GameBoard(props) {
           </div>
           <div className='userResourceRow'>
             {[...Array(playerData.currentResource)].map((resource, i) => (
-              <span className='resourceCircle activeResource'></span>
+              <span
+                className='resourceCircle activeResource'
+                key={'manaPlayer' + i}
+              ></span>
             ))}
           </div>
         </div>
