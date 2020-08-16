@@ -269,11 +269,14 @@ function GameBoard(props) {
   const sendTurnChange = () => {
     // End our turn
     setPlayerData(prevState => ({ ...prevState, isPlayersTurn: false }));
+
     // increase resource
-    // setPlayerData((prevState) => ({ ...prevState, ...{ userResource: playerData.currentResource =+ 1 } }));
+    if(playerData.currentResource <= 8 ){
     const tempData = { ...playerData };
     tempData.currentResource += 1;
     setPlayerData(tempData);
+    console.log('MANA' +   playerData.currentResource)
+    }
 
     socket.emit('room', gameId, 'endOpponentsTurn', {
       fromPlayer: playerNumber
