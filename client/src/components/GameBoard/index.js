@@ -93,7 +93,7 @@ function GameBoard() {
 
   useEffect(() => {
     socket.emit('room', gameId, 'updateOpponentResource', {
-      resourceUpdate: playerData.currentResource,
+      resourceCount: playerData.currentResource,
       fromPlayer: playerNumber
     });
   }, [playerData.currentResource]);
