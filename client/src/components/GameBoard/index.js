@@ -40,6 +40,8 @@ export const CardContext = createContext({
 // TODO: Investigate error with dragging cards outside chrome
 // TODO: Replace opponents grave with player to attack
 
+// TODO: Socket io overhaul
+
 function GameBoard() {
   const { socket, gameId, deck, playerNumber } = useContext(GameContext);
 
@@ -49,9 +51,9 @@ function GameBoard() {
       card.defense = 0;
       card.baseAttack = card.attack;
       card.baseHealth = card.health;
-      card.onPlayEffect = [];
-      card.onDeathEffect = [];
-      card.onAttackEffect = [];
+      card.onPlayEffects = [];
+      card.onDeathEffects = [];
+      card.onAttackEffects = [];
 
       // Parse the effect on this card if applicable
       const tokens = Parser.tokenize(card.effectScript);
@@ -59,13 +61,13 @@ function GameBoard() {
       for (let i = 0; i < tokens.length; i++) {
         switch (tokens[i].trigger) {
           case 'ONPLAY':
-            card.onPlayEffect.push(tokens[i]);
+            card.onPlayEffects.push(tokens[i]);
             break;
           case 'ONDEATH':
-            card.onDeathEffect.push(tokens[i]);
+            card.onDeathEffects.push(tokens[i]);
             break;
           case 'ONATK':
-            card.onAttackEffect.push(tokens[i]);
+            card.onAttackEffects.push(tokens[i]);
             break;
         }
       }
@@ -79,6 +81,8 @@ function GameBoard() {
     recentCardDeath: null,
     currentResource: 2
   });
+
+  const [effectData, setEffectData] = useState(null);
 
   const [opponentBoardData, setOpponentBoardData] = useState({
     opponentPlayAreaCount: 5,
@@ -177,8 +181,6 @@ function GameBoard() {
     const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
     const cardVal = { ...playerDeck[cardIndex] }; // The card we're dragging
 
-    // TODO: Behave differently if we're casting an effect or spell
-
     if (
       !playerData.isPlayersTurn ||
       GameLogic.isInDefenseRow(cardVal.position) ||
@@ -187,6 +189,56 @@ function GameBoard() {
       return;
     }
 
+    if (effectData) {
+      castEffect(destinationPosition, cardVal);
+    } else {
+      moveCard(destinationPosition, cardVal);
+    }
+  };
+
+  const castEffect = (destinationPosition, cardVal) => {
+    if (
+      cardVal.uId !== effectData.cardUId ||
+      destinationPosition === 'userPlayArea'
+    ) {
+      return;
+    }
+
+    // Check to see if the destination position is in the effect target
+    const currentEffect = effectData.effects[effectData.currentEffect];
+    const allowedDestinations = Parser.getScriptTargets(currentEffect);
+    if (allowedDestinations.includes(destinationPosition)) {
+      // Do the effect and end the turn
+      switch (currentEffect.operations[0].op) {
+        case 'HEAL':
+          if (GameLogic.inOpponentRows(destinationPosition)) {
+            console.log('enemy');
+          } else {
+            const destinationCard = playerDeck.find(
+              card => card.position === destinationPosition
+            );
+            destinationCard.health += parseInt(
+              currentEffect.operations[0].param2
+            );
+            setPlayerDeck([
+              ...playerDeck.filter(
+                card => card.position !== destinationCard.position
+              ),
+              destinationCard
+            ]);
+            setEffectData(null);
+            sendTurnChange();
+          }
+          break;
+
+        default:
+          sendTurnChange();
+          break;
+      }
+    }
+  };
+
+  const moveCard = (destinationPosition, cardVal) => {
     if (destinationPosition !== 'userPlayArea') {
       // Make sure the given position doesn't have a card in it already
       if (GameLogic.isPositionFilled(destinationPosition, playerDeck)) {
@@ -218,9 +270,18 @@ function GameBoard() {
         sendCardPlacement(cardVal, destinationPosition);
         cardVal.position = destinationPosition;
         setPlayerDeck([
-          ...playerDeck.filter(card => card.uId !== cardId),
+          ...playerDeck.filter(card => card.uId !== cardVal.uId),
           cardVal
         ]);
+
+        // Set that we're now starting an effect if this card has one
+        if (cardVal.onPlayEffects.length > 0) {
+          setEffectData({
+            cardUId: cardVal.uId,
+            effects: cardVal.onPlayEffects,
+            currentEffect: 0
+          });
+        }
       }
     }
   };
