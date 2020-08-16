@@ -143,5 +143,22 @@ export default {
     }
 
     return false;
+  },
+
+  findFirstAvailableCards: function (cardCount, deck) {
+    const availableCardIndices = [];
+    let foundCards = 0;
+    for (let i = 0; i < deck.length; i++) {
+      if (deck[i].position === '') {
+        availableCardIndices.push(i);
+        foundCards++;
+
+        if (foundCards === cardCount) {
+          break;
+        }
+      }
+    }
+
+    return availableCardIndices;
   }
 };

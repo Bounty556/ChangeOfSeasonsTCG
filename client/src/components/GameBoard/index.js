@@ -24,7 +24,6 @@ export const CardContext = createContext({
 // TODO: When we drag a card and hover it over a card slot, it should make the slot go grey or
 //       something similar so the user has some kind of feedback
 
-// TODO: Draw a card each turn
 // TODO: Make effects work
 // TODO: Be able to attack the opponent when his defense row is down
 // TODO: Show the opponents health
@@ -34,7 +33,6 @@ export const CardContext = createContext({
 
 // TODO: Spell cards should only trigger their effect
 
-// TODO: Make cards in the def row not be able to attack
 // TODO: Make cards retaliate
 // TODO: When cards don't have any attack, don't use up their turn
 // TODO: Cards should not show health in the graveyard
@@ -44,6 +42,9 @@ export const CardContext = createContext({
 // TODO: Players should only be able to play one card per turn, but use every card on the field in the atk row
 
 // TODO: Make cards cost resources
+// TODO: Add limit to how many cards you can have in the play area
+
+// TODO: Investigate error with dragging cards outside chrome
 
 function GameBoard(props) {
   const { socket, gameId, deck, playerNumber } = useContext(GameContext);
@@ -109,7 +110,6 @@ function GameBoard(props) {
     socket.off('receiveAttack');
     socket.off('opponentTurnEnded');
     socket.off('updateOpponentResource');
-
     socket.on('updateOpponentPlayArea', ({ changeAmount, fromPlayer }) => {
       if (fromPlayer !== playerNumber) {
         const boardData = { ...opponentBoardData };
@@ -176,14 +176,15 @@ function GameBoard(props) {
     socket.on('opponentTurnEnded', ({ fromPlayer }) => {
       if (fromPlayer !== playerNumber) {
         // Set it to be our turn
-        console.log('our turn');
         const tempData = { ...playerData };
         tempData.isPlayersTurn = true;
         if (playerData.currentResource <= 8) {
           tempData.currentResource += 1;
         }
         setPlayerData(tempData);
-        // Draw another card
+        
+        // Also draw a card for this turn
+        drawCards(1);
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -204,7 +205,7 @@ function GameBoard(props) {
 
   const cardDraggedToPosition = (cardId, position) => {
     const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
-    const cardVal = playerDeck[cardIndex]; // The card we're dragging
+    const cardVal = {...playerDeck[cardIndex]}; // The card we're dragging
 
     // TODO: Behave differently if we're casting an effect or spell
 
@@ -279,6 +280,24 @@ function GameBoard(props) {
     // End our turn
     setPlayerData(prevState => ({ ...prevState, isPlayersTurn: false }));
     socket.emit('room', gameId, 'opponentTurnEnded', {
+      fromPlayer: playerNumber
+    });
+  };
+
+  const drawCards = (cardCount) => {
+    const indices = GameLogic.findFirstAvailableCards(cardCount, playerDeck);
+
+    for (let i = 0; i < indices.length; i++) {
+      const cardVal = {...playerDeck[indices[i]]};
+      cardVal.position = 'userPlayArea';
+      setPlayerDeck([
+        ...playerDeck.filter(card => card.uId !== cardVal.uId),
+        cardVal
+      ]);
+    }
+
+    socket.emit('room', gameId, 'updateOpponentPlayArea', {
+      changeAmount: indices.length,
       fromPlayer: playerNumber
     });
   };
