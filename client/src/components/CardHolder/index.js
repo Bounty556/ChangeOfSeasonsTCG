@@ -36,7 +36,7 @@ function CardHolder(props) {
             props.card ? (
               <InfoCard {...props.card} />
             ) : (
-              <></>
+              <div key='noCard'></div>
             )
           ) : (
             heldCards.map(card => <GameCard {...card} />)

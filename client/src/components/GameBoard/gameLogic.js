@@ -1,6 +1,8 @@
 export default {
   enemyAtkRows: ['opponentAtt1', 'opponentAtt2', 'opponentAtt3'],
   enemyDefRows: ['opponentDef1', 'opponentDef2'],
+  userAtkRows: ['userAtt1', 'userAtt2', 'userAtt3'],
+  userDefRows: ['userDef1', 'userDef2'],
   // prettier-ignore
   springDeck: [1, 1, 5, 9, 9, 13, 17, 17, 21, 21, 25, 25, 29, 29, 33, 33, 37, 37, 41, 41, 45, 45, 49, 49, 53, 53, 57, 61, 65, 69],
   // prettier-ignore
@@ -15,7 +17,7 @@ export default {
     for (let i = 0; i < tempDeck.length; i++) {
       for (let j = 0; j < array.length; j++) {
         if (array[j].cardId === tempDeck[i]) {
-          newDeck.push({ ...array[j], uId: i }); // Give this card a unique Id
+          newDeck.push({ ...array[j], uId: i, key: 'gameCard' + i}); // Give this card a unique Id
           break;
         }
       }
@@ -31,7 +33,6 @@ export default {
     return copy;
   },
 
-  // chooses the correct array to duplicate
   deckChoice: function (array) {
     let deckC;
     switch (array[0].cardId) {
@@ -114,6 +115,7 @@ export default {
 
         if (deck[i].health <= 0) {
           deck[i].position = 'userGrave';
+          deck[i].health = 0;
           cardDied = { ...deck[i] };
         }
 
@@ -124,17 +126,6 @@ export default {
     return [deck, cardDied];
   },
 
-  isOpponentCardInPlay: function (cardId, opponentData) {
-    const keys = Object.keys(opponentData);
-    for (let i = 0; i < keys.length; i++) {
-      if (opponentData[keys[i]] && opponentData[keys[i]].uId === cardId) {
-        return keys[i];
-      }
-    }
-
-    return null;
-  },
-
   hasAvailableCards: function (deck) {
     for (let i = 0; i < deck.length; i++) {
       if (deck[i].position === '') {
@@ -143,5 +134,36 @@ export default {
     }
 
     return false;
+  },
+
+  findFirstAvailableCards: function (cardCount, deck) {
+    const availableCardIndices = [];
+    let foundCards = 0;
+    for (let i = 0; i < deck.length; i++) {
+      if (deck[i].position === '') {
+        availableCardIndices.push(i);
+        foundCards++;
+
+        if (foundCards === cardCount) {
+          break;
+        }
+      }
+    }
+
+    return availableCardIndices;
+  },
+
+  isInDefenseRow: function (position) {
+    return this.userDefRows.includes(position);
+  },
+
+  getCardInPosition: function (position, deck) {
+    for (let i = 0; i < deck.length; i++) {
+      if (deck[i].position === position) {
+        return deck[i];
+      }
+    }
+
+    return null;
   }
 };
