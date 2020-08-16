@@ -291,7 +291,7 @@ function GameBoard(props) {
             {[...Array(opponentBoardData.userResource)].map((resource, i) => (
               <span
                 className='resourceCircle activeResource'
-                key={'manaOpponent' + i}
+                key={'resourceOpponent' + i}
               ></span>
             ))}
           </div>
@@ -369,7 +369,7 @@ function GameBoard(props) {
             {[...Array(playerData.currentResource)].map((resource, i) => (
               <span
                 className='resourceCircle activeResource'
-                key={'manaPlayer' + i}
+                key={'resourcePlayer' + i}
               ></span>
             ))}
           </div>
