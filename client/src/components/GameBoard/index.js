@@ -40,8 +40,10 @@ export const CardContext = createContext({
 
 // TODO: Make cards cost resources
 // TODO: Add limit to how many cards you can have in the play area
+// TODO: update player deck on opponents side
 
 // TODO: Investigate error with dragging cards outside chrome
+// TODO: Replace opponents grave with player to attack
 
 function GameBoard() {
   const { socket, gameId, deck, playerNumber } = useContext(GameContext);
@@ -114,7 +116,6 @@ function GameBoard() {
         setOpponentBoardData(boardData);
       }
     });
-
     //updates resources
     socket.on('updateOpponentResource', ({ resourceUpdate, fromPlayer }) => {
       if (fromPlayer !== playerNumber) {
@@ -123,7 +124,6 @@ function GameBoard() {
         setOpponentBoardData(boardData);
       }
     });
-
     socket.on(
       'updateOpponentCardPlacement',
       ({ cardData, position, fromPlayer }) => {
@@ -143,26 +143,9 @@ function GameBoard() {
     });
     socket.on('receiveAttack', ({ position, damage, fromPlayer }) => {
       if (fromPlayer !== playerNumber) {
-        const [deck, cardDied] = GameLogic.damageCard(
-          position,
-          damage,
-          GameLogic.copyArray(playerDeck)
-        );
-        setPlayerDeck(deck);
-
-        if (cardDied) {
-          setPlayerData(prevState => ({
-            ...prevState,
-            recentCardDeath: cardDied
-          }));
-          socket.emit('room', gameId, 'updateOpponentGrave', {
-            hasGrave: true,
-            fromPlayer: playerNumber
-          });
-        }
+        receiveAttack(position, damage);
       }
     });
-    //socket.on('updateCardData', ({}))
     socket.on('opponentTurnEnded', ({ fromPlayer }) => {
       if (fromPlayer !== playerNumber) {
         // Set it to be our turn
@@ -222,7 +205,11 @@ function GameBoard() {
           cardVal.position !== 'userPlayArea' &&
           cardVal.attack > 0
         ) {
-          return sendAttack(destinationPosition, cardVal.attack);
+          return sendAttack(
+            cardVal.position,
+            destinationPosition,
+            cardVal.attack
+          );
         } else {
           return;
         }
@@ -258,23 +245,39 @@ function GameBoard() {
     });
   };
 
-  const sendAttack = (position, damage) => {
+  const sendAttack = (attackingFromPosition, attackedPosition, damage) => {
     // Need to replace opponent with user here to match the opponentBoardData object
-    position = position.replace('opponent', 'user');
+    attackedPosition = attackedPosition.replace('opponent', 'user');
     const boardData = { ...opponentBoardData };
-    boardData[position].health -= damage;
-    if (boardData[position].health <= 0) {
-      boardData[position] = null;
+    boardData[attackedPosition].health -= damage;
+    
+     // Get retaliated on
+    const attackingFromCard = {...GameLogic.getCardInPosition(attackingFromPosition, playerDeck)};
+    attackingFromCard.health -= boardData[attackedPosition].attack
+    receiveAttack(attackingFromPosition, boardData[attackedPosition].attack);
+
+    if (boardData[attackedPosition].health <= 0) {
+      boardData[attackedPosition] = null;
     }
     setOpponentBoardData(boardData);
 
     socket.emit('room', gameId, 'receiveAttack', {
-      position: position,
+      position: attackedPosition,
       damage: damage,
       fromPlayer: playerNumber
     });
 
-    sendTurnChange();
+    if (attackingFromCard.health <= 0) {
+      sendCardPlacement(
+        null,
+        attackingFromPosition
+      );
+    } else {
+      sendCardPlacement(
+        attackingFromCard,
+        attackingFromPosition
+      );
+    }
   };
 
   const sendTurnChange = () => {
@@ -301,6 +304,22 @@ function GameBoard() {
       changeAmount: indices.length,
       fromPlayer: playerNumber
     });
+  };
+
+  const receiveAttack = (position, damage) => {
+    const [deck, cardDied] = GameLogic.damageCard(
+      position,
+      damage,
+      GameLogic.copyArray(playerDeck)
+    );
+    setPlayerDeck(deck);
+
+    if (cardDied) {
+      setPlayerData(prevState => ({
+        ...prevState,
+        recentCardDeath: cardDied
+      }));
+    }
   };
 
   return (

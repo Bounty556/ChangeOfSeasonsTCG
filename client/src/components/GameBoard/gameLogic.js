@@ -33,7 +33,6 @@ export default {
     return copy;
   },
 
-  // chooses the correct array to duplicate
   deckChoice: function (array) {
     let deckC;
     switch (array[0].cardId) {
@@ -156,5 +155,15 @@ export default {
 
   isInDefenseRow: function (position) {
     return this.userDefRows.includes(position);
+  },
+
+  getCardInPosition: function (position, deck) {
+    for (let i = 0; i < deck.length; i++) {
+      if (deck[i].position === position) {
+        return deck[i];
+      }
+    }
+
+    return null;
   }
 };
