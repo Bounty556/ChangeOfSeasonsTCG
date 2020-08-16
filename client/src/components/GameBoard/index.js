@@ -27,14 +27,12 @@ export const CardContext = createContext({
 // TODO: Make effects work
 // TODO: Be able to attack the opponent when his defense row is down
 // TODO: Show the opponents health
-// TODO: Make cards not be able to attack from the play area
 // TODO: Have all units retaliate
 // TODO: Implement defense
 
 // TODO: Spell cards should only trigger their effect
 
 // TODO: Make cards retaliate
-// TODO: When cards don't have any attack, don't use up their turn
 // TODO: Cards should not show health in the graveyard
 // TODO: Cards should keep track of their original attack and health
 
@@ -46,7 +44,7 @@ export const CardContext = createContext({
 
 // TODO: Investigate error with dragging cards outside chrome
 
-function GameBoard(props) {
+function GameBoard() {
   const { socket, gameId, deck, playerNumber } = useContext(GameContext);
 
   const [playerDeck, setPlayerDeck] = useState(
@@ -229,7 +227,8 @@ function GameBoard(props) {
             destinationPosition,
             opponentBoardData
           ) &&
-          cardVal.position !== 'userPlayArea'
+          cardVal.position !== 'userPlayArea' &&
+          cardVal.attack > 0
         ) {
           return sendAttack(destinationPosition, cardVal.attack);
         } else {
