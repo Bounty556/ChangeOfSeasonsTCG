@@ -116,6 +116,7 @@ export default {
 
         if (deck[i].health <= 0) {
           deck[i].position = 'userGrave';
+          deck[i].health = 0;
           cardDied = { ...deck[i] };
         }
 
@@ -124,17 +125,6 @@ export default {
     }
 
     return [deck, cardDied];
-  },
-
-  isOpponentCardInPlay: function (cardId, opponentData) {
-    const keys = Object.keys(opponentData);
-    for (let i = 0; i < keys.length; i++) {
-      if (opponentData[keys[i]] && opponentData[keys[i]].uId === cardId) {
-        return keys[i];
-      }
-    }
-
-    return null;
   },
 
   hasAvailableCards: function (deck) {

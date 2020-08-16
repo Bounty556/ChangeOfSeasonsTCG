@@ -33,7 +33,6 @@ export const CardContext = createContext({
 // TODO: Spell cards should only trigger their effect
 
 // TODO: Make cards retaliate
-// TODO: Cards should not show health in the graveyard
 // TODO: Cards should keep track of their original attack and health
 
 // TODO: Make 'end turn' button. Turns shouldn't end on one action
@@ -130,14 +129,6 @@ function GameBoard() {
       ({ cardData, position, fromPlayer }) => {
         if (fromPlayer !== playerNumber) {
           const boardData = { ...opponentBoardData };
-          // see if this card was already in play
-          const isInPlay = GameLogic.isOpponentCardInPlay(
-            cardData.uId,
-            opponentBoardData
-          );
-          if (isInPlay) {
-            boardData[isInPlay] = null;
-          }
           boardData[position] = cardData;
           setOpponentBoardData(boardData);
         }
@@ -171,6 +162,7 @@ function GameBoard() {
         }
       }
     });
+    //socket.on('updateCardData', ({}))
     socket.on('opponentTurnEnded', ({ fromPlayer }) => {
       if (fromPlayer !== playerNumber) {
         // Set it to be our turn
