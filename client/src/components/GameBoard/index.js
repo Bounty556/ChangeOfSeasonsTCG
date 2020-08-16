@@ -24,7 +24,6 @@ export const CardContext = createContext({
 // TODO: When we drag a card and hover it over a card slot, it should make the slot go grey or
 //       something similar so the user has some kind of feedback
 
-// TODO: Show resources for enemies and players
 // TODO: Draw a card and gain a resource each turn
 // TODO: Make effects work
 // TODO: Be able to attack the opponent when his defense row is down
