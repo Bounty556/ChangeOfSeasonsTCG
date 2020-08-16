@@ -36,7 +36,6 @@ export const CardContext = createContext({
 
 // TODO: Make cards cost resources
 // TODO: Add limit to how many cards you can have in the play area
-// TODO: update player deck on opponents side
 
 // TODO: Investigate error with dragging cards outside chrome
 // TODO: Replace opponents grave with player to attack
@@ -105,18 +104,11 @@ function GameBoard() {
     socket.off('receiveAttack');
     socket.off('opponentTurnEnded');
     socket.off('updateOpponentResource');
+    socket.off('updateOpponentDeck');
     socket.on('updateOpponentPlayArea', ({ changeAmount, fromPlayer }) => {
       if (fromPlayer !== playerNumber) {
         const boardData = { ...opponentBoardData };
         boardData.opponentPlayAreaCount += changeAmount;
-        setOpponentBoardData(boardData);
-      }
-    });
-    //updates resources
-    socket.on('updateOpponentResource', ({ resourceUpdate, fromPlayer }) => {
-      if (fromPlayer !== playerNumber) {
-        const boardData = { ...opponentBoardData };
-        boardData.userResource = resourceUpdate;
         setOpponentBoardData(boardData);
       }
     });
@@ -147,6 +139,22 @@ function GameBoard() {
 
         // Also draw a card for this turn
         drawCards(1);
+      }
+    });
+    socket.on('updateOpponentResource', ({ resourceCount, fromPlayer }) => {
+      if (fromPlayer !== playerNumber) {
+        setOpponentBoardData(prevState => ({
+          ...prevState,
+          userResource: resourceCount
+        }));
+      }
+    });
+    socket.on('updateOpponentDeck', ({ hasDeck, fromPlayer }) => {
+      if (fromPlayer !== playerNumber) {
+        setOpponentBoardData(prevState => ({
+          ...prevState,
+          opponentHasDeck: hasDeck
+        }));
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -239,10 +247,12 @@ function GameBoard() {
     attackedPosition = attackedPosition.replace('opponent', 'user');
     const boardData = { ...opponentBoardData };
     boardData[attackedPosition].health -= damage;
-    
-     // Get retaliated on
-    const attackingFromCard = {...GameLogic.getCardInPosition(attackingFromPosition, playerDeck)};
-    attackingFromCard.health -= boardData[attackedPosition].attack
+
+    // Get retaliated on
+    const attackingFromCard = {
+      ...GameLogic.getCardInPosition(attackingFromPosition, playerDeck)
+    };
+    attackingFromCard.health -= boardData[attackedPosition].attack;
     receiveAttack(attackingFromPosition, boardData[attackedPosition].attack);
 
     if (boardData[attackedPosition].health <= 0) {
@@ -257,15 +267,9 @@ function GameBoard() {
     });
 
     if (attackingFromCard.health <= 0) {
-      sendCardPlacement(
-        null,
-        attackingFromPosition
-      );
+      sendCardPlacement(null, attackingFromPosition);
     } else {
-      sendCardPlacement(
-        attackingFromCard,
-        attackingFromPosition
-      );
+      sendCardPlacement(attackingFromCard, attackingFromPosition);
     }
   };
 
@@ -293,6 +297,14 @@ function GameBoard() {
       changeAmount: indices.length,
       fromPlayer: playerNumber
     });
+
+    // Ran out of cards
+    if (!GameLogic.hasAvailableCards(playerDeck)) {
+      socket.emit('room', gameId, 'updateOpponentDeck', {
+        hasDeck: false,
+        fromPlayer: playerNumber
+      });
+    }
   };
 
   const receiveAttack = (position, damage) => {
