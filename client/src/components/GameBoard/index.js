@@ -231,8 +231,8 @@ function GameBoard() {
       position: position,
       fromPlayer: playerNumber
     });
-
-    sendTurnChange();
+    //commenting out to work on end turn button 
+    // sendTurnChange();
   };
 
   const sendPlayAreaUpdate = changeAmount => {
@@ -410,6 +410,14 @@ function GameBoard() {
             ))}
           </div>
         </div>
+        { playerData.isPlayersTurn ? 
+        (<div className='endTurnRow'> 
+        <button className='woodEndButton' onClick={sendTurnChange}>End Turn</button>
+        </div>) 
+        : 
+        ( <div></div>)
+       
+        }
       </DndProvider>
     </CardContext.Provider>
   );

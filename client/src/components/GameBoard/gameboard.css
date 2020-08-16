@@ -47,6 +47,7 @@ hr {
     width: 12%;
 }
 
+
 #opponentAtt1 .card, 
 #opponentAtt2 .card, 
 #opponentAtt3 .card, 
@@ -134,11 +135,40 @@ hr {
 
 /* resources styling  */
 
-.userResourceRow { 
+.userResourceRow, .endTurnRow { 
     display: flex;
     flex-direction: row;
     justify-content: center;
     margin:10px;
+}
+
+.woodEndButton { 
+    background-image: url(./playAreaImages/woodsign.png) !important;
+    width: 200px;
+    height: 100px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color:transparent ;
+    justify-content: center;
+    border: none;
+    font-size: 35px;
+    font-weight: bold;
+    font-family: 'Trade Winds', cursive;
+    color: rgb(255, 246, 217);
+}
+
+.woodEndButton:hover {
+    transition: ease-in-out 0.2s !important;
+    transform: scale(1.05) !important;
+
+    text-shadow:
+    0 0 1px #fff,
+    0 0 1px #fff,
+    0 0 2px #fff,
+    0 0 4px rgb(0, 153, 255),
+    0 0 8px rgb(0, 153, 255),
+    0 0 80px rgb(0, 153, 255),
+    0 0 100px rgb(0, 153, 255);
 }
 
 .resourceCircle {
