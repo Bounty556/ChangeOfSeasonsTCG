@@ -136,10 +136,9 @@ function GameBoard() {
           tempData.currentResource += 1;
         }
         setPlayerData(tempData);
-
-        // Also draw a card for this turn
-        drawCards(1);
-      }
+        
+            drawCards(1);
+                }
     });
     socket.on('updateOpponentResource', ({ resourceCount, fromPlayer }) => {
       if (fromPlayer !== playerNumber) {
@@ -410,13 +409,13 @@ function GameBoard() {
             ))}
           </div>
         </div>
-        { playerData.isPlayersTurn ? 
-        (<div className='endTurnRow'> 
-        <button className='woodEndButton' onClick={sendTurnChange}>End Turn</button>
-        </div>) 
-        : 
-        ( <div></div>)
-       
+        {playerData.isPlayersTurn ?
+          (<div className='endTurnRow'>
+            <button className='woodEndButton' onClick={sendTurnChange}>End Turn</button>
+          </div>)
+          :
+          (<div></div>)
+
         }
       </DndProvider>
     </CardContext.Provider>
