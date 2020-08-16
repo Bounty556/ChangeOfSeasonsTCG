@@ -17,7 +17,7 @@ export default {
     for (let i = 0; i < tempDeck.length; i++) {
       for (let j = 0; j < array.length; j++) {
         if (array[j].cardId === tempDeck[i]) {
-          newDeck.push({ ...array[j], uId: i, key: 'gameCard' + i}); // Give this card a unique Id
+          newDeck.push({ ...array[j], uId: i, key: 'gameCard' + i }); // Give this card a unique Id
           break;
         }
       }
@@ -25,7 +25,7 @@ export default {
     return newDeck;
   },
 
-  copyArray: function (array) {
+  copyDeck: function (array) {
     const copy = array.map(el => {
       return { ...el };
     });
@@ -165,5 +165,39 @@ export default {
     }
 
     return null;
+  },
+
+  getPlayedCards: function (deck) {
+    const playedCards = [];
+    for (let i = 0; i < deck.length; i++) {
+      if (
+        this.userAtkRows.includes(deck[i].position) ||
+        this.userDefRows.includes(deck[i].position)
+      ) {
+        playedCards.push(deck[i]);
+      }
+    }
+
+    return playedCards;
+  },
+
+  compareCards: function (position, ourData, ourDeck) {
+    let theirCard = ourData[position];
+    let ourCard = this.getCardInPosition(position, ourDeck);
+
+    // Our card died
+    if (!theirCard && ourCard) {
+      ourCard.health = 0;
+      ourCard.position = 'userGrave';
+      ourDeck = [...ourDeck.filter(card => card.uId !== ourCard.uId), ourCard];
+      return [ourCard, ourDeck];
+    } else if (!theirCard && !ourCard) {
+      return [null, ourDeck];
+    } else {
+      ourCard.health = theirCard.health;
+      ourCard.attack = theirCard.attack;
+      ourDeck = [...ourDeck.filter(card => card.uId !== ourCard.uId), ourCard];
+      return [null, ourDeck];
+    }
   }
 };

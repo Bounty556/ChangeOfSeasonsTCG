@@ -91,17 +91,17 @@ export default {
     // TODO: We need to be able to target the enemy player/hero
 
     // The targetting parameter should be the first param, make sure it exists
-    if (!token || !token.operations || !token.operations.param1) {
+    if (!token || !token.operations[0] || !token.operations[0].param1) {
       return [];
     }
 
-    const target = token.operations.param1;
+    const target = token.operations[0].param1;
 
     if (target === 'SELF') {
       return this.positions.slice(0, 5);
     } else if (target === 'OPP') {
       return this.positions.slice(5);
-    } else if (target === 'ALL') {
+    } else if (target === 'ALL' || target === 'SINGLE') {
       return this.positions.slice(0);
     } else if (target === 'DEFROW') {
       return this.positions.slice(3, 5);
