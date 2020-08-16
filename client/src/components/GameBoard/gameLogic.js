@@ -1,6 +1,8 @@
 export default {
   enemyAtkRows: ['opponentAtt1', 'opponentAtt2', 'opponentAtt3'],
   enemyDefRows: ['opponentDef1', 'opponentDef2'],
+  userAtkRows: ['userAtt1', 'userAtt2', 'userAtt3'],
+  userDefRows: ['userDef1', 'userDef2'],
   // prettier-ignore
   springDeck: [1, 1, 5, 9, 9, 13, 17, 17, 21, 21, 25, 25, 29, 29, 33, 33, 37, 37, 41, 41, 45, 45, 49, 49, 53, 53, 57, 61, 65, 69],
   // prettier-ignore
@@ -160,5 +162,9 @@ export default {
     }
 
     return availableCardIndices;
+  },
+
+  isInDefenseRow: function (position) {
+    return this.userDefRows.includes(position);
   }
 };

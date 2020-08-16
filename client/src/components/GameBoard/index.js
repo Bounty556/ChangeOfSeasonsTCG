@@ -182,7 +182,7 @@ function GameBoard(props) {
           tempData.currentResource += 1;
         }
         setPlayerData(tempData);
-        
+
         // Also draw a card for this turn
         drawCards(1);
       }
@@ -205,11 +205,15 @@ function GameBoard(props) {
 
   const cardDraggedToPosition = (cardId, position) => {
     const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
-    const cardVal = {...playerDeck[cardIndex]}; // The card we're dragging
+    const cardVal = { ...playerDeck[cardIndex] }; // The card we're dragging
 
     // TODO: Behave differently if we're casting an effect or spell
 
-    if (!playerData.isPlayersTurn || !cardVal.isCreature) {
+    if (
+      !playerData.isPlayersTurn ||
+      GameLogic.isInDefenseRow(cardVal.position) ||
+      !cardVal.isCreature
+    ) {
       return;
     }
 
@@ -284,11 +288,11 @@ function GameBoard(props) {
     });
   };
 
-  const drawCards = (cardCount) => {
+  const drawCards = cardCount => {
     const indices = GameLogic.findFirstAvailableCards(cardCount, playerDeck);
 
     for (let i = 0; i < indices.length; i++) {
-      const cardVal = {...playerDeck[indices[i]]};
+      const cardVal = { ...playerDeck[indices[i]] };
       cardVal.position = 'userPlayArea';
       setPlayerDeck([
         ...playerDeck.filter(card => card.uId !== cardVal.uId),
