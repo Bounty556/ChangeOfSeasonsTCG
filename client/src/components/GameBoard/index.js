@@ -5,6 +5,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import CardPlaceHolder from '../CardPlaceHolder';
 import CardHolder from '../CardHolder';
 import Graveyard from '../Graveyard';
+import UserGameInformation from '../UserGameInformation';
 import { GameContext } from '../../pages/Lobby';
 
 import GameLogic from './gameLogic';
@@ -79,7 +80,7 @@ function GameBoard() {
     isPlayersTurn: true,
     recentCardDeath: null,
     currentResource: 2, 
-    userPlayAreaCount: 5
+    lifeTotal: 25
   });
 
   const [updateSwitch, setUpdateSwitch] = useState(false); // This swings between true and false every time we need to update
@@ -94,7 +95,8 @@ function GameBoard() {
     userAtt1: null,
     userAtt2: null,
     userAtt3: null,
-    userResource: 2
+    userResource: 2,
+    opponentLifeTotal: 25
   });
 
   useEffect(() => {
@@ -371,7 +373,9 @@ function GameBoard() {
           </div>
 
           <div id='userRow'>
-            <Graveyard id='userGrave' recent={playerData.recentCardDeath} />
+            <UserGameInformation
+            id='userInfo'
+            />
             <CardPlaceHolder
               id='userDeck'
               cardCount={GameLogic.hasAvailableCards(playerDeck) ? 1 : 0}
