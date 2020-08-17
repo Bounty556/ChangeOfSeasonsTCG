@@ -175,7 +175,7 @@ const cardSeed = [
     attack: 0,
     health: 0,
     effect: 'give attack row 1 extra attack ',
-    effectScript: 'ONPLAY RAISEATK ATKROW 1 ALL',
+    effectScript: 'ONPLAY RAISEATK ATKROW 1',
     name: 'Solstice',
     img: 'green_9.png'
   },
@@ -187,7 +187,7 @@ const cardSeed = [
     attack: 0,
     health: 0,
     effect: 'Destroy 1 of your own minions - give the rest 1 attack',
-    effectScript: 'ONPLAY KILL TARGET SELF ATKROW 1 ALL',
+    effectScript: 'ONPLAY KILL SELF RAISEATK ALL 1',
     name: 'indignity',
     img: 'violet_3.png'
   },
