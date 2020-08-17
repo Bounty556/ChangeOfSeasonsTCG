@@ -101,12 +101,7 @@ function GameBoard() {
       ourData: opponentBoardData,
       player: playerNumber
     });
-    console.log(opponentBoardData);
   }, [updateSwitch]);
-
-  useEffect(() => {
-    console.log('updated');
-  }, [opponentBoardData]);
 
   useEffect(() => {
     socket.off('updateBoard');
@@ -305,6 +300,10 @@ function GameBoard() {
           }
           increaseEffectOperation();
           setUpdateSwitch(!updateSwitch);
+          break;
+
+        default:
+          break;
       }
     }
   };
@@ -362,7 +361,7 @@ function GameBoard() {
         if (effect) {
           increaseEffectOperation({ cardId: cardVal.uId, effect: effect, currentOperation: -1 });
         }
-        
+
         setUpdateSwitch(!updateSwitch);
       }
     }
@@ -381,7 +380,6 @@ function GameBoard() {
           currentResources = GameLogic.clamp(currentResources + parseInt(param2), 0, 8);
           setOpponentBoardData(prevState => ({ ...prevState, currentResource: currentResources }));
         }
-        setUpdateSwitch(!updateSwitch);
         break;
 
       case 'DRAW':
@@ -399,7 +397,6 @@ function GameBoard() {
             cardVal.position = 'userPlayArea';
             setPlayerDeck(deck);
           }
-          setUpdateSwitch(!updateSwitch);
         }
         break;
     }
