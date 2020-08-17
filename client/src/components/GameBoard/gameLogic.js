@@ -85,10 +85,7 @@ export default {
   },
 
   inOpponentRows: function (position) {
-    return (
-      this.enemyAtkRows.includes(position) ||
-      this.enemyDefRows.includes(position)
-    );
+    return this.enemyAtkRows.includes(position) || this.enemyDefRows.includes(position);
   },
 
   isPositionFilled: function (position, deck) {
@@ -160,7 +157,7 @@ export default {
   getCardInPosition: function (position, deck) {
     for (let i = 0; i < deck.length; i++) {
       if (deck[i].position === position) {
-        return {...deck[i]};
+        return { ...deck[i] };
       }
     }
 
@@ -168,14 +165,12 @@ export default {
   },
 
   countAllCardsInPosition: function (position, deck) {
-    let occurs = 0 
+    let occurs = 0;
 
-    for (let i=0; i<deck.length; i++) { 
-      if('position' in deck[i] && deck[i].position === position)
-      occurs++
+    for (let i = 0; i < deck.length; i++) {
+      if ('position' in deck[i] && deck[i].position === position) occurs++;
     }
-    return occurs
-    
+    return occurs;
   },
 
   getPlayedCards: function (deck) {
