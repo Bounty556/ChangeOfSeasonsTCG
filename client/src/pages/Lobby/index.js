@@ -39,6 +39,7 @@ class Lobby extends Component {
       deck: [],
       gameId: 0,
       joinedLobby: false,
+      showJoin: false,
       playGame: false,
       allJoined: false,
       playerNumber: -1,
@@ -76,7 +77,19 @@ class Lobby extends Component {
     }
     
     handleChangeJoinId = event => {
-      this.setState({ gameId: parseInt(event.target.value || 0) });
+      const gameIdNumber = parseInt(event.target.value);
+
+      if (gameIdNumber > 0) {
+        this.setState({ 
+          gameId: parseInt(event.target.value || 0),
+          showJoin: true
+        });
+      } else {
+        this.setState({
+          gameId: 0,
+          showJoin: false
+        })
+      }
     };
     
     createNewGame = () => {
@@ -205,7 +218,8 @@ class Lobby extends Component {
       deck: [],
       playerNumber: 1,
       joined1: true,
-      joined2: false
+      joined2: false,
+      allJoined: false
     });
 
     if (!this.state.playGame) {
@@ -263,28 +277,34 @@ class Lobby extends Component {
                         onChange={this.handleChangeJoinId}
                       ></input>
                     ) : (
-                      <p className='gameIdText'>{this.state.gameId}</p>
+                      <p className='gameIdText' onChange={this.inputFunc}>{this.state.gameId}</p>
                     )}
                   </div>
                   <div className='row'>
                     {!this.state.joinedLobby ? (
                       <div className='button-col'>
-                        <button className='wood' onClick={this.joinLobby}>
-                          Join Match
-                        </button>
+                        {this.state.showJoin ? (
+                          <button className='wood' onClick={this.joinLobby}>
+                            Join Match
+                          </button>
+                        ) : (
+                          <></>
+                        )}
                         <button className='wood' onClick={this.createNewGame}>
                           Create Match
                         </button>
                       </div>
                     ) : (
                       <div className='button=col'>
-                        {this.state.playerNumber === 1 ? (
-                          <button className='wood' onClick={this.startMatch}>
+                        {this.state.playerNumber === 1 && this.state.allJoined ? (
+                          <button className='wood animate__animated animate__bounceIn' onClick={this.startMatch}>
                             Start Match
                           </button>
+                        ) : (this.state.playerNumber === 2 ? (
+                          <p>Waiting on host to start match.</p>
                         ) : (
                           <></>
-                        )}
+                        ))}
                         <button className='wood' onClick={this.exitGame}>
                           Exit Game
                         </button>
