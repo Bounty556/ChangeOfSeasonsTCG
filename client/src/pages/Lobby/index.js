@@ -208,7 +208,11 @@ class Lobby extends Component {
       joined2: false
     });
 
-    document.getElementById('loadingID').classList.add('loading');
+    if (!this.state.playGame) {
+      document.getElementById('loadingID').classList.add('loading');
+    } else {
+      window.location.reload();
+    }
     this.socket.off('startGame');
     this.sendPlayerInfo();
   };
