@@ -11,6 +11,7 @@ import GameLogic from './gameLogic';
 import Parser from './cardScript';
 
 import './gameboard.css';
+import gameLogic from './gameLogic';
 
 // Give this function to the children of this component so they can tell us when
 // A card was dropped on them
@@ -77,7 +78,8 @@ function GameBoard() {
   const [playerData, setPlayerData] = useState({
     isPlayersTurn: true,
     recentCardDeath: null,
-    currentResource: 2
+    currentResource: 2, 
+    userPlayAreaCount: 5
   });
 
   const [updateSwitch, setUpdateSwitch] = useState(false); // This swings between true and false every time we need to update
@@ -132,6 +134,7 @@ function GameBoard() {
       }
       boardData.opponentPlayAreaCount = playAreaCount;
 
+      
       // Update our board data
       let ourDeck = GameLogic.copyDeck(playerDeck);
       let deadCards = [null, null, null, null, null];
@@ -169,7 +172,11 @@ function GameBoard() {
           tempData.currentResource += 1;
         }
         setPlayerData(tempData);
-        drawCards(1);
+        //check to see the amount of cards in the players hands and draws a card if able 
+        const handCount = gameLogic.countAllCardsInPosition("userPlayArea", playerDeck)
+        if (handCount < 5) {
+          drawCards(1);
+        }
       }
     });
   }, [updateSwitch, playerData, playerDeck]);
@@ -193,7 +200,7 @@ function GameBoard() {
     if (!playerData.isPlayersTurn || !cardVal.isCreature) {
       return;
     }
-    
+
     moveCard(destinationPosition, cardVal);
     // if (effectData) {
     //   castEffect(destinationPosition, cardVal);
@@ -384,8 +391,8 @@ function GameBoard() {
             </button>
           </div>
         ) : (
-          <div></div>
-        )}
+            <div></div>
+          )}
       </DndProvider>
     </CardContext.Provider>
   );

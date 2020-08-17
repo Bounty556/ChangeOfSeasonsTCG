@@ -167,6 +167,18 @@ export default {
     return null;
   },
 
+  countAllCardsInPosition: function (position, deck) {
+    let occurs = 0 
+
+    for (let i=0; i<deck.length; i++) { 
+      if('position' in deck[i] && deck[i].position === position)
+      occurs++
+    }
+    return occurs
+    
+  },
+
+
   getPlayedCards: function (deck) {
     const playedCards = [];
     for (let i = 0; i < deck.length; i++) {
