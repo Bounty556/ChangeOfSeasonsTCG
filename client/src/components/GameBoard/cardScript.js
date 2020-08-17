@@ -12,13 +12,7 @@ export default {
     'SETATK',
     'ADDEFFECT'
   ],
-  targettingOperators: [
-    'HEAL',
-    'KILL',
-    'RAISEATK',
-    'RAISEDEF',
-    'SETATK'
-  ],
+  targettingOperators: ['HEAL', 'KILL', 'RAISEATK', 'RAISEDEF', 'SETATK'],
   positions: [
     'userAtt1',
     'userAtt2',
@@ -78,9 +72,7 @@ export default {
       } else {
         // This is a parameter
         currentParameter++;
-        tokens[currentToken].operations[currentOperator][
-          'param' + currentParameter
-        ] = word;
+        tokens[currentToken].operations[currentOperator]['param' + currentParameter] = word;
       }
     }
 
@@ -114,5 +106,21 @@ export default {
     }
 
     return [];
+  },
+
+  canInstaCast: function (operation) {
+    const operator = operation.op;
+    if (
+      operator === 'DRAW' ||
+      operator === 'RES' ||
+      operator === 'RTNHAND' ||
+      operator === 'RAISEATK' ||
+      operator === 'RAISEDEF' ||
+      operator === 'SETATK'
+    ) {
+      return true;
+    }
+
+    return false;
   }
 };

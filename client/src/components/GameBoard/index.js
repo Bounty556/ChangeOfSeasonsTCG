@@ -79,7 +79,7 @@ function GameBoard() {
   const [playerData, setPlayerData] = useState({
     isPlayersTurn: true,
     recentCardDeath: null,
-    currentResource: 2, 
+    currentResource: 2,
     lifeTotal: 25
   });
 
@@ -136,7 +136,6 @@ function GameBoard() {
       }
       boardData.opponentPlayAreaCount = playAreaCount;
 
-      
       // Update our board data
       let ourDeck = GameLogic.copyDeck(playerDeck);
       let deadCards = [null, null, null, null, null];
@@ -174,11 +173,13 @@ function GameBoard() {
           tempData.currentResource += 1;
         }
         setPlayerData(tempData);
-        //check to see the amount of cards in the players hands and draws a card if able 
-        const handCount = gameLogic.countAllCardsInPosition("userPlayArea", playerDeck)
+        //check to see the amount of cards in the players hands and draws a card if able
+        const handCount = gameLogic.countAllCardsInPosition('userPlayArea', playerDeck);
         if (handCount < 5) {
           drawCards(1);
         }
+
+        setUpdateSwitch(!updateSwitch);
       }
     });
   }, [updateSwitch, playerData, playerDeck]);
@@ -203,11 +204,11 @@ function GameBoard() {
       return;
     }
 
-    moveCard(destinationPosition, cardVal);
-    // if (effectData) {
-    //   castEffect(destinationPosition, cardVal);
-    // } else {
-    // }
+    if (effectData) {
+      castEffect(destinationPosition, cardVal);
+    } else {
+      moveCard(destinationPosition, cardVal);
+    }
   };
 
   const castEffect = (destinationPosition, cardVal) => {
@@ -321,8 +322,6 @@ function GameBoard() {
       cardVal.position = 'userPlayArea';
       setPlayerDeck([...playerDeck.filter(card => card.uId !== cardVal.uId), cardVal]);
     }
-
-    setUpdateSwitch(!updateSwitch);
   };
 
   return (
@@ -373,9 +372,7 @@ function GameBoard() {
           </div>
 
           <div id='userRow'>
-            <UserGameInformation
-            id='userInfo'
-            />
+            <UserGameInformation id='userInfo' />
             <CardPlaceHolder
               id='userDeck'
               cardCount={GameLogic.hasAvailableCards(playerDeck) ? 1 : 0}
@@ -395,8 +392,8 @@ function GameBoard() {
             </button>
           </div>
         ) : (
-            <div></div>
-          )}
+          <div></div>
+        )}
       </DndProvider>
     </CardContext.Provider>
   );

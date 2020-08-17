@@ -178,7 +178,6 @@ export default {
     
   },
 
-
   getPlayedCards: function (deck) {
     const playedCards = [];
     for (let i = 0; i < deck.length; i++) {
