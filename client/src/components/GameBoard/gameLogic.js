@@ -205,5 +205,9 @@ export default {
       ourDeck = [...ourDeck.filter(card => card.uId !== ourCard.uId), ourCard];
       return [null, ourDeck];
     }
+  },
+
+  clamp: function (num, a, b) {
+    return Math.max(Math.min(num, Math.max(a, b)), Math.min(a, b));
   }
 };

@@ -91,7 +91,7 @@ function GameBoard() {
     userAtt1: null,
     userAtt2: null,
     userAtt3: null,
-    userResource: 2,
+    currentResource: 2,
     opponentLifeTotal: 25
   });
 
@@ -114,7 +114,7 @@ function GameBoard() {
       // Update our opponent board data
       const boardData = { ...opponentBoardData };
       boardData.userDef1 = boardData.userDef2 = boardData.userAtt1 = boardData.userAtt2 = boardData.userAtt3 = null;
-      boardData.userResource = otherData.currentResource;
+      boardData.currentResource = otherData.currentResource;
 
       const opponentCards = GameLogic.getPlayedCards(otherDeck);
       for (let i = 0; i < opponentCards.length; i++) {
@@ -225,18 +225,19 @@ function GameBoard() {
           if (operation.param1 !== 'SINGLE') {
             break;
           }
-          
+
           // We need different behavior for if we're healing an enemy
           if (GameLogic.inOpponentRows(destinationPosition)) {
+            const boardData = { ...opponentBoardData };
             const destinationCard = { ...boardData[destinationPosition] };
             if (!destinationCard) {
               break;
             }
-            const boardData = { ...opponentBoardData };
             destinationCard.health += parseInt(operation.param2);
             boardData[destinationPosition] = destinationCard;
             setOpponentBoardData(boardData);
-          } else { // We're healing one of our own
+          } else {
+            // We're healing one of our own
             const destinationCard = GameLogic.getCardInPosition(destinationPosition, playerDeck);
             if (!destinationCard) {
               break;
@@ -258,8 +259,6 @@ function GameBoard() {
     if (!effectParam) {
       effectParam = { ...effectData };
     }
-
-    console.log('hello');
 
     for (let i = effectParam.currentOperation + 1; i < effectParam.effect.operations.length; i++) {
       if (Parser.canInstaCast(effectParam.effect.operations[i])) {
@@ -316,7 +315,23 @@ function GameBoard() {
   };
 
   const instantCastOperation = (cardId, operation) => {
-    console.log('this is insta castable!');
+    const { op, param1, param2 } = operation;
+    switch (op) {
+      case 'RES':
+        if (param1 === 'SELF') {
+          let currentResources = playerData.currentResource;
+          currentResources += parseInt(param2);
+          currentResources = GameLogic.clamp(currentResources, 0, 8);
+          setPlayerData(prevState => ({ ...prevState, currentResource: currentResources }));
+        } else if (param1 === 'OPP') {
+          let currentResources = opponentBoardData.currentResource;
+          currentResources += parseInt(param2);
+          currentResources = GameLogic.clamp(currentResources, 0, 8);
+          setOpponentBoardData(prevState => ({ ...prevState, currentResource: currentResources }));
+        }
+        setUpdateSwitch(!updateSwitch);
+        break;
+    }
   };
 
   const attackCard = (attackingCard, attackedPosition) => {
@@ -366,7 +381,7 @@ function GameBoard() {
       <DndProvider backend={HTML5Backend}>
         <div className='wrapper'>
           <div className='userResourceRow'>
-            {[...Array(opponentBoardData.userResource)].map((resource, i) => (
+            {[...Array(opponentBoardData.currentResource)].map((resource, i) => (
               <span className='resourceCircle activeResource' key={'resourceOpponent' + i}></span>
             ))}
           </div>
