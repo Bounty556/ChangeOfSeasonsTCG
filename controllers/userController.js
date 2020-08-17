@@ -47,5 +47,17 @@ module.exports = {
           .catch(err => res.status(422).json(err));
       })
       .catch(err => res.status(422).json(err));
+  },
+
+  addWin: (req, res) => {
+    db.User.updateOne({ _id: req.params.id }, { $inc: { wins: 1 } })
+      .then(dbModel => res.json(dbModel))
+      .catch(err => res.status(422).json(err));
+  },
+
+  addLoss: (req, res) => {
+    db.User.updateOne({ _id: req.params.id }, { $inc: { losses: 1 } })
+      .then(dbModel => res.json(dbModel))
+      .catch(err => res.status(422).json(err));
   }
 };

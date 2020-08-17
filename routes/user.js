@@ -39,4 +39,8 @@ router.put('/user/:id/avatar/:avatar', userController.setUserAvatar);
 
 router.put('/user/:id/deck/:season', userController.setDeck);
 
+router.put('/user/:id/win', userController.addWin);
+
+router.put('/user/:id/loss', userController.addLoss);
+
 module.exports = router;
