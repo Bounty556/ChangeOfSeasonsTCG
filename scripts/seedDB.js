@@ -22,9 +22,7 @@ OPERATORS:
    ADDEFFECT "..." - Implied 'ALL' target
 */
 
-mongoose.connect(
-  process.env.MONGODB_URI || 'mongodb://localhost/changeOfSeasons'
-);
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/changeOfSeasons');
 
 const cardSeed = [
   {
@@ -74,7 +72,7 @@ const cardSeed = [
     resourceCost: 3,
     attack: 1,
     health: 1,
-    effect: 'When played, gain 1 resource spot',
+    effect: 'When played, gain +1 resource',
     effectScript: 'ONPLAY RES SELF 1',
     name: 'Hinode',
     img: 'turtle_01.png'
@@ -128,7 +126,7 @@ const cardSeed = [
     resourceCost: 3,
     attack: 1,
     health: 3,
-    effect: 'When played, deal 3 damage to an enemy minion or player',
+    effect: 'When played, deal 3 damage to a minion or player',
     effectScript: 'ONPLAY DMG 3',
     name: 'Fanus',
     img: 'phoenix_01.png'
@@ -150,7 +148,7 @@ const cardSeed = [
     resourceCost: 3,
     attack: 1,
     health: 3,
-    effect: 'When played, restore 5 health to any player or creature',
+    effect: 'When played, +5 health to any player or creature',
     effectScript: 'ONPLAY HEAL SINGLE 5',
     name: 'Hathor',
     img: 'yeti_01.png'
@@ -162,7 +160,7 @@ const cardSeed = [
     resourceCost: 5,
     attack: 0,
     health: 0,
-    effect: 'Gain 2 resource spots ',
+    effect: 'Gain 2 resources',
     effectScript: 'ONPLAY RES 2',
     name: 'Vivifcate',
     img: 'emerald_9.png'
@@ -174,7 +172,7 @@ const cardSeed = [
     resourceCost: 4,
     attack: 0,
     health: 0,
-    effect: 'give attack row 1 extra attack ',
+    effect: 'Give attack row +1 ATK',
     effectScript: 'ONPLAY RAISEATK ATKROW 1',
     name: 'Solstice',
     img: 'green_9.png'
@@ -186,7 +184,7 @@ const cardSeed = [
     resourceCost: 3,
     attack: 0,
     health: 0,
-    effect: 'Destroy 1 of your own minions - give the rest 1 attack',
+    effect: 'Destroy 1 of your own minions - give the rest +1 ATK',
     effectScript: 'ONPLAY KILL SELF RAISEATK ALL 1',
     name: 'indignity',
     img: 'violet_3.png'
@@ -198,7 +196,7 @@ const cardSeed = [
     resourceCost: 4,
     attack: 0,
     health: 0,
-    effect: 'Give defense row 2 extra health ',
+    effect: 'Give defense row +2 health ',
     effectScript: 'ONPLAY RAISEDEF 2 ALL',
     name: 'Dark Shell',
     img: 'violet_11.png'
@@ -330,7 +328,7 @@ const cardSeed = [
     resourceCost: 5,
     attack: 3,
     health: 3,
-    effect: 'Gain an extra resource',
+    effect: 'Gain +1 resource',
     effectScript: 'ONPLAY RES SELF 1',
     name: 'Rynia',
     img: 'green_13.png'
@@ -342,7 +340,7 @@ const cardSeed = [
     resourceCost: 5,
     attack: 3,
     health: 3,
-    effect: 'Deal 5 damage to an enemy minion or player',
+    effect: 'Deal 5 damage to a minion or player',
     effectScript: 'ONPLAY DMG 5',
     name: 'Vyniho',
     img: 'red_1.png'
@@ -357,7 +355,7 @@ const cardSeed = [
     effect: 'Destroy 1 enemy resource',
     effectScript: 'ONPLAY RES OPP -1',
     name: 'Tirdyha',
-    img:'skeleton_02.png'
+    img: 'skeleton_02.png'
   },
   {
     season: 'Winter',
@@ -390,7 +388,7 @@ const cardSeed = [
     resourceCost: 6,
     attack: 0,
     health: 0,
-    effect: 'restore 15 life to all your creatures ',
+    effect: 'Give +15 health to all your creatures',
     effectScript: 'ONPLAY HEAL ALL 15',
     name: 'Gaea`s Cure',
     img: 'green_22.png'
@@ -402,7 +400,7 @@ const cardSeed = [
     resourceCost: 7,
     attack: 0,
     health: 0,
-    effect: 'Give all your creatures +2 attack ',
+    effect: 'Give all your creatures +2 ATK',
     effectScript: 'ONPLAY RAISEATK 2 ALL',
     name: 'Dark Ambush',
     img: 'yellow_37.png'
@@ -414,7 +412,7 @@ const cardSeed = [
     resourceCost: 7,
     attack: 0,
     health: 0,
-    effect: 'Give all your creatures +2 attack ',
+    effect: 'Give all your creatures +2 ATK',
     effectScript: 'ONPLAY RAISEATK 2 ALL',
     name: 'Frosts` Bite',
     img: 'blue_1.png'
@@ -478,7 +476,7 @@ const cardSeed = [
     resourceCost: 6,
     attack: 3,
     health: 4,
-    effect: 'When this enters give your atk row +1ATK +1DEF',
+    effect: 'When played, give your attack row +1 ATK +1 DEF',
     effectScript: 'ONPLAY RAISEATK ATKROW 1 RAISEDEF ATKROW 1',
     name: 'Koedranduk',
     img: 'golem_01.png'
@@ -490,7 +488,7 @@ const cardSeed = [
     resourceCost: 6,
     attack: 3,
     health: 4,
-    effect: 'When this enters give your atk row +2 ATK',
+    effect: 'When played, give your attack row +2 ATK',
     effectScript: 'ONPLAY RAISEATK ATKROW 2',
     name: 'Omdib',
     img: 'doll_01.png'
@@ -502,7 +500,7 @@ const cardSeed = [
     resourceCost: 6,
     attack: 3,
     health: 4,
-    effect: 'When this enters heal your def row by 3 health',
+    effect: 'When played, give your defense row +3 health',
     effectScript: 'ONPLAY HEAL DEFROW 3',
     name: 'Chilnershir',
     img: 'madman.png'
@@ -512,7 +510,7 @@ const cardSeed = [
     cardId: 45,
     isCreature: true,
     resourceCost: 7,
-    attack:5,
+    attack: 5,
     health: 6,
     name: 'Reldo',
     img: 'gremlin_01.png'
@@ -552,9 +550,9 @@ const cardSeed = [
     cardId: 49,
     isCreature: true,
     resourceCost: 7,
-    attack:3,
+    attack: 3,
     health: 5,
-    effect: 'When this enters give your atk row +3 attack',
+    effect: 'When played, give your attack row +3 ATK',
     effectScript: 'ONPLAY RAISEATK ATKROW 3',
     name: 'Buggraulm',
     img: 'demon_05.png'
@@ -566,7 +564,7 @@ const cardSeed = [
     resourceCost: 7,
     attack: 3,
     health: 5,
-    effect: 'Deal 6 damage to an enemy minion or player',
+    effect: 'Deal 6 damage to a minion or player',
     effectScript: 'ONPLAY DMG 6',
     name: 'Legrash',
     img: 'parasit_01.png'
@@ -640,7 +638,7 @@ const cardSeed = [
     cardId: 57,
     isCreature: true,
     resourceCost: 8,
-    attack:4,
+    attack: 4,
     health: 5,
     effect: 'When this deals damage draw a card',
     effectScript: 'ONATK DRAW 1',
@@ -666,7 +664,7 @@ const cardSeed = [
     resourceCost: 8,
     attack: 4,
     health: 5,
-    effect: 'Give all your minions +2ATK +1DEF',
+    effect: 'Give all your minions +2 ATK +1 DEF',
     effectScript: 'ONPLAY RAISEATK ALL 2 RAISEDEF ALL 1',
     name: 'Xanderise',
     img: 'skeleton_07.png'
@@ -678,7 +676,7 @@ const cardSeed = [
     resourceCost: 8,
     attack: 4,
     health: 5,
-    effect: 'Give all your minions +1 +2',
+    effect: 'Give all your minions +1 ATK +2 DEF',
     effectScript: 'ONPLAY RAISEATK ALL 1 RAISEDEF ALL 2',
     name: 'Artesa',
     img: 'skeleton_05.png'
@@ -688,7 +686,7 @@ const cardSeed = [
     cardId: 61,
     isCreature: false,
     resourceCost: 9,
-    attack:0,
+    attack: 0,
     health: 0,
     effect: 'Draw cards until your hand is full',
     effectScript: 'ONPLAY DRAW FULL',
@@ -702,7 +700,7 @@ const cardSeed = [
     resourceCost: 9,
     attack: 0,
     health: 0,
-    effect: 'Deal 10 damage to an enemy minion or player',
+    effect: 'Deal 10 damage to a minion or player',
     effectScript: 'ONPLAY DMG 10',
     name: 'Sun Flare',
     img: 'violet_28.png'
@@ -714,7 +712,7 @@ const cardSeed = [
     resourceCost: 9,
     attack: 0,
     health: 0,
-    effect: 'You may play a card from your graveyard for free',
+    effect: "Choose a card to have a 'Return to hand on death' effect",
     effectScript: 'ONPLAY ADDEFFECT "ONDEATH RTNHND"',
     name: 'Endless Death',
     img: 'emerald_3.png'
@@ -726,7 +724,7 @@ const cardSeed = [
     resourceCost: 9,
     attack: 0,
     health: 0,
-    effect: 'Give all your minions +4ATK',
+    effect: 'Give all your minions +4 ATK',
     effectScript: 'ONPLAY RAISEATK ALL 4',
     name: 'Winter`s End',
     img: 'violet_4.png'
@@ -736,7 +734,7 @@ const cardSeed = [
     cardId: 65,
     isCreature: true,
     resourceCost: 9,
-    attack:6,
+    attack: 6,
     health: 7,
     name: 'Sühkgüi',
     img: 'violet_11.png'
@@ -746,7 +744,7 @@ const cardSeed = [
     cardId: 66,
     isCreature: true,
     resourceCost: 9,
-    attack:6,
+    attack: 6,
     health: 7,
     name: 'Enezorig',
     img: 'dark_knight_01.png'
@@ -756,7 +754,7 @@ const cardSeed = [
     cardId: 67,
     isCreature: true,
     resourceCost: 9,
-    attack:6,
+    attack: 6,
     health: 7,
     name: 'Nertsetseg',
     img: 'yellow_40.png'
@@ -766,7 +764,7 @@ const cardSeed = [
     cardId: 68,
     isCreature: true,
     resourceCost: 9,
-    attack:6,
+    attack: 6,
     health: 7,
     name: 'Hontuyaa',
     img: 'orc_05.png'
@@ -776,9 +774,9 @@ const cardSeed = [
     cardId: 69,
     isCreature: true,
     resourceCost: 9,
-    attack:5,
+    attack: 5,
     health: 5,
-    effect: 'While this is in play give all your creatures +2ATK +4DEF',
+    effect: 'While this is in play give all your creatures +2 ATK +4 DEF',
     effectScript: 'ONPLAY RAISEATK ALL 2 RAISEDEF ALL 4 ONDEATH RAISEATK ALL -2 RAISEDEF ALL -4',
     name: 'Irikmolush',
     img: 'dragon_01.png'
@@ -788,9 +786,9 @@ const cardSeed = [
     cardId: 70,
     isCreature: true,
     resourceCost: 9,
-    attack:5,
+    attack: 5,
     health: 5,
-    effect: 'While this is in play give all your creatures +3 +3',
+    effect: 'While this is in play give all your creatures +3 ATK +3 DEF',
     effectScript: 'ONPLAY RAISEATK ALL 3 RAISEDEF ALL 3 ONDEATH RAISEATK ALL -3 RAISEDEF ALL -3',
     name: 'Otgonbaatar',
     img: 'dragon_04.png'
@@ -800,9 +798,9 @@ const cardSeed = [
     cardId: 71,
     isCreature: true,
     resourceCost: 9,
-    attack:5,
+    attack: 5,
     health: 5,
-    effect: 'When this dies destroy your opponents defense row',
+    effect: 'When this dies destroy your opponent\'s defense row',
     effectScript: 'ONDEATH KILL OPPDEFROW',
     name: 'Nertulga',
     img: 'dragon_03.png'
@@ -812,13 +810,13 @@ const cardSeed = [
     cardId: 72,
     isCreature: true,
     resourceCost: 9,
-    attack:5,
+    attack: 5,
     health: 5,
     effect: 'Reduce your opponents attack row attack to 0',
     effectScript: 'ONPLAY SETATK OPPATKROW 0',
     name: 'Batgüi',
     img: 'dragon_05.png'
-  },
+  }
 ];
 
 db.Card.remove({})

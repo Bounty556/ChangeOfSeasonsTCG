@@ -147,6 +147,15 @@ function GameBoard() {
             ...prevState,
             recentCardDeath: deadCards[i]
           }));
+
+          // Trigger that cards on death effect
+          const effect = deadCards[i].onDeathEffect;
+          if (effect) {
+            for (let i = 0; i < effect.operations.length; i++) {
+              instantCastOperation(deadCards[i].cardId, effect.operations[i]);
+            }
+          }
+
           break;
         }
       }
@@ -329,6 +338,11 @@ function GameBoard() {
           currentResources = GameLogic.clamp(currentResources, 0, 8);
           setOpponentBoardData(prevState => ({ ...prevState, currentResource: currentResources }));
         }
+        setUpdateSwitch(!updateSwitch);
+        break;
+
+      case 'DRAW':
+        drawCards(parseInt(param1));
         setUpdateSwitch(!updateSwitch);
         break;
     }
