@@ -23,8 +23,8 @@ function UserProfile() {
     //used for when a user is selecting a new avatar 
     const [selectAvatar, setSelectAvatar] = useState('');
     const [, setSelectDeck] = useState('');
-    const [wins,] = useState(0);
-    const [losses,] = useState(0);
+    const [wins, setWins] = useState(0);
+    const [losses, setLosses] = useState(0);
     const history = useHistory();
 
     //code for Avatar Modal 
@@ -52,6 +52,8 @@ function UserProfile() {
 
         axios.get(`/api/user/${userId}`)
             .then(res => {
+                setWins(res.data.wins);
+                setLosses(res.data.losses);
                 localStorage.setItem('avatar', res.data.avatar);
                 localStorage.setItem('username', res.data.username);
                 setAvatar(localStorage.getItem('avatar'));

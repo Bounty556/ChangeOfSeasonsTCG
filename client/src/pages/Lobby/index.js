@@ -192,7 +192,7 @@ class Lobby extends Component {
 
     // If we're hosting we need to let the other player's browser know to start the game too
     if (this.state.playerNumber === 1) {
-      this.socket.emit('room', this.state.gameId, 'startGame')
+      this.socket.emit('room', this.state.gameId, 'startGame');
     }
     this.setState({ playGame: true });
   };
@@ -225,7 +225,10 @@ class Lobby extends Component {
     if (!this.state.playGame) {
       document.getElementById('loadingID').classList.add('loading');
     } else {
-      window.location.reload();
+      axios.put(`/api/user/${JSON.parse(localStorage.getItem('authentication'))._id}/win`)
+      .then(() => {
+        window.location.reload();
+      })
     }
     this.socket.off('startGame');
     this.sendPlayerInfo();
