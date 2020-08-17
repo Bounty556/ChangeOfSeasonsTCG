@@ -91,7 +91,7 @@ function GameBoard() {
     userAtt1: null,
     userAtt2: null,
     userAtt3: null,
-    userResource: 2,
+    currentResource: 2,
     opponentLifeTotal: 25
   });
 
@@ -114,7 +114,7 @@ function GameBoard() {
       // Update our opponent board data
       const boardData = { ...opponentBoardData };
       boardData.userDef1 = boardData.userDef2 = boardData.userAtt1 = boardData.userAtt2 = boardData.userAtt3 = null;
-      boardData.userResource = otherData.currentResource;
+      boardData.currentResource = otherData.currentResource;
 
       const opponentCards = GameLogic.getPlayedCards(otherDeck);
       for (let i = 0; i < opponentCards.length; i++) {
@@ -141,18 +141,34 @@ function GameBoard() {
       [deadCards[3], ourDeck] = GameLogic.compareCards('userAtt2', ourData, ourDeck);
       [deadCards[4], ourDeck] = GameLogic.compareCards('userAtt3', ourData, ourDeck);
 
+      let deadCard = null;
       for (let i = 0; i < deadCards.length; i++) {
         if (deadCards[i]) {
-          setPlayerData(prevState => ({
-            ...prevState,
-            recentCardDeath: deadCards[i]
-          }));
+          deadCard = deadCards[i];
           break;
         }
       }
 
       setOpponentBoardData(boardData);
-      setPlayerDeck(ourDeck);
+
+      if (deadCard) {
+        setPlayerData(prevState => ({
+          ...prevState,
+          recentCardDeath: deadCard
+        }));
+
+        // Trigger that card's on death effect
+        const effect = deadCard.onDeathEffect;
+        if (effect) {
+          for (let i = 0; i < effect.operations.length; i++) {
+            instantCastOperation(deadCard.uId, effect.operations[i], ourDeck);
+          }
+        }
+        setPlayerDeck(ourDeck);
+        setUpdateSwitch(!updateSwitch);
+      } else {
+        setPlayerDeck(ourDeck);
+      }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playerDeck, playerData, opponentBoardData]);
@@ -225,18 +241,19 @@ function GameBoard() {
           if (operation.param1 !== 'SINGLE') {
             break;
           }
-          
+
           // We need different behavior for if we're healing an enemy
           if (GameLogic.inOpponentRows(destinationPosition)) {
+            const boardData = { ...opponentBoardData };
             const destinationCard = { ...boardData[destinationPosition] };
             if (!destinationCard) {
               break;
             }
-            const boardData = { ...opponentBoardData };
             destinationCard.health += parseInt(operation.param2);
             boardData[destinationPosition] = destinationCard;
             setOpponentBoardData(boardData);
-          } else { // We're healing one of our own
+          } else {
+            // We're healing one of our own
             const destinationCard = GameLogic.getCardInPosition(destinationPosition, playerDeck);
             if (!destinationCard) {
               break;
@@ -258,8 +275,6 @@ function GameBoard() {
     if (!effectParam) {
       effectParam = { ...effectData };
     }
-
-    console.log('hello');
 
     for (let i = effectParam.currentOperation + 1; i < effectParam.effect.operations.length; i++) {
       if (Parser.canInstaCast(effectParam.effect.operations[i])) {
@@ -293,7 +308,7 @@ function GameBoard() {
           cardVal.position !== 'userPlayArea' &&
           cardVal.attack > 0
         ) {
-          return attackCard(cardVal, destinationPosition);
+          return attackCard(cardVal.position, destinationPosition);
         } else {
           return;
         }
@@ -315,11 +330,54 @@ function GameBoard() {
     }
   };
 
-  const instantCastOperation = (cardId, operation) => {
-    console.log('this is insta castable!');
+  const instantCastOperation = (cardId, operation, useDeck) => {
+    const { op, param1, param2 } = operation;
+    switch (op) {
+      case 'RES':
+        if (param1 === 'SELF') {
+          let currentResources = playerData.currentResource;
+          currentResources += parseInt(param2);
+          currentResources = GameLogic.clamp(currentResources, 0, 8);
+          setPlayerData(prevState => ({ ...prevState, currentResource: currentResources }));
+        } else if (param1 === 'OPP') {
+          let currentResources = opponentBoardData.currentResource;
+          currentResources += parseInt(param2);
+          currentResources = GameLogic.clamp(currentResources, 0, 8);
+          setOpponentBoardData(prevState => ({ ...prevState, currentResource: currentResources }));
+        }
+        setUpdateSwitch(!updateSwitch);
+        break;
+
+      case 'DRAW':
+        const indices = GameLogic.findFirstAvailableCards(parseInt(param1), playerDeck);
+        let deck;
+        if (useDeck) {
+          deck = useDeck;
+          for (let i = 0; i < indices.length; i++) {
+            deck[indices[i]].position = 'userPlayArea';
+          }
+        } else {
+          deck = GameLogic.copyDeck(playerDeck);
+          for (let i = 0; i < indices.length; i++) {
+            const cardVal = { ...deck[indices[i]] };
+            cardVal.position = 'userPlayArea';
+            setPlayerDeck([...deck.filter(card => card.uId !== cardVal.uId), cardVal]);
+          }
+          setUpdateSwitch(!updateSwitch);
+        }
+        break;
+    }
   };
 
-  const attackCard = (attackingCard, attackedPosition) => {
+  const attackCard = (attackingCardPosition, attackedPosition) => {
+    const ourDeck = GameLogic.copyDeck(playerDeck);
+    let attackingCard;
+    for (let i = 0; i < ourDeck.length; i++) {
+      if (ourDeck[i].position === attackingCardPosition) {
+        attackingCard = ourDeck[i];
+      }
+    }
+
     // Need to replace opponent with user here to match the opponentBoardData object
     attackedPosition = attackedPosition.replace('opponent', 'user');
     const boardData = { ...opponentBoardData };
@@ -327,6 +385,7 @@ function GameBoard() {
 
     // Retaliation
     attackingCard.health -= boardData[attackedPosition].attack;
+    // Check if our card died
     if (attackingCard.health <= 0) {
       attackingCard.health = 0;
       attackingCard.position = 'userGrave';
@@ -334,8 +393,16 @@ function GameBoard() {
         ...prevState,
         recentCardDeath: attackingCard
       }));
+
+      // Trigger that card's on death effect
+      const effect = attackingCard.onDeathEffect;
+      if (effect) {
+        for (let i = 0; i < effect.operations.length; i++) {
+          instantCastOperation(attackingCard.uId, effect.operations[i], ourDeck);
+        }
+      }
     }
-    setPlayerDeck([...playerDeck.filter(card => card.uId !== attackingCard.uId), attackingCard]);
+    setPlayerDeck(ourDeck);
 
     if (boardData[attackedPosition].health <= 0) {
       boardData[attackedPosition] = null;
@@ -366,7 +433,7 @@ function GameBoard() {
       <DndProvider backend={HTML5Backend}>
         <div className='wrapper'>
           <div className='userResourceRow'>
-            {[...Array(opponentBoardData.userResource)].map((resource, i) => (
+            {[...Array(opponentBoardData.currentResource)].map((resource, i) => (
               <span className='resourceCircle activeResource' key={'resourceOpponent' + i}></span>
             ))}
           </div>
