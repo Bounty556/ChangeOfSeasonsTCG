@@ -32,9 +32,11 @@ export default {
      {
        trigger: 'ONPLAY',
        operations: [
-         op: 'RES',
-         param1: 'SELF',
-         param2: '3'
+         {
+           op: 'RES',
+           param1: 'SELF',
+           param2: '3'
+         }
        ]
      }
    */
@@ -79,15 +81,15 @@ export default {
     return tokens;
   },
 
-  getScriptTargets: function (token) {
+  getScriptTargets: function (operation) {
     // TODO: We need to be able to target the enemy player/hero
 
     // The targetting parameter should be the first param, make sure it exists
-    if (!token || !token.operations[0] || !token.operations[0].param1) {
+    if (!operation || !operation.param1) {
       return [];
     }
 
-    const target = token.operations[0].param1;
+    const target = operation.param1;
 
     if (target === 'SELF') {
       return this.positions.slice(0, 5);
@@ -110,17 +112,15 @@ export default {
 
   canInstaCast: function (operation) {
     const operator = operation.op;
-    if (
+    return (
       operator === 'DRAW' ||
       operator === 'RES' ||
       operator === 'RTNHAND' ||
       operator === 'RAISEATK' ||
       operator === 'RAISEDEF' ||
-      operator === 'SETATK'
-    ) {
-      return true;
-    }
-
-    return false;
+      operator === 'SETATK' ||
+      (operator === 'HEAL' && operation.param1 === 'ALL') ||
+      (operator === 'HEAL' && operation.param1 === 'DEFROW')
+    )
   }
 };

@@ -160,7 +160,7 @@ export default {
   getCardInPosition: function (position, deck) {
     for (let i = 0; i < deck.length; i++) {
       if (deck[i].position === position) {
-        return deck[i];
+        return {...deck[i]};
       }
     }
 
