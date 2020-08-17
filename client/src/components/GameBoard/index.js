@@ -67,7 +67,6 @@ function GameBoard() {
             break;
         }
       }
-
       return card;
     })
   );
@@ -102,7 +101,12 @@ function GameBoard() {
       ourData: opponentBoardData,
       player: playerNumber
     });
+    console.log(opponentBoardData);
   }, [updateSwitch]);
+
+  useEffect(() => {
+    console.log('updated');
+  }, [opponentBoardData]);
 
   useEffect(() => {
     socket.off('updateBoard');
@@ -133,6 +137,10 @@ function GameBoard() {
       boardData.opponentPlayAreaCount = playAreaCount;
 
       // Update our board data
+      const newPlayerData = { ...playerData };
+      newPlayerData.currentResource = ourData.currentResource;
+      console.log(ourData.currentResource);
+
       let ourDeck = GameLogic.copyDeck(playerDeck);
       let deadCards = [null, null, null, null, null];
       [deadCards[0], ourDeck] = GameLogic.compareCards('userDef1', ourData, ourDeck);
@@ -152,10 +160,7 @@ function GameBoard() {
       setOpponentBoardData(boardData);
 
       if (deadCard) {
-        setPlayerData(prevState => ({
-          ...prevState,
-          recentCardDeath: deadCard
-        }));
+        newPlayerData.recentCardDeath = deadCard;
 
         // Trigger that card's on death effect
         const effect = deadCard.onDeathEffect;
@@ -164,9 +169,11 @@ function GameBoard() {
             instantCastOperation(deadCard.uId, effect.operations[i], ourDeck);
           }
         }
+        setPlayerData(newPlayerData);
         setPlayerDeck(ourDeck);
         setUpdateSwitch(!updateSwitch);
       } else {
+        setPlayerData(newPlayerData);
         setPlayerDeck(ourDeck);
       }
     });
@@ -245,16 +252,18 @@ function GameBoard() {
           // We need different behavior for if we're healing an enemy
           if (GameLogic.inOpponentRows(destinationPosition)) {
             const boardData = { ...opponentBoardData };
-            const destinationCard = { ...boardData[destinationPosition] };
+            const destinationCard = boardData[destinationPosition];
             if (!destinationCard) {
               break;
             }
             destinationCard.health += parseInt(operation.param2);
-            boardData[destinationPosition] = destinationCard;
             setOpponentBoardData(boardData);
           } else {
             // We're healing one of our own
-            const destinationCard = GameLogic.getCardInPosition(destinationPosition, playerDeck);
+            const destinationCard = GameLogic.getCardInPosition(
+              destinationPosition,
+              GameLogic.copyDeck(playerDeck)
+            );
             if (!destinationCard) {
               break;
             }
@@ -267,6 +276,35 @@ function GameBoard() {
           increaseEffectOperation();
           setUpdateSwitch(!updateSwitch);
           break;
+
+        case 'DMG':
+          // We need different behavior for if we're hurting an enemy
+          if (GameLogic.inOpponentRows(destinationPosition)) {
+            const boardData = { ...opponentBoardData };
+            const destinationCard = boardData[destinationPosition];
+            if (!destinationCard) {
+              break;
+            }
+            destinationCard.health -= parseInt(operation.param2);
+            if (destinationCard.health <= 0) {
+              boardData[destinationPosition] = null;
+            }
+            setOpponentBoardData(boardData);
+          } else {
+            // We're hurting one of our own
+            const ourDeck = GameLogic.copyDeck;
+            const destinationCard = GameLogic.getCardInPosition(destinationPosition, ourDeck);
+            if (!destinationCard) {
+              break;
+            }
+            destinationCard.health -= parseInt(operation.param2);
+            if (destinationCard.health <= 0) {
+              handleCardDeath(destinationCard, ourDeck);
+            }
+            setPlayerDeck(ourDeck);
+          }
+          increaseEffectOperation();
+          setUpdateSwitch(!updateSwitch);
       }
     }
   };
@@ -319,13 +357,13 @@ function GameBoard() {
         cardVal.position = destinationPosition;
         setPlayerDeck([...playerDeck.filter(card => card.uId !== cardVal.uId), cardVal]);
 
-        setUpdateSwitch(!updateSwitch);
-
         // Set that we're now starting an effect if this card has one
         const effect = cardVal.onPlayEffect;
         if (effect) {
           increaseEffectOperation({ cardId: cardVal.uId, effect: effect, currentOperation: -1 });
         }
+        
+        setUpdateSwitch(!updateSwitch);
       }
     }
   };
@@ -336,13 +374,11 @@ function GameBoard() {
       case 'RES':
         if (param1 === 'SELF') {
           let currentResources = playerData.currentResource;
-          currentResources += parseInt(param2);
-          currentResources = GameLogic.clamp(currentResources, 0, 8);
+          currentResources = GameLogic.clamp(currentResources + parseInt(param2), 0, 8);
           setPlayerData(prevState => ({ ...prevState, currentResource: currentResources }));
         } else if (param1 === 'OPP') {
           let currentResources = opponentBoardData.currentResource;
-          currentResources += parseInt(param2);
-          currentResources = GameLogic.clamp(currentResources, 0, 8);
+          currentResources = GameLogic.clamp(currentResources + parseInt(param2), 0, 8);
           setOpponentBoardData(prevState => ({ ...prevState, currentResource: currentResources }));
         }
         setUpdateSwitch(!updateSwitch);
@@ -359,9 +395,9 @@ function GameBoard() {
         } else {
           deck = GameLogic.copyDeck(playerDeck);
           for (let i = 0; i < indices.length; i++) {
-            const cardVal = { ...deck[indices[i]] };
+            const cardVal = deck[indices[i]];
             cardVal.position = 'userPlayArea';
-            setPlayerDeck([...deck.filter(card => card.uId !== cardVal.uId), cardVal]);
+            setPlayerDeck(deck);
           }
           setUpdateSwitch(!updateSwitch);
         }
@@ -385,22 +421,8 @@ function GameBoard() {
 
     // Retaliation
     attackingCard.health -= boardData[attackedPosition].attack;
-    // Check if our card died
     if (attackingCard.health <= 0) {
-      attackingCard.health = 0;
-      attackingCard.position = 'userGrave';
-      setPlayerData(prevState => ({
-        ...prevState,
-        recentCardDeath: attackingCard
-      }));
-
-      // Trigger that card's on death effect
-      const effect = attackingCard.onDeathEffect;
-      if (effect) {
-        for (let i = 0; i < effect.operations.length; i++) {
-          instantCastOperation(attackingCard.uId, effect.operations[i], ourDeck);
-        }
-      }
+      handleCardDeath(attackingCard, ourDeck);
     }
     setPlayerDeck(ourDeck);
 
@@ -410,6 +432,23 @@ function GameBoard() {
 
     setOpponentBoardData(boardData);
     setUpdateSwitch(!updateSwitch);
+  };
+
+  const handleCardDeath = (deadCard, ourDeck) => {
+    deadCard.health = 0;
+    deadCard.position = 'userGrave';
+    setPlayerData(prevState => ({
+      ...prevState,
+      recentCardDeath: deadCard
+    }));
+
+    // Trigger that card's on death effect
+    const effect = deadCard.onDeathEffect;
+    if (effect) {
+      for (let i = 0; i < effect.operations.length; i++) {
+        instantCastOperation(deadCard.uId, effect.operations[i], ourDeck);
+      }
+    }
   };
 
   const sendTurnChange = () => {
