@@ -5,6 +5,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import CardPlaceHolder from '../CardPlaceHolder';
 import CardHolder from '../CardHolder';
 import Graveyard from '../Graveyard';
+import UserGameInformation from '../UserGameInformation';
 import { GameContext } from '../../pages/Lobby';
 
 import GameLogic from './gameLogic';
@@ -372,7 +373,9 @@ function GameBoard() {
           </div>
 
           <div id='userRow'>
-            <Graveyard id='userGrave' recent={playerData.recentCardDeath} />
+            <UserGameInformation
+            id='userInfo'
+            />
             <CardPlaceHolder
               id='userDeck'
               cardCount={GameLogic.hasAvailableCards(playerDeck) ? 1 : 0}

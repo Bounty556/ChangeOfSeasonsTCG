@@ -69,7 +69,8 @@ hr {
 #opponentDeck .card, 
 #userDeck .card, 
 #userGrave .card, 
-#opponentGrave .card {
+#opponentGrave .card 
+#userInfo .card {
     background-image: url(./cardbackground.jpg);
 }
 
