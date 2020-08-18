@@ -549,7 +549,7 @@ function GameBoard() {
   return (
     <CardContext.Provider value={{ cardDraggedToPosition, playerDeck }}>
       <DndProvider backend={HTML5Backend}>
-        <div className='wrapper'>
+        <div className='wrapper animate__animated animate__bounceIn'>
           <div className='userResourceRow'>
             {[...Array(opponentBoardData.currentResource)].map((resource, i) => (
               <span className='resourceCircle activeResource' key={'resourceOpponent' + i}></span>
@@ -580,6 +580,7 @@ function GameBoard() {
         </div>
 
         <hr />
+<<<<<<< HEAD
         {playerData.isPlayersTurn ? (
           <div className='endTurnRow'>
             <button className='woodEndButton' onClick={sendTurnChange}>
@@ -591,6 +592,10 @@ function GameBoard() {
           )}
         <div className='wrapper'>
           
+=======
+
+        <div className='wrapper animate__animated animate__bounceIn'>
+>>>>>>> bd635838284c561bf1eb93e796c989e1e4ac89ba
           <div id='userAttRow'>
             <CardHolder id='userAtt1' />
             <CardHolder id='userAtt2' />
