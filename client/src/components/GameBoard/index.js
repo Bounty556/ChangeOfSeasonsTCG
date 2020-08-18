@@ -94,21 +94,9 @@ function GameBoard() {
       if (fromPlayer !== playerNumber) {
         setPlayerData(prevState => ({ ...prevState, isPlayersTurn: true }));
       } else {
-        const tempData = { ...playerData };
-        tempData.isPlayersTurn = false;
-        if (tempData.currentResource <= 8) {
-          tempData.currentResource += 1;
-        }
-        setPlayerData(tempData);
-        // Check to see the amount of cards in the players hands and draws a card if able
-        const handCount = HelperFunctions.countAllCardsInPosition('userPlayArea', playerDeck);
-        if (handCount < 5) {
-          GameLogic.drawCard(playerDeck, setPlayerDeck);
-        }
-
-        setEffectData(null); // They may have wasted any spells they could've cast
-
-        setUpdateSwitch(!updateSwitch);
+        const states = { playerData, updateSwitch, playerDeck };
+        const functions = { setPlayerData, setUpdateSwitch, setPlayerDeck, setEffectData };
+        GameLogic.endTurn(states, functions);
       }
     });
   }, [updateSwitch, playerData, playerDeck]);

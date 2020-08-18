@@ -98,6 +98,27 @@ export default {
     });
   },
 
+  endTurn: function (states, functions) {
+    const { playerData, updateSwitch, playerDeck } = states;
+    const { setPlayerData, setUpdateSwitch, setPlayerDeck, setEffectData } = functions;
+
+    const tempData = { ...playerData };
+    tempData.isPlayersTurn = false;
+    if (tempData.currentResource <= 8) {
+      tempData.currentResource += 1;
+    }
+    setPlayerData(tempData);
+    // Check to see the amount of cards in the players hands and draws a card if able
+    const handCount = HelperFunctions.countAllCardsInPosition('userPlayArea', playerDeck);
+    if (handCount < 5) {
+      this.drawCard(playerDeck, setPlayerDeck);
+    }
+
+    setEffectData(null); // They may have wasted any spells they could've cast
+
+    setUpdateSwitch(!updateSwitch);
+  },
+
   updateBoard: (otherDeck, otherData, ourData, playerNumber, player, states, functions) => {
     const { playerDeck, playerData, updateSwitch, opponentBoardData } = states;
     const {
