@@ -582,6 +582,15 @@ function GameBoard() {
         <hr />
 
         <div className='wrapper animate__animated animate__bounceIn'>
+        {playerData.isPlayersTurn ? (
+          <div className='endTurnRow'>
+            <button className='woodEndButton' onClick={sendTurnChange}>
+              End Turn
+            </button>
+          </div>
+        ) : (
+          <div></div>
+        )}
           <div id='userAttRow'>
             <CardHolder id='userAtt1' />
             <CardHolder id='userAtt2' />
@@ -607,15 +616,6 @@ function GameBoard() {
             ))}
           </div>
         </div>
-        {playerData.isPlayersTurn ? (
-          <div className='endTurnRow'>
-            <button className='woodEndButton' onClick={sendTurnChange}>
-              End Turn
-            </button>
-          </div>
-        ) : (
-          <div></div>
-        )}
       </DndProvider>
     </CardContext.Provider>
   );
