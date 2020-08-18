@@ -95,7 +95,7 @@ export default {
       return this.positions.slice(0, 5);
     } else if (target === 'OPP') {
       return this.positions.slice(5);
-    } else if (target === 'ALL' || target === 'SINGLE') {
+    } else if (target === 'ALL' || target === 'SINGLE' || operation.op === 'DMG') {
       return this.positions.slice(0);
     } else if (target === 'DEFROW') {
       return this.positions.slice(3, 5);
@@ -121,6 +121,6 @@ export default {
       operator === 'SETATK' ||
       (operator === 'HEAL' && operation.param1 === 'ALL') ||
       (operator === 'HEAL' && operation.param1 === 'DEFROW')
-    )
+    );
   }
 };

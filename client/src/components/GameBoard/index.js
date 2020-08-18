@@ -134,7 +134,6 @@ function GameBoard() {
       // Update our board data
       const newPlayerData = { ...playerData };
       newPlayerData.currentResource = ourData.currentResource;
-      console.log(ourData.currentResource);
 
       let ourDeck = GameLogic.copyDeck(playerDeck);
       let deadCards = [null, null, null, null, null];
@@ -246,6 +245,7 @@ function GameBoard() {
 
           // We need different behavior for if we're healing an enemy
           if (GameLogic.inOpponentRows(destinationPosition)) {
+            destinationPosition = destinationPosition.replace('opponent', 'user');
             const boardData = { ...opponentBoardData };
             const destinationCard = boardData[destinationPosition];
             if (!destinationCard) {
@@ -255,18 +255,13 @@ function GameBoard() {
             setOpponentBoardData(boardData);
           } else {
             // We're healing one of our own
-            const destinationCard = GameLogic.getCardInPosition(
-              destinationPosition,
-              GameLogic.copyDeck(playerDeck)
-            );
+            const ourDeck = GameLogic.copyDeck(playerDeck);
+            const destinationCard = GameLogic.getCardInPosition(destinationPosition, ourDeck);
             if (!destinationCard) {
               break;
             }
             destinationCard.health += parseInt(operation.param2);
-            setPlayerDeck([
-              ...playerDeck.filter(card => card.uId !== destinationCard.uId),
-              destinationCard
-            ]);
+            setPlayerDeck(ourDeck);
           }
           increaseEffectOperation();
           setUpdateSwitch(!updateSwitch);
@@ -275,24 +270,25 @@ function GameBoard() {
         case 'DMG':
           // We need different behavior for if we're hurting an enemy
           if (GameLogic.inOpponentRows(destinationPosition)) {
+            destinationPosition = destinationPosition.replace('opponent', 'user');
             const boardData = { ...opponentBoardData };
             const destinationCard = boardData[destinationPosition];
             if (!destinationCard) {
               break;
             }
-            destinationCard.health -= parseInt(operation.param2);
+            destinationCard.health -= parseInt(operation.param1);
             if (destinationCard.health <= 0) {
               boardData[destinationPosition] = null;
             }
             setOpponentBoardData(boardData);
           } else {
             // We're hurting one of our own
-            const ourDeck = GameLogic.copyDeck;
+            const ourDeck = GameLogic.copyDeck(playerDeck);
             const destinationCard = GameLogic.getCardInPosition(destinationPosition, ourDeck);
             if (!destinationCard) {
               break;
             }
-            destinationCard.health -= parseInt(operation.param2);
+            destinationCard.health -= parseInt(operation.param1);
             if (destinationCard.health <= 0) {
               handleCardDeath(destinationCard, ourDeck);
             }
