@@ -38,6 +38,8 @@ export const CardContext = createContext({
 // TODO: Investigate error with dragging cards outside chrome
 // TODO: Replace opponents grave with player to attack
 
+// TODO: FIX TOPDECK
+
 function GameBoard() {
   const { socket, gameId, deck, playerNumber } = useContext(GameContext);
 
@@ -137,7 +139,6 @@ function GameBoard() {
         const newPlayerData = { ...playerData };
         newPlayerData.currentResource = ourData.currentResource;
 
-        console.log('do the stuff');
         let ourDeck = GameLogic.copyDeck(playerDeck);
         let deadCards = [null, null, null, null, null];
         [deadCards[0], ourDeck] = GameLogic.compareCards('userDef1', ourData, ourDeck);
@@ -166,7 +167,6 @@ function GameBoard() {
           setPlayerDeck(ourDeck);
           setUpdateSwitch(!updateSwitch);
         } else {
-          console.log(ourDeck);
           setPlayerData(newPlayerData);
           setPlayerDeck(ourDeck);
         }
@@ -467,9 +467,16 @@ function GameBoard() {
 
       case 'TOPDECK': {
         let deck = useDeck || GameLogic.copyDeck(playerDeck);
-        const card = GameLogic.getCardWithId(cardId, useDeck);
+        const card = GameLogic.getCardWithId(cardId, deck);
         card.position = '';
-        deck = [card, ...useDeck.filter(el => el.uId !== card.uId)];
+
+        for (let i = 0; i < deck.length; i++) {
+          if (deck[i].uId === card.uId) {
+            deck[i] = deck[0];
+            break;
+          }
+        }
+        deck[0] = card;
 
         if (!useDeck) {
           setPlayerDeck(deck);
