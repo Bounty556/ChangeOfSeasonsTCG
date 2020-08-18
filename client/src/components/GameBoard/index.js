@@ -28,7 +28,6 @@ export const CardContext = createContext({
 // TODO: Show the opponents health
 // TODO: Spell cards should only trigger their effect
 // TODO: Players should still be able to use cards if another card has an active effect
-// TODO: Make cards cost resources
 // TODO: Replace opponents grave with player to attack
 // TODO: Make cards 69 and 70 have proactive effects
 
