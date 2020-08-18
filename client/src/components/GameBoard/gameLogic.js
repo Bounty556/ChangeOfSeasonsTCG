@@ -2,13 +2,11 @@ import HelperFunctions from './helperFunctions';
 import Parser from './cardScript';
 
 export default {
-  drawCard: (playerDeck, setPlayerDeck) => {
-    const indices = HelperFunctions.findFirstAvailableCards(1, playerDeck);
+  drawCard: deck => {
+    const indices = HelperFunctions.findFirstAvailableCards(1, deck);
 
     if (indices.length > 0) {
-      const cardVal = { ...playerDeck[indices[0]] };
-      cardVal.position = 'userPlayArea';
-      setPlayerDeck([...playerDeck.filter(card => card.uId !== cardVal.uId), cardVal]);
+      deck[indices[0]].position = 'userPlayArea';
     }
   },
 
@@ -33,38 +31,40 @@ export default {
       setOpponentBoardData,
       setUpdateSwitch
     } = functions;
-    const ourDeck = HelperFunctions.copyDeck(playerDeck);
-    let attackingCard;
-    for (let i = 0; i < ourDeck.length; i++) {
-      if (ourDeck[i].position === attackingCardPosition) {
-        attackingCard = ourDeck[i];
-      }
+
+    // See if this is a valid attack
+    if (!HelperFunctions.isOpponentPositionFilled(attackedPosition, opponentBoardData)) {
+      return;
     }
+
+    const deck = HelperFunctions.copyDeck(playerDeck);
+    const attackingCard = HelperFunctions.getCardInPosition(attackingCardPosition, deck);
 
     // Need to replace opponent with user here to match the opponentBoardData object
     attackedPosition = attackedPosition.replace('opponent', 'user');
     const boardData = { ...opponentBoardData };
     boardData[attackedPosition].health -= attackingCard.attack;
+    attackingCard.hasAttacked = true;
 
     // Start the on attack effect
     const attackEffect = attackingCard.onAttackEffect;
     if (attackEffect) {
       for (let i = 0; i < attackEffect.operations.length; i++) {
-        instantCastOperation(attackingCard.uId, attackEffect.operations[i], ourDeck);
+        instantCastOperation(attackingCard.uId, attackEffect.operations[i], deck);
       }
     }
 
     // Retaliation
     attackingCard.health -= boardData[attackedPosition].attack;
     if (attackingCard.health <= 0) {
-      this.handleCardDeath(attackingCard, ourDeck, instantCastOperation);
+      this.handleCardDeath(attackingCard, deck, instantCastOperation);
     }
-    setPlayerDeck(ourDeck);
 
     if (boardData[attackedPosition].health <= 0) {
       boardData[attackedPosition] = null;
     }
 
+    setPlayerDeck(deck);
     setOpponentBoardData(boardData);
     setUpdateSwitch(!updateSwitch);
   },
@@ -77,6 +77,7 @@ export default {
       card.onPlayEffect = null;
       card.onDeathEffect = null;
       card.onAttackEffect = null;
+      card.hasAttacked = false;
 
       // Parse the effect on this card if applicable
       const tokens = Parser.tokenize(card.effectScript);
@@ -91,6 +92,8 @@ export default {
             break;
           case 'ONATK':
             card.onAttackEffect = tokens[i];
+            break;
+          default:
             break;
         }
       }
@@ -109,13 +112,19 @@ export default {
     }
     setPlayerData(tempData);
     // Check to see the amount of cards in the players hands and draws a card if able
+    const deck = HelperFunctions.copyDeck(playerDeck);
     const handCount = HelperFunctions.countAllCardsInPosition('userPlayArea', playerDeck);
     if (handCount < 5) {
-      this.drawCard(playerDeck, setPlayerDeck);
+      this.drawCard(deck);
     }
 
-    setEffectData(null); // They may have wasted any spells they could've cast
+    // Reset attacked flag for all cards
+    for (let i = 0; i < deck.length; i++) {
+      deck[i].hasAttacked = false;
+    }
 
+    setPlayerDeck(deck);
+    setEffectData(null); // They may have wasted any spells they could've cast
     setUpdateSwitch(!updateSwitch);
   },
 
