@@ -6,7 +6,7 @@ export default {
     'DMG',
     'HEAL',
     'KILL',
-    'RTNHND',
+    'TOPDECK',
     'RAISEATK',
     'RAISEDEF',
     'SETATK',
@@ -115,7 +115,7 @@ export default {
     return (
       operator === 'DRAW' ||
       operator === 'RES' ||
-      operator === 'RTNHAND' ||
+      operator === 'TOPDECK' ||
       operator === 'RAISEATK' ||
       operator === 'RAISEDEF' ||
       operator === 'SETATK' ||

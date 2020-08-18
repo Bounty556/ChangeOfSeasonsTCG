@@ -15,7 +15,7 @@ OPERATORS:
    DMG # - Implied 'ALL' target
    HEAL TARGET # - SINGLE, ALL, ATKROW, DEFROW, DEALT
    KILL TARGET - SELF, OPP, ALL, OPPDEFROW
-   RTNHND - Moves the card back to the players hand
+   TOPDECK - Moves the card back to the top of the players deck
    RAISEATK TARGET # - ALL, ATKROW, DEFROW
    SETATK TARGET # - OPPATKROW
    ADDEFFECT "..." - Implied 'ALL' target
@@ -588,7 +588,7 @@ const cardSeed = [
     attack: 3,
     health: 2,
     effect: 'When this dies return it to your hand',
-    effectScript: 'ONDEATH RTNHND',
+    effectScript: 'ONDEATH TOPDECK DRAW 1',
     name: 'Volmuloelle',
     img: 'blue_32.png'
   },
@@ -712,7 +712,7 @@ const cardSeed = [
     attack: 0,
     health: 0,
     effect: "Choose a card to have a 'Return to hand on death' effect",
-    effectScript: 'ONPLAY ADDEFFECT "ONDEATH RTNHND"',
+    effectScript: 'ONPLAY ADDEFFECT "ONDEATH TOPDECK DRAW 1"',
     name: 'Endless Death',
     img: 'emerald_3.png'
   },

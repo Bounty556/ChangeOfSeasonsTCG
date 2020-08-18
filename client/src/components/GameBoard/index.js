@@ -72,6 +72,7 @@ function GameBoard() {
 
   const [playerData, setPlayerData] = useState({
     isPlayersTurn: true,
+    hasInitiated: false,
     currentResource: 2,
     lifeTotal: 25
   });
@@ -129,42 +130,46 @@ function GameBoard() {
       }
       boardData.opponentPlayAreaCount = playAreaCount;
 
-      // Update our board data
-      const newPlayerData = { ...playerData };
-      newPlayerData.currentResource = ourData.currentResource;
-
-      let ourDeck = GameLogic.copyDeck(playerDeck);
-      let deadCards = [null, null, null, null, null];
-      [deadCards[0], ourDeck] = GameLogic.compareCards('userDef1', ourData, ourDeck);
-      [deadCards[1], ourDeck] = GameLogic.compareCards('userDef2', ourData, ourDeck);
-      [deadCards[2], ourDeck] = GameLogic.compareCards('userAtt1', ourData, ourDeck);
-      [deadCards[3], ourDeck] = GameLogic.compareCards('userAtt2', ourData, ourDeck);
-      [deadCards[4], ourDeck] = GameLogic.compareCards('userAtt3', ourData, ourDeck);
-
-      let deadCard = null;
-      for (let i = 0; i < deadCards.length; i++) {
-        if (deadCards[i]) {
-          deadCard = deadCards[i];
-          break;
-        }
-      }
-
       setOpponentBoardData(boardData);
 
-      if (deadCard) {
-        // Trigger that card's on death effect
-        const effect = deadCard.onDeathEffect;
-        if (effect) {
-          for (let i = 0; i < effect.operations.length; i++) {
-            instantCastOperation(deadCard.uId, effect.operations[i], ourDeck);
+      if (playerData.hasInitiated) {
+        // Update our board data
+        const newPlayerData = { ...playerData };
+        newPlayerData.currentResource = ourData.currentResource;
+
+        console.log('do the stuff');
+        let ourDeck = GameLogic.copyDeck(playerDeck);
+        let deadCards = [null, null, null, null, null];
+        [deadCards[0], ourDeck] = GameLogic.compareCards('userDef1', ourData, ourDeck);
+        [deadCards[1], ourDeck] = GameLogic.compareCards('userDef2', ourData, ourDeck);
+        [deadCards[2], ourDeck] = GameLogic.compareCards('userAtt1', ourData, ourDeck);
+        [deadCards[3], ourDeck] = GameLogic.compareCards('userAtt2', ourData, ourDeck);
+        [deadCards[4], ourDeck] = GameLogic.compareCards('userAtt3', ourData, ourDeck);
+
+        let deadCard = null;
+        for (let i = 0; i < deadCards.length; i++) {
+          if (deadCards[i]) {
+            deadCard = deadCards[i];
+            break;
           }
         }
-        setPlayerData(newPlayerData);
-        setPlayerDeck(ourDeck);
-        setUpdateSwitch(!updateSwitch);
-      } else {
-        setPlayerData(newPlayerData);
-        setPlayerDeck(ourDeck);
+
+        if (deadCard) {
+          // Trigger that card's on death effect
+          const effect = deadCard.onDeathEffect;
+          if (effect) {
+            for (let i = 0; i < effect.operations.length; i++) {
+              instantCastOperation(deadCard.uId, effect.operations[i], ourDeck);
+            }
+          }
+          setPlayerData(newPlayerData);
+          setPlayerDeck(ourDeck);
+          setUpdateSwitch(!updateSwitch);
+        } else {
+          console.log(ourDeck);
+          setPlayerData(newPlayerData);
+          setPlayerDeck(ourDeck);
+        }
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -196,13 +201,13 @@ function GameBoard() {
   }, [updateSwitch, playerData, playerDeck]);
 
   useEffect(() => {
+    const copy = GameLogic.copyDeck(playerDeck);
+    setPlayerDeck(GameLogic.assignHand(GameLogic.shuffleArray(GameLogic.deckChoice(copy))));
     setPlayerData(prevState => ({
       ...prevState,
-      isPlayersTurn: playerNumber === 1 ? true : false
+      isPlayersTurn: playerNumber === 1 ? true : false,
+      hasInitiated: true
     }));
-    const copy = GameLogic.copyDeck(playerDeck);
-
-    setPlayerDeck(GameLogic.assignHand(GameLogic.shuffleArray(GameLogic.deckChoice(copy))));
     setUpdateSwitch(!updateSwitch);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -458,6 +463,17 @@ function GameBoard() {
           setPlayerDeck(deck);
         }
         break;
+      }
+
+      case 'TOPDECK': {
+        let deck = useDeck || GameLogic.copyDeck(playerDeck);
+        const card = GameLogic.getCardWithId(cardId, useDeck);
+        card.position = '';
+        deck = [card, ...useDeck.filter(el => el.uId !== card.uId)];
+
+        if (!useDeck) {
+          setPlayerDeck(deck);
+        }
       }
     }
   };
