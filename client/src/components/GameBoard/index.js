@@ -21,19 +21,17 @@ export const CardContext = createContext({
   playerDeck: null
 });
 
-// TODO: We definitely need to redo the CSS for all of the cardholders and the cards themselves
-//       So things don't look awful
 // TODO: When we drag a card and hover it over a card slot, it should make the slot go grey or
 //       something similar so the user has some kind of feedback
-
 // TODO: Make effects work
 // TODO: Be able to attack the opponent when his defense row is down
 // TODO: Show the opponents health
 // TODO: Spell cards should only trigger their effect
-// TODO: Players should be able to use every card on the field in the atk row once
-// TODO: Make cards cost resources
+// TODO: Players should still be able to use cards if another card has an active effect
 // TODO: Replace opponents grave with player to attack
 // TODO: Make cards 69 and 70 have proactive effects
+
+// TODO: Fix issue with ending turn before 2nd player loads in causing it to be no one's turn
 
 function GameBoard() {
   const { socket, gameId, deck, playerNumber } = useContext(GameContext);
@@ -222,21 +220,14 @@ function GameBoard() {
   };
 
   const moveCard = (destinationPosition, cardVal) => {
-    if (destinationPosition !== 'userPlayArea') {
-      // Make sure the given position doesn't have a card in it already
-      if (
-        HelperFunctions.isInDefenseRow(cardVal.position) ||
-        HelperFunctions.isPositionFilled(destinationPosition, playerDeck)
-      ) {
-        return;
-      }
-
+    if (
+      destinationPosition !== 'userPlayArea' ||
+      HelperFunctions.isInDefenseRow(cardVal.position) ||
+      HelperFunctions.isPositionFilled(destinationPosition, playerDeck)
+    ) {
       if (HelperFunctions.inOpponentRows(destinationPosition)) {
-        if (
-          HelperFunctions.isOpponentPositionFilled(destinationPosition, opponentBoardData) &&
-          cardVal.position !== 'userPlayArea' &&
-          cardVal.attack > 0
-        ) {
+        // Attack card
+        if (cardVal.position !== 'userPlayArea' && cardVal.attack > 0 && !cardVal.hasAttacked) {
           const states = { opponentBoardData, playerDeck, updateSwitch };
           const functions = {
             instantCastOperation,
@@ -251,22 +242,14 @@ function GameBoard() {
       }
 
       if (cardVal.position === 'userPlayArea') {
-        const deck = HelperFunctions.copyDeck(playerDeck);
-        const cardCopy = HelperFunctions.getCardWithId(cardVal.uId, deck);
-        // Make sure we're moving from the play area to the field
-        cardCopy.position = destinationPosition;
-
-        // Set that we're now starting an effect if this card has one
-        const effect = cardCopy.onPlayEffect;
-        if (effect) {
-          increaseEffectOperation(
-            { cardId: cardVal.uId, effect: effect, currentOperation: -1 },
-            deck
-          );
-        }
-
-        setPlayerDeck(deck);
-        setUpdateSwitch(!updateSwitch);
+        const states = { playerDeck, playerData, updateSwitch };
+        const functions = {
+          increaseEffectOperation,
+          setPlayerDeck,
+          setPlayerData,
+          setUpdateSwitch
+        };
+        GameLogic.playCard(cardVal, destinationPosition, states, functions);
       }
     }
   };
