@@ -13,7 +13,7 @@ OPERATORS:
    DRAW # - If FULL, give cards until hand is full
    RES TARGET # - SELF, OPP - gives target resources
    DMG # - Implied 'ALL' target
-   HEAL TARGET # - SINGLE, ALL, DEFROW
+   HEAL TARGET # - SINGLE, ALL, DEFROW, DEALT
    KILL TARGET - SELF, OPP, ALL, OPPDEFROW
    RTNHND - Moves the card back to the players hand
    RAISEATK TARGET # - ALL, ATKROW, DEFROW
@@ -401,7 +401,7 @@ const cardSeed = [
     attack: 0,
     health: 0,
     effect: 'Give all your creatures +2 ATK',
-    effectScript: 'ONPLAY RAISEATK 2 ALL',
+    effectScript: 'ONPLAY RAISEATK ALL 2',
     name: 'Dark Ambush',
     img: 'yellow_37.png'
   },
@@ -413,7 +413,7 @@ const cardSeed = [
     attack: 0,
     health: 0,
     effect: 'Give all your creatures +2 ATK',
-    effectScript: 'ONPLAY RAISEATK 2 ALL',
+    effectScript: 'ONPLAY RAISEATK ALL 2',
     name: 'Frosts` Bite',
     img: 'blue_1.png'
   },
@@ -577,7 +577,7 @@ const cardSeed = [
     attack: 3,
     health: 5,
     effect: 'Restore life equal to the damage this deals',
-    effectScript: 'ONATK HEAL DMG',
+    effectScript: 'ONATK HEAL DEALT',
     name: 'Fardel',
     img: 'pumpkin.png'
   },
