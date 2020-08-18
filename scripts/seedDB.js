@@ -13,11 +13,10 @@ OPERATORS:
    DRAW # - If FULL, give cards until hand is full
    RES TARGET # - SELF, OPP - gives target resources
    DMG # - Implied 'ALL' target
-   HEAL TARGET # - SINGLE, ALL, DEFROW, DEALT
+   HEAL TARGET # - SINGLE, ALL, ATKROW, DEFROW, DEALT
    KILL TARGET - SELF, OPP, ALL, OPPDEFROW
-   RTNHND - Moves the card back to the players hand
+   TOPDECK - Moves the card back to the top of the players deck
    RAISEATK TARGET # - ALL, ATKROW, DEFROW
-   RAISEDEF TARGET # - ALL, ATKROW, DEFROW
    SETATK TARGET # - OPPATKROW
    ADDEFFECT "..." - Implied 'ALL' target
 */
@@ -197,7 +196,7 @@ const cardSeed = [
     attack: 0,
     health: 0,
     effect: 'Give defense row +2 health ',
-    effectScript: 'ONPLAY RAISEDEF 2 ALL',
+    effectScript: 'ONPLAY HEAL ALL 2',
     name: 'Dark Shell',
     img: 'violet_11.png'
   },
@@ -477,7 +476,7 @@ const cardSeed = [
     attack: 3,
     health: 4,
     effect: 'When played, give your attack row +1 ATK +1 DEF',
-    effectScript: 'ONPLAY RAISEATK ATKROW 1 RAISEDEF ATKROW 1',
+    effectScript: 'ONPLAY RAISEATK ATKROW 1 HEAL ATKROW 1',
     name: 'Koedranduk',
     img: 'golem_01.png'
   },
@@ -589,7 +588,7 @@ const cardSeed = [
     attack: 3,
     health: 2,
     effect: 'When this dies return it to your hand',
-    effectScript: 'ONDEATH RTNHND',
+    effectScript: 'ONDEATH TOPDECK DRAW 1',
     name: 'Volmuloelle',
     img: 'blue_32.png'
   },
@@ -640,7 +639,7 @@ const cardSeed = [
     resourceCost: 8,
     attack: 4,
     health: 5,
-    effect: 'When this deals damage draw a card',
+    effect: 'When this attacks, draw a card',
     effectScript: 'ONATK DRAW 1',
     name: 'Phantisto',
     img: 'skeleton_01.png'
@@ -664,8 +663,8 @@ const cardSeed = [
     resourceCost: 8,
     attack: 4,
     health: 5,
-    effect: 'Give all your minions +2 ATK +1 DEF',
-    effectScript: 'ONPLAY RAISEATK ALL 2 RAISEDEF ALL 1',
+    effect: 'Give all your minions +2 ATK +1 health',
+    effectScript: 'ONPLAY RAISEATK ALL 2 HEAL ALL 1',
     name: 'Xanderise',
     img: 'skeleton_07.png'
   },
@@ -676,8 +675,8 @@ const cardSeed = [
     resourceCost: 8,
     attack: 4,
     health: 5,
-    effect: 'Give all your minions +1 ATK +2 DEF',
-    effectScript: 'ONPLAY RAISEATK ALL 1 RAISEDEF ALL 2',
+    effect: 'Give all your minions +1 ATK +2 health',
+    effectScript: 'ONPLAY RAISEATK ALL 1 HEAL ALL 2',
     name: 'Artesa',
     img: 'skeleton_05.png'
   },
@@ -713,7 +712,7 @@ const cardSeed = [
     attack: 0,
     health: 0,
     effect: "Choose a card to have a 'Return to hand on death' effect",
-    effectScript: 'ONPLAY ADDEFFECT "ONDEATH RTNHND"',
+    effectScript: 'ONPLAY ADDEFFECT "ONDEATH TOPDECK DRAW 1"',
     name: 'Endless Death',
     img: 'emerald_3.png'
   },
@@ -776,8 +775,8 @@ const cardSeed = [
     resourceCost: 9,
     attack: 5,
     health: 5,
-    effect: 'While this is in play give all your creatures +2 ATK +4 DEF',
-    effectScript: 'ONPLAY RAISEATK ALL 2 RAISEDEF ALL 4 ONDEATH RAISEATK ALL -2 RAISEDEF ALL -4',
+    effect: 'While this is in play give all your creatures +2 ATK +4 health',
+    effectScript: 'ONPLAY RAISEATK ALL 2 HEAL ALL 4 ONDEATH RAISEATK ALL -2 DMG ALL 4',
     name: 'Irikmolush',
     img: 'dragon_01.png'
   },
@@ -788,8 +787,8 @@ const cardSeed = [
     resourceCost: 9,
     attack: 5,
     health: 5,
-    effect: 'While this is in play give all your creatures +3 ATK +3 DEF',
-    effectScript: 'ONPLAY RAISEATK ALL 3 RAISEDEF ALL 3 ONDEATH RAISEATK ALL -3 RAISEDEF ALL -3',
+    effect: 'While this is in play give all your creatures +3 ATK +3 health',
+    effectScript: 'ONPLAY RAISEATK ALL 3 HEAL ALL 3 ONDEATH RAISEATK ALL -3 DMG ALL 3',
     name: 'Otgonbaatar',
     img: 'dragon_04.png'
   },

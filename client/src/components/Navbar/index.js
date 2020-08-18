@@ -43,6 +43,9 @@ function Navbar() {
             <Link to='/'>
                 <h3>Change of Seasons</h3>
             </Link>
+            <Link to='/HowToPlay'>
+                <h3>How to Play?</h3>
+            </Link>
                 {auth ? (
                     <div className='dropleft'>
                         <button className='btn' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>

@@ -10,7 +10,7 @@ import Signin from './pages/Sign In/index';
 import ForgotPassword from './pages/Forgot-Password/index';
 import UserProfile from './pages/UserProfile/index';
 import Lobby from './pages/Lobby/index'
-
+import HowToPlay from './pages/HowToPlay/index'
 // TODO: Check out blank page when duplicating tabs
 
 function App() {
@@ -39,6 +39,7 @@ function App() {
             <div>
                 <Switch>
                     <Route exact path='/' component={Homepage}/>
+                    <Route exact path='/HowToPlay' component={HowToPlay}/>
                     <Route exact path='/About' component={About}/>
                     <Route exact path='/Signup' component={SignUp}/>
                     <Route exact path='/Signin' component={Signin} />
