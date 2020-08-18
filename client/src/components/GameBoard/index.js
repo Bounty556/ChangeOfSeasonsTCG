@@ -73,7 +73,6 @@ function GameBoard() {
 
   const [playerData, setPlayerData] = useState({
     isPlayersTurn: true,
-    recentCardDeath: null,
     currentResource: 2,
     lifeTotal: 25
   });
@@ -154,8 +153,6 @@ function GameBoard() {
       setOpponentBoardData(boardData);
 
       if (deadCard) {
-        newPlayerData.recentCardDeath = deadCard;
-
         // Trigger that card's on death effect
         const effect = deadCard.onDeathEffect;
         if (effect) {
@@ -369,11 +366,11 @@ function GameBoard() {
       case 'RES':
         if (param1 === 'SELF') {
           let currentResources = playerData.currentResource;
-          currentResources = GameLogic.clamp(currentResources + parseInt(param2), 0, 8);
+          currentResources = GameLogic.clamp(currentResources + parseInt(param2), 0, 9);
           setPlayerData(prevState => ({ ...prevState, currentResource: currentResources }));
         } else if (param1 === 'OPP') {
           let currentResources = opponentBoardData.currentResource;
-          currentResources = GameLogic.clamp(currentResources + parseInt(param2), 0, 8);
+          currentResources = GameLogic.clamp(currentResources + parseInt(param2), 0, 9);
           setOpponentBoardData(prevState => ({ ...prevState, currentResource: currentResources }));
         }
         break;
@@ -523,10 +520,6 @@ function GameBoard() {
   const handleCardDeath = (deadCard, ourDeck) => {
     deadCard.health = 0;
     deadCard.position = 'userGrave';
-    setPlayerData(prevState => ({
-      ...prevState,
-      recentCardDeath: deadCard
-    }));
 
     // Trigger that card's on death effect
     const effect = deadCard.onDeathEffect;
