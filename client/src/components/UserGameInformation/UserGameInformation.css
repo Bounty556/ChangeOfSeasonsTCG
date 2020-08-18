@@ -1,5 +1,22 @@
-
 .lifeTotal  {
-color: red;
-text-align: center;
+    color: red;
+    text-align: center;
+}
+
+.gameInfoAvatar {
+    background-color: rgba(148, 79, 0, 0.835);
+    display: block;
+    border: 10px solid transparent;
+    border-image-source: url(https://media1.giphy.com/media/5vidmSHUsyoybSYNN0/giphy.gif?cid=ecf05e47ta00vpixh6lraija5cpo2bhvvsif55qgx61zmlkl&rid=giphy.gif);
+    border-image-repeat: stretch;
+    border-image-slice: 30;
+    border-image-width: 10px;       
+    box-shadow: 1px 1px 1px 1px black;
+    width: 200px;
+    margin-bottom: 25px;
+}
+
+#gameInfo {
+    background-image: url(../GameBoard/cardbackground.jpg);
+    margin-left: 35px;
 }
