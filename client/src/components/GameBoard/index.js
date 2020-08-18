@@ -11,11 +11,8 @@ import GameLogic from './gameLogic';
 import Parser from './cardScript';
 
 import './gameboard.css';
-<<<<<<< HEAD
-=======
 import gameLogic from './gameLogic';
 import { STATES } from 'mongoose';
->>>>>>> 66eed0bfa6aef8fc4ccddcd1aeabb5cda634e0f1
 
 // Give this function to the children of this component so they can tell us when
 // A card was dropped on them
