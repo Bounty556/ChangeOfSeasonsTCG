@@ -580,22 +580,8 @@ function GameBoard() {
         </div>
 
         <hr />
-<<<<<<< HEAD
-        {playerData.isPlayersTurn ? (
-          <div className='endTurnRow'>
-            <button className='woodEndButton' onClick={sendTurnChange}>
-              End Turn
-            </button>
-          </div>
-        ) : (
-            <div></div>
-          )}
-        <div className='wrapper'>
-          
-=======
 
         <div className='wrapper animate__animated animate__bounceIn'>
->>>>>>> bd635838284c561bf1eb93e796c989e1e4ac89ba
           <div id='userAttRow'>
             <CardHolder id='userAtt1' />
             <CardHolder id='userAtt2' />
@@ -608,7 +594,7 @@ function GameBoard() {
           </div>
 
           <div id='userRow'>
-            <UserGameInformation id='userGrave' />
+            <UserGameInformation id='userInfo' />
             <CardPlaceHolder
               id='userDeck'
               cardCount={GameLogic.hasAvailableCards(playerDeck) ? 1 : 0}
@@ -621,6 +607,15 @@ function GameBoard() {
             ))}
           </div>
         </div>
+        {playerData.isPlayersTurn ? (
+          <div className='endTurnRow'>
+            <button className='woodEndButton' onClick={sendTurnChange}>
+              End Turn
+            </button>
+          </div>
+        ) : (
+          <div></div>
+        )}
       </DndProvider>
     </CardContext.Provider>
   );
