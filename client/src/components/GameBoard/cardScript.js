@@ -6,7 +6,7 @@ export default {
     'DMG',
     'HEAL',
     'KILL',
-    'RTNHND',
+    'TOPDECK',
     'RAISEATK',
     'RAISEDEF',
     'SETATK',
@@ -115,12 +115,13 @@ export default {
     return (
       operator === 'DRAW' ||
       operator === 'RES' ||
-      operator === 'RTNHAND' ||
+      operator === 'TOPDECK' ||
       operator === 'RAISEATK' ||
       operator === 'RAISEDEF' ||
       operator === 'SETATK' ||
       (operator === 'HEAL' && operation.param1 === 'ALL') ||
-      (operator === 'HEAL' && operation.param1 === 'DEFROW')
+      (operator === 'HEAL' && operation.param1 === 'DEFROW') ||
+      (operator === 'HEAL' && operation.param1 === 'ATKROW')
     );
   }
 };
