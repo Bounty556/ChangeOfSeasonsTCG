@@ -372,7 +372,7 @@ function GameBoard() {
   const instantCastOperation = (cardId, operation, useDeck) => {
     const { op, param1, param2 } = operation;
     switch (op) {
-      case 'RES':
+      case 'RES': {
         if (param1 === 'SELF') {
           let currentResources = playerData.currentResource;
           currentResources = GameLogic.clamp(currentResources + parseInt(param2), 0, 9);
@@ -383,6 +383,7 @@ function GameBoard() {
           setOpponentBoardData(prevState => ({ ...prevState, currentResource: currentResources }));
         }
         break;
+      }
 
       case 'DRAW': {
         const handCount = GameLogic.countAllCardsInPosition('userPlayArea', useDeck || playerDeck);
@@ -434,7 +435,7 @@ function GameBoard() {
       }
 
       case 'RAISEATK': {
-        let deck;
+        let deck = useDeck || GameLogic.copyDeck(playerDeck);
         let positions;
         if (param1 === 'ALL') {
           positions = [...GameLogic.userAtkRows, ...GameLogic.userDefRows];
@@ -443,20 +444,18 @@ function GameBoard() {
         } else if (param1 === 'DEFROW') {
           positions = GameLogic.userDefRows;
         }
-        if (useDeck) {
-          deck = useDeck;
-        } else {
-          deck = GameLogic.copyDeck(playerDeck);
-        }
+
         // Increase the attack of all of our cards
-        for (let i = 0; i < positions; i++) {
-          const card = deck[positions[i]];
+        for (let i = 0; i < positions.length; i++) {
+          const card = GameLogic.getCardInPosition(positions[i], deck);
           if (card) {
             card.attack += parseInt(param2);
           }
         }
 
-        setPlayerDeck(deck);
+        if (!useDeck) {
+          setPlayerDeck(deck);
+        }
         break;
       }
 
