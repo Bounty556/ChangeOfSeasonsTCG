@@ -12,6 +12,7 @@ import Parser from './cardScript';
 
 import './gameboard.css';
 import gameLogic from './gameLogic';
+import { STATES } from 'mongoose';
 
 // Give this function to the children of this component so they can tell us when
 // A card was dropped on them
@@ -603,7 +604,7 @@ function GameBoard() {
           </div>
 
           <div id='userRow'>
-            <UserGameInformation id='userInfo' />
+            <UserGameInformation id='userInfo' lifeState={playerData.lifeTotal} lifeStateSet={setPlayerData} />
             <CardPlaceHolder
               id='userDeck'
               cardCount={GameLogic.hasAvailableCards(playerDeck) ? 1 : 0}
