@@ -395,6 +395,25 @@ function GameBoard() {
           }
         }
         break;
+
+      case 'HEAL':
+        const ourDeck = GameLogic.copyDeck(playerDeck);
+        let positions;
+        if (param1 === 'ALL') {
+          positions = [...GameLogic.userAtkRows, ...GameLogic.userDefRows];
+        } else if (param1 === 'DEFROW') {
+          positions = GameLogic.userDefRows;
+        }
+        // Increase the health of all of our cards
+        for (let i = 0; i < positions; i++) {
+          const card = ourDeck[positions[i]];
+          if (card) {
+            card.health += parseInt(param2);
+          }
+        }
+
+        setPlayerDeck(ourDeck);
+        break;
     }
   };
 
