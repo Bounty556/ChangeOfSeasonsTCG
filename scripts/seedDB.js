@@ -775,8 +775,8 @@ const cardSeed = [
     resourceCost: 9,
     attack: 5,
     health: 5,
-    effect: 'While this is in play give all your creatures +2 ATK +4 DEF',
-    effectScript: 'ONPLAY RAISEATK ALL 2 HEAL ALL 4 ONDEATH RAISEATK ALL -2 HEAL ALL -4',
+    effect: 'While this is in play give all your creatures +2 ATK +4 health',
+    effectScript: 'ONPLAY RAISEATK ALL 2 HEAL ALL 4 ONDEATH RAISEATK ALL -2 DMG ALL 4',
     name: 'Irikmolush',
     img: 'dragon_01.png'
   },
@@ -787,8 +787,8 @@ const cardSeed = [
     resourceCost: 9,
     attack: 5,
     health: 5,
-    effect: 'While this is in play give all your creatures +3 ATK +3 DEF',
-    effectScript: 'ONPLAY RAISEATK ALL 3 HEAL ALL 3 ONDEATH RAISEATK ALL -3 HEAL ALL -3',
+    effect: 'While this is in play give all your creatures +3 ATK +3 health',
+    effectScript: 'ONPLAY RAISEATK ALL 3 HEAL ALL 3 ONDEATH RAISEATK ALL -3 DMG ALL 3',
     name: 'Otgonbaatar',
     img: 'dragon_04.png'
   },

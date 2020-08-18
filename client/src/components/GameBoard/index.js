@@ -40,6 +40,8 @@ export const CardContext = createContext({
 // TODO: Investigate error with dragging cards outside chrome
 // TODO: Replace opponents grave with player to attack
 
+// TODO: Make cards 69 and 70 have proactive effects
+
 function GameBoard() {
   const { socket, gameId, deck, playerNumber } = useContext(GameContext);
 
@@ -452,7 +454,7 @@ function GameBoard() {
         for (let i = 0; i < positions.length; i++) {
           const card = GameLogic.getCardInPosition(positions[i], deck);
           if (card) {
-            card.attack += parseInt(param2);
+            card.attack = GameLogic.clamp(card.attack + parseInt(param2), 0, 100);
           }
         }
 
@@ -474,6 +476,27 @@ function GameBoard() {
           }
         }
         deck[0] = card;
+
+        if (!useDeck) {
+          setPlayerDeck(deck);
+        }
+      }
+
+      case 'DMG': {
+        // We're hurting one of our own
+        const deck = useDeck || GameLogic.copyDeck(playerDeck);
+        const positions = [...GameLogic.userAtkRows, ...GameLogic.userDefRows];
+
+        for (let i = 0; i < positions.length; i++) {
+          const card = GameLogic.getCardInPosition(positions[i], deck);
+          if (card) {
+            card.health -= parseInt(param2);
+
+            if (card.health <= 0) {
+              handleCardDeath(card, deck);
+            }
+          }
+        }
 
         if (!useDeck) {
           setPlayerDeck(deck);
