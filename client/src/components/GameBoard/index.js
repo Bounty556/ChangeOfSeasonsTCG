@@ -392,7 +392,12 @@ function GameBoard() {
       case 'DRAW': {
         const deck = useDeck || GameLogic.copyDeck(playerDeck);
         const handCount = GameLogic.countAllCardsInPosition('userPlayArea', deck);
-        const canDraw = GameLogic.clamp(parseInt(param1), 0, 5 - handCount);
+        let canDraw;
+        if (param1 === 'FULL') {
+          canDraw = GameLogic.clamp(5, 0, 5 - handCount);
+        } else {
+          canDraw = GameLogic.clamp(parseInt(param1), 0, 5 - handCount);
+        }
         const indices = GameLogic.findFirstAvailableCards(canDraw, deck);
         for (let i = 0; i < indices.length; i++) {
           deck[indices[i]].position = 'userPlayArea';
