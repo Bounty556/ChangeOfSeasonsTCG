@@ -121,7 +121,8 @@ export default {
       operator === 'SETATK' ||
       (operator === 'HEAL' && operation.param1 === 'ALL') ||
       (operator === 'HEAL' && operation.param1 === 'DEFROW') ||
-      (operator === 'HEAL' && operation.param1 === 'ATKROW')
+      (operator === 'HEAL' && operation.param1 === 'ATKROW') ||
+      (operator === 'DMG' && operation.param1 === 'ALL')
     );
   }
 };

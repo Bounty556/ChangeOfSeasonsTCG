@@ -1,228 +1,174 @@
+import HelperFunctions from './helperFunctions';
+import Parser from './cardScript';
+
 export default {
-  enemyAtkRows: ['opponentAtt1', 'opponentAtt2', 'opponentAtt3'],
-  enemyDefRows: ['opponentDef1', 'opponentDef2'],
-  userAtkRows: ['userAtt1', 'userAtt2', 'userAtt3'],
-  userDefRows: ['userDef1', 'userDef2'],
-  // prettier-ignore
-  springDeck: [1, 1, 5, 9, 9, 13, 17, 17, 21, 21, 25, 25, 29, 29, 33, 33, 37, 37, 41, 41, 45, 45, 49, 49, 53, 53, 57, 61, 65, 69],
-  // prettier-ignore
-  summerDeck: [2, 2, 6, 6, 10, 14, 18, 18, 22, 22, 26, 26, 30, 30, 34, 34, 38, 38, 42, 42, 46, 46, 50, 50, 54, 54, 58, 62, 66, 70],
-  // prettier-ignore
-  fallDeck: [3, 3, 7, 11, 11, 15, 19, 19, 23, 23, 27, 27, 31, 31, 35, 35, 39, 39, 43, 43, 47, 47, 51, 51, 55, 55, 59, 63, 67, 71],
-  // prettier-ignore
-  //winterDeck: [4, 4, 8, 8, 12, 16, 20, 20, 24, 24, 28, 28, 32, 32, 36, 36, 40, 40, 44, 44, 48, 48, 52, 52, 56, 56, 60, 64, 68, 72],
-  winterDeck: [52, 4, 4, 8, 8, 8, 8, 12, 12, 12],
+  drawCard: (playerDeck, setPlayerDeck) => {
+    const indices = HelperFunctions.findFirstAvailableCards(1, playerDeck);
 
-  duplicate: function (array, tempDeck) {
-    const newDeck = [];
-    for (let i = 0; i < tempDeck.length; i++) {
-      for (let j = 0; j < array.length; j++) {
-        if (array[j].cardId === tempDeck[i]) {
-          newDeck.push({ ...array[j], uId: i, key: 'gameCard' + i }); // Give this card a unique Id
-          break;
-        }
-      }
+    if (indices.length > 0) {
+      const cardVal = { ...playerDeck[indices[0]] };
+      cardVal.position = 'userPlayArea';
+      setPlayerDeck([...playerDeck.filter(card => card.uId !== cardVal.uId), cardVal]);
     }
-    return newDeck;
   },
 
-  copyDeck: function (array) {
-    const copy = array.map(el => {
-      return { ...el };
+  handleCardDeath: (deadCard, deck, effectCallback) => {
+    deadCard.health = 0;
+    deadCard.position = 'userGrave';
+
+    // Trigger that card's on death effect
+    const effect = deadCard.onDeathEffect;
+    if (effect) {
+      for (let i = 0; i < effect.operations.length; i++) {
+        effectCallback(deadCard.uId, effect.operations[i], deck);
+      }
+    }
+  },
+
+  attackCard: function (attackingCardPosition, attackedPosition, states, functions) {
+    const { opponentBoardData, playerDeck, updateSwitch } = states;
+    const {
+      instantCastOperation,
+      setPlayerDeck,
+      setOpponentBoardData,
+      setUpdateSwitch
+    } = functions;
+    const ourDeck = HelperFunctions.copyDeck(playerDeck);
+    let attackingCard;
+    for (let i = 0; i < ourDeck.length; i++) {
+      if (ourDeck[i].position === attackingCardPosition) {
+        attackingCard = ourDeck[i];
+      }
+    }
+
+    // Need to replace opponent with user here to match the opponentBoardData object
+    attackedPosition = attackedPosition.replace('opponent', 'user');
+    const boardData = { ...opponentBoardData };
+    boardData[attackedPosition].health -= attackingCard.attack;
+
+    // Start the on attack effect
+    const attackEffect = attackingCard.onAttackEffect;
+    if (attackEffect) {
+      for (let i = 0; i < attackEffect.operations.length; i++) {
+        instantCastOperation(attackingCard.uId, attackEffect.operations[i], ourDeck);
+      }
+    }
+
+    // Retaliation
+    attackingCard.health -= boardData[attackedPosition].attack;
+    if (attackingCard.health <= 0) {
+      this.handleCardDeath(attackingCard, ourDeck, instantCastOperation);
+    }
+    setPlayerDeck(ourDeck);
+
+    if (boardData[attackedPosition].health <= 0) {
+      boardData[attackedPosition] = null;
+    }
+
+    setOpponentBoardData(boardData);
+    setUpdateSwitch(!updateSwitch);
+  },
+
+  initiatePlayerDeck: deck => {
+    return deck.map(card => {
+      card.position = '';
+      card.baseAttack = card.attack;
+      card.baseHealth = card.health;
+      card.onPlayEffect = null;
+      card.onDeathEffect = null;
+      card.onAttackEffect = null;
+
+      // Parse the effect on this card if applicable
+      const tokens = Parser.tokenize(card.effectScript);
+
+      for (let i = 0; i < tokens.length; i++) {
+        switch (tokens[i].trigger) {
+          case 'ONPLAY':
+            card.onPlayEffect = tokens[i];
+            break;
+          case 'ONDEATH':
+            card.onDeathEffect = tokens[i];
+            break;
+          case 'ONATK':
+            card.onAttackEffect = tokens[i];
+            break;
+        }
+      }
+      return card;
     });
-
-    return copy;
   },
 
-  deckChoice: function (array) {
-    let deckC;
-    switch (array[0].cardId) {
-      case 1:
-        deckC = this.springDeck;
-        break;
-      case 2:
-        deckC = this.summerDeck;
-        break;
-      case 3:
-        deckC = this.fallDeck;
-        break;
-      case 4:
-        deckC = this.winterDeck;
-        break;
-      default:
-        console.log('You do not have a deck');
-    }
-    return this.duplicate(array, deckC);
-  },
+  updateBoard: (otherDeck, otherData, ourData, playerNumber, player, states, functions) => {
+    const { playerDeck, playerData, updateSwitch, opponentBoardData } = states;
+    const {
+      setPlayerDeck,
+      setPlayerData,
+      setUpdateSwitch,
+      setOpponentBoardData,
+      instantCastOperation
+    } = functions;
 
-  shuffleArray: function (array) {
-    var max = array.length / 4;
-    var min = 0;
-    for (let i = 0; i < 4; i++) {
-      //Randomly generate a random index number
-      for (let j = 0; j < 20; j++) {
-        const randomIndex1 = Math.floor(Math.random() * (max - min) + min);
-        const randomIndex2 = Math.floor(Math.random() * (max - min) + min);
-        // Swap these elements in the array
-        if (randomIndex1 !== randomIndex2) {
-          const tempElement = array[randomIndex1];
-          array[randomIndex1] = array[randomIndex2];
-          array[randomIndex2] = tempElement;
-        }
-      }
-      max += array.length / 4;
-      min += array.length / 4;
-    }
-    return array;
-  },
-
-  // Assigns the first 5 cards in the deck to be in the player's hand
-  assignHand: function (deck) {
-    for (let i = 0; i < 5; i++) {
-      deck[i].position = 'userPlayArea';
+    if (player === playerNumber) {
+      return;
     }
 
-    return deck;
-  },
+    // Update our opponent board data
+    const boardData = {
+      ...opponentBoardData,
+      userDef1: null,
+      userDef2: null,
+      userAtt1: null,
+      userAtt2: null,
+      userAtt3: null,
+      currentResource: otherData.currentResource
+    };
 
-  inOpponentRows: function (position) {
-    return this.enemyAtkRows.includes(position) || this.enemyDefRows.includes(position);
-  },
-
-  isPositionFilled: function (position, deck) {
-    for (let i = 0; i < deck.length; i++) {
-      if (deck[i].position === position) {
-        return true;
-      }
+    const opponentCards = HelperFunctions.getPlayedCards(otherDeck);
+    for (let i = 0; i < opponentCards.length; i++) {
+      boardData[opponentCards[i].position] = opponentCards[i];
     }
 
-    return false;
-  },
+    boardData.opponentBoardData = HelperFunctions.hasAvailableCards(otherDeck);
+    boardData.opponentPlayAreaCount = HelperFunctions.countAllCardsInPosition(
+      'userPlayArea',
+      otherDeck
+    );
 
-  isOpponentPositionFilled: function (position, opponentData) {
-    position = position.replace('opponent', 'user');
+    setOpponentBoardData(boardData);
 
-    return opponentData[position];
-  },
+    if (playerData.hasInitiated) {
+      // Update our board data
+      setPlayerData(prevState => ({ ...prevState, currentResource: ourData.currentResource }));
 
-  damageCard: function (position, damage, deck) {
-    let cardDied = null;
-    for (let i = 0; i < deck.length; i++) {
-      if (deck[i].position === position) {
-        deck[i].health -= damage;
+      let ourDeck = HelperFunctions.copyDeck(playerDeck);
+      let deadCards = [null, null, null, null, null];
+      [deadCards[0], ourDeck] = HelperFunctions.compareCards('userDef1', ourData, ourDeck);
+      [deadCards[1], ourDeck] = HelperFunctions.compareCards('userDef2', ourData, ourDeck);
+      [deadCards[2], ourDeck] = HelperFunctions.compareCards('userAtt1', ourData, ourDeck);
+      [deadCards[3], ourDeck] = HelperFunctions.compareCards('userAtt2', ourData, ourDeck);
+      [deadCards[4], ourDeck] = HelperFunctions.compareCards('userAtt3', ourData, ourDeck);
 
-        if (deck[i].health <= 0) {
-          deck[i].position = 'userGrave';
-          deck[i].health = 0;
-          cardDied = { ...deck[i] };
-        }
-
-        break;
-      }
-    }
-
-    return [deck, cardDied];
-  },
-
-  hasAvailableCards: function (deck) {
-    for (let i = 0; i < deck.length; i++) {
-      if (deck[i].position === '') {
-        return true;
-      }
-    }
-
-    return false;
-  },
-
-  findFirstAvailableCards: function (cardCount, deck) {
-    if (cardCount === 0) {
-      return [];
-    }
-
-    const availableCardIndices = [];
-    let foundCards = 0;
-    for (let i = 0; i < deck.length; i++) {
-      if (deck[i].position === '') {
-        availableCardIndices.push(i);
-        foundCards++;
-
-        if (foundCards === cardCount) {
+      let deadCard;
+      for (let i = 0; i < deadCards.length; i++) {
+        if (deadCards[i]) {
+          deadCard = deadCards[i];
           break;
         }
       }
-    }
 
-    return availableCardIndices;
-  },
-
-  isInDefenseRow: function (position) {
-    return this.userDefRows.includes(position);
-  },
-
-  getCardInPosition: function (position, deck) {
-    for (let i = 0; i < deck.length; i++) {
-      if (deck[i].position === position) {
-        return deck[i];
+      if (deadCard) {
+        // Trigger that card's on death effect
+        const effect = deadCard.onDeathEffect;
+        if (effect) {
+          for (let i = 0; i < effect.operations.length; i++) {
+            instantCastOperation(deadCard.uId, effect.operations[i], ourDeck);
+          }
+        }
+        setPlayerDeck(ourDeck);
+        setUpdateSwitch(!updateSwitch);
+      } else {
+        setPlayerDeck(ourDeck);
       }
     }
-
-    return null;
-  },
-
-  countAllCardsInPosition: function (position, deck) {
-    let occurs = 0;
-
-    for (let i = 0; i < deck.length; i++) {
-      if ('position' in deck[i] && deck[i].position === position) occurs++;
-    }
-    return occurs;
-  },
-
-  getPlayedCards: function (deck) {
-    const playedCards = [];
-    for (let i = 0; i < deck.length; i++) {
-      if (
-        this.userAtkRows.includes(deck[i].position) ||
-        this.userDefRows.includes(deck[i].position)
-      ) {
-        playedCards.push(deck[i]);
-      }
-    }
-
-    return playedCards;
-  },
-
-  compareCards: function (position, ourData, ourDeck) {
-    let theirCard = ourData[position];
-    let ourCard = this.getCardInPosition(position, ourDeck);
-
-    // Our card died
-    if (!theirCard && ourCard) {
-      ourCard.health = 0;
-      ourCard.position = 'userGrave';
-      ourDeck = [...ourDeck.filter(card => card.uId !== ourCard.uId), ourCard];
-      return [ourCard, ourDeck];
-    } else if (!theirCard && !ourCard) {
-      return [null, ourDeck];
-    } else {
-      ourCard.health = theirCard.health;
-      ourCard.attack = theirCard.attack;
-      ourDeck = [...ourDeck.filter(card => card.uId !== ourCard.uId), ourCard];
-      return [null, ourDeck];
-    }
-  },
-
-  clamp: function (num, a, b) {
-    return Math.max(Math.min(num, Math.max(a, b)), Math.min(a, b));
-  },
-
-  getCardWithId: function (cardId, deck) {
-    for (let i = 0; i < deck.length; i++) {
-      if (deck[i].uId === cardId) {
-        return deck[i];
-      }
-    }
-
-    return null;
   }
 };

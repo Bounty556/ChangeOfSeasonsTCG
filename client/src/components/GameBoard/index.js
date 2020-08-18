@@ -7,12 +7,12 @@ import CardHolder from '../CardHolder';
 import UserGameInformation from '../UserGameInformation';
 import { GameContext } from '../../pages/Lobby';
 
+import HelperFunctions from './helperFunctions';
 import GameLogic from './gameLogic';
 import Parser from './cardScript';
+import Effects from './effects';
 
 import './gameboard.css';
-import gameLogic from './gameLogic';
-import { STATES } from 'mongoose';
 
 // Give this function to the children of this component so they can tell us when
 // A card was dropped on them
@@ -29,50 +29,16 @@ export const CardContext = createContext({
 // TODO: Make effects work
 // TODO: Be able to attack the opponent when his defense row is down
 // TODO: Show the opponents health
-// TODO: Implement defense
-
 // TODO: Spell cards should only trigger their effect
-
 // TODO: Players should be able to use every card on the field in the atk row once
-
 // TODO: Make cards cost resources
-
-// TODO: Investigate error with dragging cards outside chrome
 // TODO: Replace opponents grave with player to attack
-
-// TODO: FIX TOPDECK
+// TODO: Make cards 69 and 70 have proactive effects
 
 function GameBoard() {
   const { socket, gameId, deck, playerNumber } = useContext(GameContext);
 
-  const [playerDeck, setPlayerDeck] = useState(
-    deck.map(card => {
-      card.position = '';
-      card.baseAttack = card.attack;
-      card.baseHealth = card.health;
-      card.onPlayEffect = null;
-      card.onDeathEffect = null;
-      card.onAttackEffect = null;
-
-      // Parse the effect on this card if applicable
-      const tokens = Parser.tokenize(card.effectScript);
-
-      for (let i = 0; i < tokens.length; i++) {
-        switch (tokens[i].trigger) {
-          case 'ONPLAY':
-            card.onPlayEffect = tokens[i];
-            break;
-          case 'ONDEATH':
-            card.onDeathEffect = tokens[i];
-            break;
-          case 'ONATK':
-            card.onAttackEffect = tokens[i];
-            break;
-        }
-      }
-      return card;
-    })
-  );
+  const [playerDeck, setPlayerDeck] = useState(GameLogic.initiatePlayerDeck(deck));
 
   const [playerData, setPlayerData] = useState({
     isPlayersTurn: true,
@@ -109,70 +75,15 @@ function GameBoard() {
   useEffect(() => {
     socket.off('updateBoard');
     socket.on('updateBoard', ({ otherDeck, otherData, ourData, player }) => {
-      if (player === playerNumber) {
-        return;
-      }
-
-      // Update our opponent board data
-      const boardData = { ...opponentBoardData };
-      boardData.userDef1 = boardData.userDef2 = boardData.userAtt1 = boardData.userAtt2 = boardData.userAtt3 = null;
-      boardData.currentResource = otherData.currentResource;
-
-      const opponentCards = GameLogic.getPlayedCards(otherDeck);
-      for (let i = 0; i < opponentCards.length; i++) {
-        boardData[opponentCards[i].position] = opponentCards[i];
-      }
-
-      let playAreaCount = 0;
-      for (let i = 0; i < otherDeck.length; i++) {
-        if (otherDeck[i].position === 'userPlayArea') {
-          playAreaCount++;
-        }
-        if (otherDeck[i].position === '') {
-          boardData.opponentHasDeck = true;
-        }
-      }
-      boardData.opponentPlayAreaCount = playAreaCount;
-
-      setOpponentBoardData(boardData);
-
-      if (playerData.hasInitiated) {
-        // Update our board data
-        const newPlayerData = { ...playerData };
-        newPlayerData.currentResource = ourData.currentResource;
-
-        let ourDeck = GameLogic.copyDeck(playerDeck);
-        let deadCards = [null, null, null, null, null];
-        [deadCards[0], ourDeck] = GameLogic.compareCards('userDef1', ourData, ourDeck);
-        [deadCards[1], ourDeck] = GameLogic.compareCards('userDef2', ourData, ourDeck);
-        [deadCards[2], ourDeck] = GameLogic.compareCards('userAtt1', ourData, ourDeck);
-        [deadCards[3], ourDeck] = GameLogic.compareCards('userAtt2', ourData, ourDeck);
-        [deadCards[4], ourDeck] = GameLogic.compareCards('userAtt3', ourData, ourDeck);
-
-        let deadCard = null;
-        for (let i = 0; i < deadCards.length; i++) {
-          if (deadCards[i]) {
-            deadCard = deadCards[i];
-            break;
-          }
-        }
-
-        if (deadCard) {
-          // Trigger that card's on death effect
-          const effect = deadCard.onDeathEffect;
-          if (effect) {
-            for (let i = 0; i < effect.operations.length; i++) {
-              instantCastOperation(deadCard.uId, effect.operations[i], ourDeck);
-            }
-          }
-          setPlayerData(newPlayerData);
-          setPlayerDeck(ourDeck);
-          setUpdateSwitch(!updateSwitch);
-        } else {
-          setPlayerData(newPlayerData);
-          setPlayerDeck(ourDeck);
-        }
-      }
+      const states = { playerDeck, playerData, updateSwitch, opponentBoardData };
+      const functions = {
+        setPlayerDeck,
+        setPlayerData,
+        setUpdateSwitch,
+        setOpponentBoardData,
+        instantCastOperation
+      };
+      GameLogic.updateBoard(otherDeck, otherData, ourData, playerNumber, player, states, functions);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playerDeck, playerData, opponentBoardData]);
@@ -190,9 +101,9 @@ function GameBoard() {
         }
         setPlayerData(tempData);
         // Check to see the amount of cards in the players hands and draws a card if able
-        const handCount = GameLogic.countAllCardsInPosition('userPlayArea', playerDeck);
+        const handCount = HelperFunctions.countAllCardsInPosition('userPlayArea', playerDeck);
         if (handCount < 5) {
-          drawCards(1);
+          GameLogic.drawCard(playerDeck, setPlayerDeck);
         }
 
         setEffectData(null); // They may have wasted any spells they could've cast
@@ -203,8 +114,10 @@ function GameBoard() {
   }, [updateSwitch, playerData, playerDeck]);
 
   useEffect(() => {
-    const copy = GameLogic.copyDeck(playerDeck);
-    setPlayerDeck(GameLogic.assignHand(GameLogic.shuffleArray(GameLogic.deckChoice(copy))));
+    const copy = HelperFunctions.copyDeck(playerDeck);
+    setPlayerDeck(
+      HelperFunctions.assignHand(HelperFunctions.shuffleArray(HelperFunctions.deckChoice(copy)))
+    );
     setPlayerData(prevState => ({
       ...prevState,
       isPlayersTurn: playerNumber === 1 ? true : false,
@@ -224,86 +137,74 @@ function GameBoard() {
     }
 
     if (effectData) {
-      castEffect(destinationPosition, cardVal);
+      castEffect(destinationPosition, cardId);
     } else {
       moveCard(destinationPosition, cardVal);
     }
   };
 
-  const castEffect = (destinationPosition, cardVal) => {
-    if (cardVal.uId !== effectData.cardId || destinationPosition === 'userPlayArea') {
+  const castEffect = (destinationPosition, cardId) => {
+    if (cardId !== effectData.cardId || destinationPosition === 'userPlayArea') {
       return;
     }
 
     // Check to make sure our destination is a possible target for this effect
     const operation = effectData.effect.operations[effectData.currentOperation];
     const availablePositions = Parser.getScriptTargets(operation);
+    const states = { effectData, opponentBoardData, playerDeck, updateSwitch };
+    const functions = {
+      setOpponentBoardData,
+      setPlayerDeck,
+      increaseEffectOperation,
+      setUpdateSwitch,
+      instantCastOperation
+    };
     if (availablePositions.includes(destinationPosition)) {
       switch (operation.op) {
         case 'HEAL':
-          // This must be the 'single' target
-          if (operation.param1 !== 'SINGLE') {
-            break;
-          }
-
-          // We need different behavior for if we're healing an enemy
-          if (GameLogic.inOpponentRows(destinationPosition)) {
-            destinationPosition = destinationPosition.replace('opponent', 'user');
-            const boardData = { ...opponentBoardData };
-            const destinationCard = boardData[destinationPosition];
-            if (!destinationCard) {
-              break;
-            }
-            destinationCard.health += parseInt(operation.param2);
-            setOpponentBoardData(boardData);
-          } else {
-            // We're healing one of our own
-            const ourDeck = GameLogic.copyDeck(playerDeck);
-            const destinationCard = GameLogic.getCardInPosition(destinationPosition, ourDeck);
-            if (!destinationCard) {
-              break;
-            }
-            destinationCard.health += parseInt(operation.param2);
-            setPlayerDeck(ourDeck);
-          }
-          increaseEffectOperation();
-          setUpdateSwitch(!updateSwitch);
+          Effects.manualHealEffect(destinationPosition, states, functions);
           break;
 
         case 'DMG':
-          // We need different behavior for if we're hurting an enemy
-          if (GameLogic.inOpponentRows(destinationPosition)) {
-            destinationPosition = destinationPosition.replace('opponent', 'user');
-            const boardData = { ...opponentBoardData };
-            const destinationCard = boardData[destinationPosition];
-            if (!destinationCard) {
-              break;
-            }
-            destinationCard.health -= parseInt(operation.param1);
-            if (destinationCard.health <= 0) {
-              boardData[destinationPosition] = null;
-            }
-            setOpponentBoardData(boardData);
-          } else {
-            // We're hurting one of our own
-            const ourDeck = GameLogic.copyDeck(playerDeck);
-            const destinationCard = GameLogic.getCardInPosition(destinationPosition, ourDeck);
-            if (!destinationCard) {
-              break;
-            }
-            destinationCard.health -= parseInt(operation.param1);
-            if (destinationCard.health <= 0) {
-              handleCardDeath(destinationCard, ourDeck);
-            }
-            setPlayerDeck(ourDeck);
-          }
-          increaseEffectOperation();
-          setUpdateSwitch(!updateSwitch);
+          Effects.manualDmgEffect(destinationPosition, states, functions);
           break;
 
         default:
           break;
       }
+    }
+  };
+
+  const instantCastOperation = (cardId, operation, useDeck) => {
+    const states = { playerDeck, playerData, opponentBoardData };
+    const functions = { setPlayerDeck, setPlayerData, setOpponentBoardData };
+    switch (operation.op) {
+      case 'RES':
+        Effects.instantResEffect(operation, states, functions);
+        break;
+
+      case 'DRAW':
+        Effects.instantDrawEffect(operation, useDeck, states, functions);
+        break;
+
+      case 'HEAL':
+        Effects.instantHealEffect(cardId, operation, useDeck, states, functions);
+        break;
+
+      case 'RAISEATK':
+        Effects.instantRaiseAtkEffect(operation, useDeck, states, functions);
+        break;
+
+      case 'TOPDECK':
+        Effects.instantTopDeckEffect(cardId, useDeck, states, functions);
+        break;
+
+      case 'DMG':
+        Effects.instantDmgEffect(operation, useDeck, states, functions);
+        break;
+
+      default:
+        break;
     }
   };
 
@@ -336,27 +237,34 @@ function GameBoard() {
     if (destinationPosition !== 'userPlayArea') {
       // Make sure the given position doesn't have a card in it already
       if (
-        GameLogic.isInDefenseRow(cardVal.position) ||
-        GameLogic.isPositionFilled(destinationPosition, playerDeck)
+        HelperFunctions.isInDefenseRow(cardVal.position) ||
+        HelperFunctions.isPositionFilled(destinationPosition, playerDeck)
       ) {
         return;
       }
 
-      if (GameLogic.inOpponentRows(destinationPosition)) {
+      if (HelperFunctions.inOpponentRows(destinationPosition)) {
         if (
-          GameLogic.isOpponentPositionFilled(destinationPosition, opponentBoardData) &&
+          HelperFunctions.isOpponentPositionFilled(destinationPosition, opponentBoardData) &&
           cardVal.position !== 'userPlayArea' &&
           cardVal.attack > 0
         ) {
-          return attackCard(cardVal.position, destinationPosition);
+          const states = { opponentBoardData, playerDeck, updateSwitch };
+          const functions = {
+            instantCastOperation,
+            setPlayerDeck,
+            setOpponentBoardData,
+            setUpdateSwitch
+          };
+          return GameLogic.attackCard(cardVal.position, destinationPosition, states, functions);
         } else {
           return;
         }
       }
 
       if (cardVal.position === 'userPlayArea') {
-        const deck = GameLogic.copyDeck(playerDeck);
-        const cardCopy = GameLogic.getCardWithId(cardVal.uId, deck);
+        const deck = HelperFunctions.copyDeck(playerDeck);
+        const cardCopy = HelperFunctions.getCardWithId(cardVal.uId, deck);
         // Make sure we're moving from the play area to the field
         cardCopy.position = destinationPosition;
 
@@ -375,182 +283,10 @@ function GameBoard() {
     }
   };
 
-  const instantCastOperation = (cardId, operation, useDeck) => {
-    const { op, param1, param2 } = operation;
-    switch (op) {
-      case 'RES': {
-        if (param1 === 'SELF') {
-          let currentResources = playerData.currentResource;
-          currentResources = GameLogic.clamp(currentResources + parseInt(param2), 0, 9);
-          setPlayerData(prevState => ({ ...prevState, currentResource: currentResources }));
-        } else if (param1 === 'OPP') {
-          let currentResources = opponentBoardData.currentResource;
-          currentResources = GameLogic.clamp(currentResources + parseInt(param2), 0, 9);
-          setOpponentBoardData(prevState => ({ ...prevState, currentResource: currentResources }));
-        }
-        break;
-      }
-
-      case 'DRAW': {
-        const handCount = GameLogic.countAllCardsInPosition('userPlayArea', useDeck || playerDeck);
-        const canDraw = GameLogic.clamp(parseInt(param1), 0, 5 - handCount);
-        const indices = GameLogic.findFirstAvailableCards(canDraw, playerDeck);
-        let deck = useDeck || GameLogic.copyDeck(playerDeck);
-        if (useDeck) {
-          for (let i = 0; i < indices.length; i++) {
-            deck[indices[i]].position = 'userPlayArea';
-          }
-        } else {
-          for (let i = 0; i < indices.length; i++) {
-            const cardVal = deck[indices[i]];
-            cardVal.position = 'userPlayArea';
-            setPlayerDeck(deck);
-          }
-        }
-        break;
-      }
-
-      case 'HEAL': {
-        let deck;
-        let positions;
-        if (useDeck) {
-          deck = useDeck;
-        } else {
-          deck = GameLogic.copyDeck(playerDeck);
-        }
-        if (param1 === 'ALL') {
-          positions = [...GameLogic.userAtkRows, ...GameLogic.userDefRows];
-        } else if (param1 === 'DEFROW') {
-          positions = GameLogic.userDefRows;
-        } else if (param1 === 'ATKROW') {
-          positions = GameLogic.userAtkRows;
-        } else if (param1 === 'DEALT') {
-          // Get card with uId from deck
-          const card = GameLogic.getCardWithId(cardId, deck);
-          card.health += card.attack;
-          break;
-        }
-        // Increase the health of all of our cards
-        for (let i = 0; i < positions; i++) {
-          const card = deck[positions[i]];
-          if (card) {
-            card.health += parseInt(param2);
-          }
-        }
-
-        setPlayerDeck(deck);
-        break;
-      }
-
-      case 'RAISEATK': {
-        let deck = useDeck || GameLogic.copyDeck(playerDeck);
-        let positions;
-        if (param1 === 'ALL') {
-          positions = [...GameLogic.userAtkRows, ...GameLogic.userDefRows];
-        } else if (param1 === 'ATKROW') {
-          positions = GameLogic.userAtkRows;
-        } else if (param1 === 'DEFROW') {
-          positions = GameLogic.userDefRows;
-        }
-
-        // Increase the attack of all of our cards
-        for (let i = 0; i < positions.length; i++) {
-          const card = GameLogic.getCardInPosition(positions[i], deck);
-          if (card) {
-            card.attack += parseInt(param2);
-          }
-        }
-
-        if (!useDeck) {
-          setPlayerDeck(deck);
-        }
-        break;
-      }
-
-      case 'TOPDECK': {
-        let deck = useDeck || GameLogic.copyDeck(playerDeck);
-        const card = GameLogic.getCardWithId(cardId, deck);
-        card.position = '';
-
-        for (let i = 0; i < deck.length; i++) {
-          if (deck[i].uId === card.uId) {
-            deck[i] = deck[0];
-            break;
-          }
-        }
-        deck[0] = card;
-
-        if (!useDeck) {
-          setPlayerDeck(deck);
-        }
-      }
-    }
-  };
-
-  const attackCard = (attackingCardPosition, attackedPosition) => {
-    const ourDeck = GameLogic.copyDeck(playerDeck);
-    let attackingCard;
-    for (let i = 0; i < ourDeck.length; i++) {
-      if (ourDeck[i].position === attackingCardPosition) {
-        attackingCard = ourDeck[i];
-      }
-    }
-
-    // Need to replace opponent with user here to match the opponentBoardData object
-    attackedPosition = attackedPosition.replace('opponent', 'user');
-    const boardData = { ...opponentBoardData };
-    boardData[attackedPosition].health -= attackingCard.attack;
-
-    // Start the on attack effect
-    const attackEffect = attackingCard.onAttackEffect;
-    if (attackEffect) {
-      for (let i = 0; i < attackEffect.operations.length; i++) {
-        instantCastOperation(attackingCard.uId, attackEffect.operations[i], ourDeck);
-      }
-    }
-
-    // Retaliation
-    attackingCard.health -= boardData[attackedPosition].attack;
-    if (attackingCard.health <= 0) {
-      handleCardDeath(attackingCard, ourDeck);
-    }
-    setPlayerDeck(ourDeck);
-
-    if (boardData[attackedPosition].health <= 0) {
-      boardData[attackedPosition] = null;
-    }
-
-    setOpponentBoardData(boardData);
-    setUpdateSwitch(!updateSwitch);
-  };
-
-  const handleCardDeath = (deadCard, ourDeck) => {
-    deadCard.health = 0;
-    deadCard.position = 'userGrave';
-
-    // Trigger that card's on death effect
-    const effect = deadCard.onDeathEffect;
-    if (effect) {
-      for (let i = 0; i < effect.operations.length; i++) {
-        instantCastOperation(deadCard.uId, effect.operations[i], ourDeck);
-      }
-    }
-  };
-
   const sendTurnChange = () => {
     socket.emit('room', gameId, 'ourTurn', {
       fromPlayer: playerNumber
     });
-  };
-
-  const drawCards = cardCount => {
-    const indices = GameLogic.findFirstAvailableCards(cardCount, playerDeck);
-
-    for (let i = 0; i < indices.length; i++) {
-      const cardVal = { ...playerDeck[indices[i]] };
-      cardVal.position = 'userPlayArea';
-      setPlayerDeck([...playerDeck.filter(card => card.uId !== cardVal.uId), cardVal]);
-    }
   };
 
   return (
@@ -589,15 +325,15 @@ function GameBoard() {
         <hr />
 
         <div className='wrapper animate__animated animate__bounceIn'>
-        {playerData.isPlayersTurn ? (
-          <div className='endTurnRow'>
-            <button className='woodEndButton' onClick={sendTurnChange}>
-              End Turn
-            </button>
-          </div>
-        ) : (
-          <div></div>
-        )}
+          {playerData.isPlayersTurn ? (
+            <div className='endTurnRow'>
+              <button className='woodEndButton' onClick={sendTurnChange}>
+                End Turn
+              </button>
+            </div>
+          ) : (
+            <div></div>
+          )}
           <div id='userAttRow'>
             <CardHolder id='userAtt1' />
             <CardHolder id='userAtt2' />
@@ -610,10 +346,14 @@ function GameBoard() {
           </div>
 
           <div id='userRow'>
-            <UserGameInformation id='userInfo' lifeState={playerData.lifeTotal} lifeStateSet={setPlayerData} />
+            <UserGameInformation
+              id='userInfo'
+              lifeState={playerData.lifeTotal}
+              lifeStateSet={setPlayerData}
+            />
             <CardPlaceHolder
               id='userDeck'
-              cardCount={GameLogic.hasAvailableCards(playerDeck) ? 1 : 0}
+              cardCount={HelperFunctions.hasAvailableCards(playerDeck) ? 1 : 0}
             />
             <CardHolder id='userPlayArea' />
           </div>
