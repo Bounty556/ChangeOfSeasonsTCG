@@ -445,6 +445,32 @@ function GameBoard() {
 
         setPlayerDeck(deck);
         break;
+      
+        case 'RAISEDEF':
+          let deck;
+          let positions;
+          if (param1 === 'ALL') {
+            positions = [...GameLogic.userAtkRows, ...GameLogic.userDefRows];
+          } else if (param1 === 'ATKROW') {
+            positions = GameLogic.userAtkRows;
+          } else if (param1 === 'DEFROW') {
+            positions = GameLogic.userDefRows;
+          }
+          if (useDeck) {
+            deck = useDeck;
+          } else {
+            deck = GameLogic.copyDeck(playerDeck);
+          }
+          // Increase the attack of all of our cards
+          for (let i = 0; i < positions; i++) {
+            const card = deck[positions[i]];
+            if (card) {
+              card.health += parseInt(param2);
+            }
+          }
+  
+          setPlayerDeck(deck);
+          break;
     }
   };
 
