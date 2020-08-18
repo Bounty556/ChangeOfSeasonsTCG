@@ -184,7 +184,7 @@ function GameBoard() {
         }
         setPlayerData(tempData);
         // Check to see the amount of cards in the players hands and draws a card if able
-        const handCount = gameLogic.countAllCardsInPosition('userPlayArea', playerDeck);
+        const handCount = GameLogic.countAllCardsInPosition('userPlayArea', playerDeck);
         if (handCount < 5) {
           drawCards(1);
         }
@@ -301,14 +301,18 @@ function GameBoard() {
     }
   };
 
-  const increaseEffectOperation = effectParam => {
+  const increaseEffectOperation = (effectParam, deck) => {
     if (!effectParam) {
       effectParam = { ...effectData };
     }
 
     for (let i = effectParam.currentOperation + 1; i < effectParam.effect.operations.length; i++) {
       if (Parser.canInstaCast(effectParam.effect.operations[i])) {
-        instantCastOperation(effectParam.cardId, effectParam.effect.operations[i]);
+        if (deck) {
+          instantCastOperation(effectParam.cardId, effectParam.effect.operations[i], deck);
+        } else {
+          instantCastOperation(effectParam.cardId, effectParam.effect.operations[i]);
+        }
       } else {
         setEffectData({
           cardId: effectParam.cardId,
@@ -345,16 +349,21 @@ function GameBoard() {
       }
 
       if (cardVal.position === 'userPlayArea') {
+        const deck = GameLogic.copyDeck(playerDeck);
+        const cardCopy = GameLogic.getCardWithId(cardVal.uId, deck);
         // Make sure we're moving from the play area to the field
-        cardVal.position = destinationPosition;
-        setPlayerDeck([...playerDeck.filter(card => card.uId !== cardVal.uId), cardVal]);
+        cardCopy.position = destinationPosition;
 
         // Set that we're now starting an effect if this card has one
-        const effect = cardVal.onPlayEffect;
+        const effect = cardCopy.onPlayEffect;
         if (effect) {
-          increaseEffectOperation({ cardId: cardVal.uId, effect: effect, currentOperation: -1 });
+          increaseEffectOperation(
+            { cardId: cardVal.uId, effect: effect, currentOperation: -1 },
+            deck
+          );
         }
 
+        setPlayerDeck(deck);
         setUpdateSwitch(!updateSwitch);
       }
     }
@@ -376,15 +385,15 @@ function GameBoard() {
         break;
 
       case 'DRAW': {
-        const indices = GameLogic.findFirstAvailableCards(parseInt(param1), playerDeck);
-        let deck;
+        const handCount = GameLogic.countAllCardsInPosition('userPlayArea', useDeck || playerDeck);
+        const canDraw = GameLogic.clamp(parseInt(param1), 0, 5 - handCount);
+        const indices = GameLogic.findFirstAvailableCards(canDraw, playerDeck);
+        let deck = useDeck || GameLogic.copyDeck(playerDeck);
         if (useDeck) {
-          deck = useDeck;
           for (let i = 0; i < indices.length; i++) {
             deck[indices[i]].position = 'userPlayArea';
           }
         } else {
-          deck = GameLogic.copyDeck(playerDeck);
           for (let i = 0; i < indices.length; i++) {
             const cardVal = deck[indices[i]];
             cardVal.position = 'userPlayArea';
