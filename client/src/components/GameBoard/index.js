@@ -378,7 +378,7 @@ function GameBoard() {
         }
         break;
 
-      case 'DRAW':
+      case 'DRAW': {
         const indices = GameLogic.findFirstAvailableCards(parseInt(param1), playerDeck);
         let deck;
         if (useDeck) {
@@ -395,19 +395,25 @@ function GameBoard() {
           }
         }
         break;
+      }
 
-      case 'HEAL':
+      case 'HEAL': {
         let deck;
         let positions;
-        if (param1 === 'ALL') {
-          positions = [...GameLogic.userAtkRows, ...GameLogic.userDefRows];
-        } else if (param1 === 'DEFROW') {
-          positions = GameLogic.userDefRows;
-        }
         if (useDeck) {
           deck = useDeck;
         } else {
           deck = GameLogic.copyDeck(playerDeck);
+        }
+        if (param1 === 'ALL') {
+          positions = [...GameLogic.userAtkRows, ...GameLogic.userDefRows];
+        } else if (param1 === 'DEFROW') {
+          positions = GameLogic.userDefRows;
+        } else if (param1 === 'DEALT') {
+          // Get card with uId from deck
+          const card = GameLogic.getCardWithId(cardId, deck);
+          card.health += card.attack;
+          break;
         }
         // Increase the health of all of our cards
         for (let i = 0; i < positions; i++) {
@@ -419,8 +425,9 @@ function GameBoard() {
 
         setPlayerDeck(deck);
         break;
-      
-      case 'RAISEATK':
+      }
+
+      case 'RAISEATK': {
         let deck;
         let positions;
         if (param1 === 'ALL') {
@@ -445,32 +452,34 @@ function GameBoard() {
 
         setPlayerDeck(deck);
         break;
-      
-        case 'RAISEDEF':
-          let deck;
-          let positions;
-          if (param1 === 'ALL') {
-            positions = [...GameLogic.userAtkRows, ...GameLogic.userDefRows];
-          } else if (param1 === 'ATKROW') {
-            positions = GameLogic.userAtkRows;
-          } else if (param1 === 'DEFROW') {
-            positions = GameLogic.userDefRows;
+      }
+
+      case 'RAISEDEF': {
+        let deck;
+        let positions;
+        if (param1 === 'ALL') {
+          positions = [...GameLogic.userAtkRows, ...GameLogic.userDefRows];
+        } else if (param1 === 'ATKROW') {
+          positions = GameLogic.userAtkRows;
+        } else if (param1 === 'DEFROW') {
+          positions = GameLogic.userDefRows;
+        }
+        if (useDeck) {
+          deck = useDeck;
+        } else {
+          deck = GameLogic.copyDeck(playerDeck);
+        }
+        // Increase the attack of all of our cards
+        for (let i = 0; i < positions; i++) {
+          const card = deck[positions[i]];
+          if (card) {
+            card.health += parseInt(param2);
           }
-          if (useDeck) {
-            deck = useDeck;
-          } else {
-            deck = GameLogic.copyDeck(playerDeck);
-          }
-          // Increase the attack of all of our cards
-          for (let i = 0; i < positions; i++) {
-            const card = deck[positions[i]];
-            if (card) {
-              card.health += parseInt(param2);
-            }
-          }
-  
-          setPlayerDeck(deck);
-          break;
+        }
+
+        setPlayerDeck(deck);
+        break;
+      }
     }
   };
 
@@ -487,6 +496,14 @@ function GameBoard() {
     attackedPosition = attackedPosition.replace('opponent', 'user');
     const boardData = { ...opponentBoardData };
     boardData[attackedPosition].health -= attackingCard.attack;
+
+    // Start the on attack effect
+    const attackEffect = attackingCard.onAttackEffect;
+    if (attackEffect) {
+      for (let i = 0; i < attackEffect.operations.length; i++) {
+        instantCastOperation(attackingCard.uId, attackEffect.operations[i], ourDeck);
+      }
+    }
 
     // Retaliation
     attackingCard.health -= boardData[attackedPosition].attack;

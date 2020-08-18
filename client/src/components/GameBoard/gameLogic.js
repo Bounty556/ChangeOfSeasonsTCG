@@ -8,7 +8,8 @@ export default {
   // prettier-ignore
   summerDeck: [2, 2, 6, 6, 10, 14, 18, 18, 22, 22, 26, 26, 30, 30, 34, 34, 38, 38, 42, 42, 46, 46, 50, 50, 54, 54, 58, 62, 66, 70],
   // prettier-ignore
-  fallDeck: [3, 3, 7, 11, 11, 15, 19, 19, 23, 23, 27, 27, 31, 31, 35, 35, 39, 39, 43, 43, 47, 47, 51, 51, 55, 55, 59, 63, 67, 71],
+  //fallDeck: [3, 3, 7, 11, 11, 15, 19, 19, 23, 23, 27, 27, 31, 31, 35, 35, 39, 39, 43, 43, 47, 47, 51, 51, 55, 55, 59, 63, 67, 71],
+  fallDeck: [3, 3, 51, 51, 51, 51, 51, 51],
   // prettier-ignore
   winterDeck: [4, 4, 8, 8, 12, 16, 20, 20, 24, 24, 28, 28, 32, 32, 36, 36, 40, 40, 44, 44, 48, 48, 52, 52, 56, 56, 60, 64, 68, 72],
 
@@ -209,5 +210,15 @@ export default {
 
   clamp: function (num, a, b) {
     return Math.max(Math.min(num, Math.max(a, b)), Math.min(a, b));
+  },
+
+  getCardWithId: function (cardId, deck) {
+    for (let i = 0; i < deck.length; i++) {
+      if (deck[i].uId === cardId) {
+        return deck[i];
+      }
+    }
+
+    return null;
   }
 };
