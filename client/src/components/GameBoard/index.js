@@ -11,7 +11,6 @@ import GameLogic from './gameLogic';
 import Parser from './cardScript';
 
 import './gameboard.css';
-import gameLogic from './gameLogic';
 
 // Give this function to the children of this component so they can tell us when
 // A card was dropped on them
@@ -32,7 +31,7 @@ export const CardContext = createContext({
 
 // TODO: Spell cards should only trigger their effect
 
-// TODO: Players should only be able to play one card per turn, but use every card on the field in the atk row
+// TODO: Players should be able to use every card on the field in the atk row once
 
 // TODO: Make cards cost resources
 
@@ -416,6 +415,8 @@ function GameBoard() {
           positions = [...GameLogic.userAtkRows, ...GameLogic.userDefRows];
         } else if (param1 === 'DEFROW') {
           positions = GameLogic.userDefRows;
+        } else if (param1 === 'ATKROW') {
+          positions = GameLogic.userAtkRows;
         } else if (param1 === 'DEALT') {
           // Get card with uId from deck
           const card = GameLogic.getCardWithId(cardId, deck);
@@ -456,33 +457,6 @@ function GameBoard() {
         if (!useDeck) {
           setPlayerDeck(deck);
         }
-        break;
-      }
-
-      case 'RAISEDEF': {
-        let deck;
-        let positions;
-        if (param1 === 'ALL') {
-          positions = [...GameLogic.userAtkRows, ...GameLogic.userDefRows];
-        } else if (param1 === 'ATKROW') {
-          positions = GameLogic.userAtkRows;
-        } else if (param1 === 'DEFROW') {
-          positions = GameLogic.userDefRows;
-        }
-        if (useDeck) {
-          deck = useDeck;
-        } else {
-          deck = GameLogic.copyDeck(playerDeck);
-        }
-        // Increase the attack of all of our cards
-        for (let i = 0; i < positions; i++) {
-          const card = deck[positions[i]];
-          if (card) {
-            card.health += parseInt(param2);
-          }
-        }
-
-        setPlayerDeck(deck);
         break;
       }
     }

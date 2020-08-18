@@ -120,7 +120,8 @@ export default {
       operator === 'RAISEDEF' ||
       operator === 'SETATK' ||
       (operator === 'HEAL' && operation.param1 === 'ALL') ||
-      (operator === 'HEAL' && operation.param1 === 'DEFROW')
+      (operator === 'HEAL' && operation.param1 === 'DEFROW') ||
+      (operator === 'HEAL' && operation.param1 === 'ATKROW')
     );
   }
 };
