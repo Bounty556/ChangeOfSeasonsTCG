@@ -101,6 +101,31 @@ export default {
     });
   },
 
+  playCard: (cardVal, destinationPosition, states, functions) => {
+    const { playerDeck, playerData, updateSwitch } = states;
+    const { increaseEffectOperation, setPlayerDeck, setPlayerData, setUpdateSwitch } = functions;
+
+    const deck = HelperFunctions.copyDeck(playerDeck);
+    const data = { ...playerData };
+    const card = HelperFunctions.getCardWithId(cardVal.uId, deck);
+    if (data.currentResource >= card.resourceCost) {
+      data.currentResource -= card.resourceCost;
+      card.position = destinationPosition;
+    } else {
+      return;
+    }
+
+    // Set that we're now starting an effect if this card has one
+    const effect = card.onPlayEffect;
+    if (effect) {
+      increaseEffectOperation({ cardId: cardVal.uId, effect: effect, currentOperation: -1 }, deck);
+    }
+
+    setPlayerData(data);
+    setPlayerDeck(deck);
+    setUpdateSwitch(!updateSwitch);
+  },
+
   endTurn: function (states, functions) {
     const { playerData, updateSwitch, playerDeck } = states;
     const { setPlayerData, setUpdateSwitch, setPlayerDeck, setEffectData } = functions;

@@ -27,7 +27,6 @@ export const CardContext = createContext({
 // TODO: Be able to attack the opponent when his defense row is down
 // TODO: Show the opponents health
 // TODO: Spell cards should only trigger their effect
-// TODO: Players should be able to use every card on the field in the atk row once
 // TODO: Players should still be able to use cards if another card has an active effect
 // TODO: Make cards cost resources
 // TODO: Replace opponents grave with player to attack
@@ -244,21 +243,14 @@ function GameBoard() {
       }
 
       if (cardVal.position === 'userPlayArea') {
-        const deck = HelperFunctions.copyDeck(playerDeck);
-        const cardCopy = HelperFunctions.getCardWithId(cardVal.uId, deck);
-        cardCopy.position = destinationPosition;
-
-        // Set that we're now starting an effect if this card has one
-        const effect = cardCopy.onPlayEffect;
-        if (effect) {
-          increaseEffectOperation(
-            { cardId: cardVal.uId, effect: effect, currentOperation: -1 },
-            deck
-          );
-        }
-
-        setPlayerDeck(deck);
-        setUpdateSwitch(!updateSwitch);
+        const states = { playerDeck, playerData, updateSwitch };
+        const functions = {
+          increaseEffectOperation,
+          setPlayerDeck,
+          setPlayerData,
+          setUpdateSwitch
+        };
+        GameLogic.playCard(cardVal, destinationPosition, states, functions);
       }
     }
   };
