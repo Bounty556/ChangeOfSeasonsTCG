@@ -11,7 +11,7 @@ import Modal from 'react-bootstrap/Modal';
 
 import './lobby.css';
 
-const ENDPOINT = 'http://localhost:3001/';
+const ENDPOINT = process.env.PORT || 'http://localhost:3001/';
 
 export const GameContext = createContext({
   socket: null,
