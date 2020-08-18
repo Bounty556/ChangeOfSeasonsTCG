@@ -162,7 +162,9 @@ function GameBoard() {
           const effect = deadCard.onDeathEffect;
           if (effect) {
             for (let i = 0; i < effect.operations.length; i++) {
+              console.log(ourDeck);
               instantCastOperation(deadCard.uId, effect.operations[i], ourDeck);
+              console.log(ourDeck);
             }
           }
           setPlayerData(newPlayerData);
@@ -392,32 +394,22 @@ function GameBoard() {
       }
 
       case 'DRAW': {
-        const handCount = GameLogic.countAllCardsInPosition('userPlayArea', useDeck || playerDeck);
+        const deck = useDeck || GameLogic.copyDeck(playerDeck);
+        const handCount = GameLogic.countAllCardsInPosition('userPlayArea', deck);
         const canDraw = GameLogic.clamp(parseInt(param1), 0, 5 - handCount);
-        const indices = GameLogic.findFirstAvailableCards(canDraw, playerDeck);
-        let deck = useDeck || GameLogic.copyDeck(playerDeck);
-        if (useDeck) {
-          for (let i = 0; i < indices.length; i++) {
-            deck[indices[i]].position = 'userPlayArea';
-          }
-        } else {
-          for (let i = 0; i < indices.length; i++) {
-            const cardVal = deck[indices[i]];
-            cardVal.position = 'userPlayArea';
-            setPlayerDeck(deck);
-          }
+        const indices = GameLogic.findFirstAvailableCards(canDraw, deck);
+        for (let i = 0; i < indices.length; i++) {
+          deck[indices[i]].position = 'userPlayArea';
+        }
+        if (!useDeck) {
+          setPlayerDeck(deck);
         }
         break;
       }
 
       case 'HEAL': {
-        let deck;
+        let deck = useDeck || GameLogic.copyDeck(playerDeck);
         let positions;
-        if (useDeck) {
-          deck = useDeck;
-        } else {
-          deck = GameLogic.copyDeck(playerDeck);
-        }
         if (param1 === 'ALL') {
           positions = [...GameLogic.userAtkRows, ...GameLogic.userDefRows];
         } else if (param1 === 'DEFROW') {
@@ -589,15 +581,15 @@ function GameBoard() {
         <hr />
 
         <div className='wrapper animate__animated animate__bounceIn'>
-        {playerData.isPlayersTurn ? (
-          <div className='endTurnRow'>
-            <button className='woodEndButton' onClick={sendTurnChange}>
-              End Turn
-            </button>
-          </div>
-        ) : (
-          <div></div>
-        )}
+          {playerData.isPlayersTurn ? (
+            <div className='endTurnRow'>
+              <button className='woodEndButton' onClick={sendTurnChange}>
+                End Turn
+              </button>
+            </div>
+          ) : (
+            <div></div>
+          )}
           <div id='userAttRow'>
             <CardHolder id='userAtt1' />
             <CardHolder id='userAtt2' />
@@ -610,7 +602,11 @@ function GameBoard() {
           </div>
 
           <div id='userRow'>
-            <UserGameInformation id='userInfo' lifeState={playerData.lifeTotal} lifeStateSet={setPlayerData} />
+            <UserGameInformation
+              id='userInfo'
+              lifeState={playerData.lifeTotal}
+              lifeStateSet={setPlayerData}
+            />
             <CardPlaceHolder
               id='userDeck'
               cardCount={GameLogic.hasAvailableCards(playerDeck) ? 1 : 0}
