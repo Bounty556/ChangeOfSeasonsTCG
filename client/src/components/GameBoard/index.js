@@ -11,6 +11,11 @@ import GameLogic from './gameLogic';
 import Parser from './cardScript';
 
 import './gameboard.css';
+<<<<<<< HEAD
+=======
+import gameLogic from './gameLogic';
+import { STATES } from 'mongoose';
+>>>>>>> 66eed0bfa6aef8fc4ccddcd1aeabb5cda634e0f1
 
 // Give this function to the children of this component so they can tell us when
 // A card was dropped on them
@@ -587,6 +592,15 @@ function GameBoard() {
         <hr />
 
         <div className='wrapper animate__animated animate__bounceIn'>
+        {playerData.isPlayersTurn ? (
+          <div className='endTurnRow'>
+            <button className='woodEndButton' onClick={sendTurnChange}>
+              End Turn
+            </button>
+          </div>
+        ) : (
+          <div></div>
+        )}
           <div id='userAttRow'>
             <CardHolder id='userAtt1' />
             <CardHolder id='userAtt2' />
@@ -599,7 +613,7 @@ function GameBoard() {
           </div>
 
           <div id='userRow'>
-            <UserGameInformation id='userInfo' />
+            <UserGameInformation id='userInfo' lifeState={playerData.lifeTotal} lifeStateSet={setPlayerData} />
             <CardPlaceHolder
               id='userDeck'
               cardCount={GameLogic.hasAvailableCards(playerDeck) ? 1 : 0}
@@ -612,15 +626,6 @@ function GameBoard() {
             ))}
           </div>
         </div>
-        {playerData.isPlayersTurn ? (
-          <div className='endTurnRow'>
-            <button className='woodEndButton' onClick={sendTurnChange}>
-              End Turn
-            </button>
-          </div>
-        ) : (
-          <div></div>
-        )}
       </DndProvider>
     </CardContext.Provider>
   );

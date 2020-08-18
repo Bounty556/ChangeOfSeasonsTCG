@@ -1,0 +1,30 @@
+.inline {
+    display: inline;
+}
+
+.highlightB {
+    text-shadow:
+    0 0 1px #fff,
+    0 0 1px #fff,
+    0 0 2px #fff,
+    0 0 4px rgb(0, 153, 255),
+    0 0 8px rgb(0, 153, 255),
+    0 0 80px rgb(0, 153, 255),
+    0 0 100px rgb(0, 153, 255),
+    0 0 120px rgb(0, 153, 255);
+
+    font-size: 22px;
+}
+.highlightR {
+    text-shadow:
+    0 0 1px #fff,
+    0 0 1px #fff,
+    0 0 2px #fff,
+    0 0 4px rgb(167, 25, 25),
+    0 0 8px rgb(167, 25, 25),
+    0 0 80px rgb(167, 25, 25),
+    0 0 100px rgb(167, 25, 25),
+    0 0 120px rgb(167, 25, 25);
+
+    font-size: 22px;
+}
