@@ -40,8 +40,6 @@ export const CardContext = createContext({
 // TODO: Investigate error with dragging cards outside chrome
 // TODO: Replace opponents grave with player to attack
 
-// TODO: FIX TOPDECK
-
 function GameBoard() {
   const { socket, gameId, deck, playerNumber } = useContext(GameContext);
 
@@ -162,9 +160,7 @@ function GameBoard() {
           const effect = deadCard.onDeathEffect;
           if (effect) {
             for (let i = 0; i < effect.operations.length; i++) {
-              console.log(ourDeck);
               instantCastOperation(deadCard.uId, effect.operations[i], ourDeck);
-              console.log(ourDeck);
             }
           }
           setPlayerData(newPlayerData);
@@ -423,14 +419,16 @@ function GameBoard() {
           break;
         }
         // Increase the health of all of our cards
-        for (let i = 0; i < positions; i++) {
-          const card = deck[positions[i]];
+        for (let i = 0; i < positions.length; i++) {
+          const card = GameLogic.getCardInPosition(positions[i], deck);
           if (card) {
             card.health += parseInt(param2);
           }
         }
 
-        setPlayerDeck(deck);
+        if (!useDeck) {
+          setPlayerDeck(deck);
+        }
         break;
       }
 

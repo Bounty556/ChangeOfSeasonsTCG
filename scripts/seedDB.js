@@ -639,7 +639,7 @@ const cardSeed = [
     resourceCost: 8,
     attack: 4,
     health: 5,
-    effect: 'When this deals damage draw a card',
+    effect: 'When this attacks, draw a card',
     effectScript: 'ONATK DRAW 1',
     name: 'Phantisto',
     img: 'skeleton_01.png'
@@ -663,7 +663,7 @@ const cardSeed = [
     resourceCost: 8,
     attack: 4,
     health: 5,
-    effect: 'Give all your minions +2 ATK +1 DEF',
+    effect: 'Give all your minions +2 ATK +1 health',
     effectScript: 'ONPLAY RAISEATK ALL 2 HEAL ALL 1',
     name: 'Xanderise',
     img: 'skeleton_07.png'
@@ -675,7 +675,7 @@ const cardSeed = [
     resourceCost: 8,
     attack: 4,
     health: 5,
-    effect: 'Give all your minions +1 ATK +2 DEF',
+    effect: 'Give all your minions +1 ATK +2 health',
     effectScript: 'ONPLAY RAISEATK ALL 1 HEAL ALL 2',
     name: 'Artesa',
     img: 'skeleton_05.png'
