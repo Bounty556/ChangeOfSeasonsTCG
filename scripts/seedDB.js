@@ -401,7 +401,7 @@ const cardSeed = [
     attack: 0,
     health: 0,
     effect: 'Give all your creatures +2 ATK',
-    effectScript: 'ONPLAY RAISEATK 2 ALL',
+    effectScript: 'ONPLAY RAISEATK ALL 2',
     name: 'Dark Ambush',
     img: 'yellow_37.png'
   },
@@ -413,7 +413,7 @@ const cardSeed = [
     attack: 0,
     health: 0,
     effect: 'Give all your creatures +2 ATK',
-    effectScript: 'ONPLAY RAISEATK 2 ALL',
+    effectScript: 'ONPLAY RAISEATK ALL 2',
     name: 'Frosts` Bite',
     img: 'blue_1.png'
   },
