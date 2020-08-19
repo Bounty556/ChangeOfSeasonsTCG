@@ -45,7 +45,7 @@ export default {
       oppData.opponentLifeTotal -= card.attack;
       card.hasAttacked = true;
 
-      if(oppData.opponentLifeTotal <= 24) { 
+      if(oppData.opponentLifeTotal <= 0) { 
         oppData.opponentLost = true;
       }
 
