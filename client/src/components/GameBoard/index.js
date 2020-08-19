@@ -16,6 +16,8 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Container from '../../components/Container/index';
 
+import axios from 'axios';
+
 import './gameboard.css';
 
 // Give this function to the children of this component so they can tell us when
@@ -41,7 +43,8 @@ function GameBoard() {
     isPlayersTurn: true,
     hasInitiated: false,
     currentResource: 2,
-    lifeTotal: 25
+    lifeTotal: 25,
+    playerLost: false
   });
 
   // This swings between true and false every time we need to update
@@ -112,7 +115,16 @@ function GameBoard() {
     setUpdateSwitch(!updateSwitch);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
+
+  useEffect(() => {
+    if (playerData.lifeTotal <= 0) {
+      setPlayerData(prevState => ({
+        ...prevState,
+        playerLost: true
+      }))
+    }
+  }, [playerData.lifeTotal])
+
   // Called by CardHolder components whenever a card is dragged on to one of them
   const cardDraggedToPosition = (cardId, destinationPosition) => {
     const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
@@ -267,33 +279,21 @@ function GameBoard() {
     });
   };
 
-  //modal code 
-  //WIN
-  const [showModalWin, setShowModalWin] = useState(false);
 
-  //Lose
-  const [showModalLose, setShowModalLose] = useState(false);
-
-  //redirect 
-  const exitGameWin  = () => {
-    window.location = '/profile';
-    //need to update user db information 
+  const exitGameWin = () => {
+    const userId = JSON.parse(localStorage.getItem('authentication'))._id;
+    axios.put(`/api/user/${userId}/win`)
+      .then(() =>
+        window.location = '/profile'
+      );
   };
-  const exitGameLose  = () => {
-    window.location = '/profile';
-        //need to update user db information 
+  const exitGameLose = () => {
+    const userId = JSON.parse(localStorage.getItem('authentication'))._id;
+    axios.put(`/api/user/${userId}/loss`)
+      .then(() =>
+        window.location = '/profile'
+      );
   };
-
-   
-  // if(opponentBoardData.opponentLost === true) { 
-  // setShowModalWin(true);
-  // }
-
-  //TESTING 
-  // if(playerData.lifeTotal <= 24) { 
-  //   setShowModal(true)
-  // }
-
 
   return (
     <CardContext.Provider value={{ cardDraggedToPosition, playerDeck }}>
@@ -342,8 +342,8 @@ function GameBoard() {
               </button>
             </div>
           ) : (
-            <p style={{textAlign: 'center'}}>Waiting for Opponent to Finish their turn.</p>
-          )}
+              <p style={{ textAlign: 'center' }}>Waiting for Opponent to Finish their turn.</p>
+            )}
           <div id='userAttRow'>
             <CardHolder id='userAtt1' />
             <CardHolder id='userAtt2' />
@@ -378,7 +378,7 @@ function GameBoard() {
       <Modal className='avatarModal' show={opponentBoardData.opponentLost === true}>
         <Modal.Body className='modalBody'>
           <Container className='modalContainer'>
-            <p>YOU WIN</p>
+            <p>YOU WON</p>
           </Container>
         </Modal.Body>
         <Modal.Footer className='modalFooter'>
@@ -387,10 +387,10 @@ function GameBoard() {
       </Modal>
 
       {/* MODAL FOR LOSING  */}
-      <Modal className='avatarModal' show={showModalLose}>
+      <Modal className='avatarModal' show={playerData.playerLost === true}>
         <Modal.Body className='modalBody'>
           <Container className='modalContainer'>
-            <p>YOU LOOSE</p>
+            <p>YOU LOST</p>
           </Container>
         </Modal.Body>
         <Modal.Footer className='modalFooter'>
