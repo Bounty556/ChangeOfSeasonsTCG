@@ -25,8 +25,9 @@ export default {
     const { param1 } = operation;
     const { oppData, ourDeck } = tempStates;
 
-    // We need different behavior for if we're hurting an enemy
-    if (HelperFunctions.inOpponentRows(target)) {
+    if (target === 'opponentGameInformation') {
+      oppData.opponentLifeTotal -= parseInt(param1);
+    } else if (HelperFunctions.inOpponentRows(target)) {
       target = target.replace('opponent', 'user');
       const damagedCard = oppData[target];
       if (damagedCard) {
