@@ -141,7 +141,7 @@ export default {
   },
 
   opponentHasDef: function (opponentBoardData) { 
-    for (let i = 0; i < this.userDefRows; i++) { 
+    for (let i = 0; i < this.userDefRows.length; i++) { 
       if (opponentBoardData[this.userDefRows[i]]) { 
         return true;
       }
