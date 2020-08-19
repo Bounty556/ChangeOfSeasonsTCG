@@ -225,6 +225,100 @@
     top: 11px;
 }
 
+/* Fall */
+.drawCardWhen {
+    font-size: 15.5px;
+    margin-right: 32px;
+    margin-left: 24px;
+    top: 8px;
+}
+
+.destroy {
+    font-size: 12.5px;
+    margin-right: 31px;
+    margin-left: 26px;
+    top: 51px;
+}
+
+.giveAll {
+    font-size: 13.5px;
+    margin-right: 9px;
+    margin-left: 7px;
+    top: 38px;
+}
+
+.whenPlayedAtt {
+    font-size: 12.5px;
+    margin-right: 13px;
+    margin-left: 7px;
+    top: 3px;
+}
+
+.restore {
+    font-size: 12.5px;
+    margin-right: 9px;
+    margin-left: 7px;
+    top: 5px;
+}
+
+.giveAllYour {
+    font-size: 13.5px;
+    margin-right: 11px;
+    margin-left: 9px;
+    top: 5px;
+}
+
+.choose {
+    font-size: 12.5px;
+    margin-right: 16px;
+    margin-left: 11px;
+    top: 50px;
+}
+
+.whenThisDies {
+    margin-right: 23px;
+    margin-left: 17px;
+    top: 15px;
+}
+
+/* Winter */
+.whenPlayedFive {
+    font-size: 10.5px;
+    margin-right: 12px;
+    top: -3px;
+}
+
+.whenPlayedDef {
+    margin-left: -4px;
+    top: 1px;
+}
+
+.whenThisDiesReturn {
+    font-size: 12.5px;
+    margin-right: 19px;
+    margin-left: 18px;
+    top: 6px;
+}
+
+.giveAllAtt {
+    font-size: 12.5px;
+    margin-right: 24px;
+    margin-left: 20px;
+    top: 4px;
+}
+
+.giveAllMin {
+    font-size: 14.5px;
+    margin-right: 11px;
+    margin-left: 12px;
+    top: 42px;
+}
+
+.reduce {
+    margin-right: 11px;
+    top: 1px;
+}
+
 @media (max-width: 1300px) {
     .card-name {
         top: -19px;

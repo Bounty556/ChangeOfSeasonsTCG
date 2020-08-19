@@ -69,6 +69,51 @@ function GameCard(props) {
       case 'Draw 2 cards':
         return <p className='effect drawTwo'>{props.effect}</p>
 
+      // Effects for Fall
+      case 'Draw a card when this dies':
+        return <p className='effect drawCardWhen'>{props.effect}</p>
+
+      case 'Destroy 1 of your own minions - give the rest +1 ATK':
+        return <p className='effect destroy'>{props.effect}</p>
+      
+      case 'Give all your creatures +2 ATK':
+        return <p className='effect giveAll'>{props.effect}</p>
+        
+      case 'Give all your minions +2 ATK +1 health':
+        return <p className='effect giveAllYour'>{props.effect}</p>
+
+      case 'When played, give your attack row +2 ATK':
+        return <p className='effect whenPlayedAtt'>{props.effect}</p>
+      
+      case 'Restore life equal to the damage this deals':
+        return <p className='effect restore'>{props.effect}</p>
+      
+      case "Choose a card to have a 'Return to hand on death' effect":
+        return <p className='effect choose'>{props.effect}</p>
+
+      case "When this dies destroy your opponent's defense row":
+        return <p className='effect whenThisDies'>{props.effect}</p>
+
+      // Effect for Winter
+      case 'When played, +5 health to any player or creature':
+        return <p className='effect whenPlayedFive'>{props.effect}</p>
+      
+      case 'When played, give your defense row +3 health':
+        return <p className='effect whenPlayedDef'>{props.effect}</p>
+      
+      case 'When this dies return it to your hand':
+        return <p className='effect whenThisDiesReturn'>{props.effect}</p>
+        
+      case 'Give all your minions +1 ATK +2 health':
+        return <p className='effect giveAllAtt'>{props.effect}</p>
+      
+      case 'Give all your minions +4 ATK':
+        return <p className='effect giveAllMin'>{props.effect}</p>
+
+      case 'Reduce your opponents attack row attack to 0':
+        return <p className='effect reduce'>{props.effect}</p>
+      
+      
       default:
         return <p className='effect'>{props.effect}</p>
     }
