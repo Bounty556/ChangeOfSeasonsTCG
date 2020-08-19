@@ -57,7 +57,7 @@ function GameBoard() {
     userAtt1: null,
     userAtt2: null,
     userAtt3: null,
-    userGameInofrormation: null,
+    userGameInformation: null,
     currentResource: 2,
     opponentLifeTotal: 25
   });
@@ -283,8 +283,6 @@ function GameBoard() {
             <UserGameInformation 
             id ='opponentGameInformation'
             lifeState ={opponentBoardData.opponentLifeTotal}
-            override={true}
-            card={opponentBoardData.userGameInofrormation}
             /> 
           </div>
 
