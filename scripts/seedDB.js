@@ -138,7 +138,7 @@ const cardSeed = [
     attack: 3,
     health: 3,
     name: 'Consus',
-    img: 'dragon_03.png'
+    img: 'demon_07.png'
   },
   {
     season: 'Winter',
