@@ -137,14 +137,11 @@ function GameBoard() {
     const card = HelperFunctions.getCardWithId(cardId, deck);
     const effect = card.onPlayEffect;
     const positions = Parser.getScriptTargets(effect.operations[0]);
-    console.log(playerData, ' this is the player data');
     const data = { ...playerData };
 
     if (positions.includes(destinationPosition) && data.currentResource >= card.resourceCost) {
-      console.log(data, ' before the cast');
       for (let i = 0; i < effect.operations.length; i++) {
         instantCastOperation(cardId, effect.operations[i], deck, data);
-        console.log(data, ' right after the cast');
       }
 
       card.position = 'userGrave';
@@ -194,7 +191,6 @@ function GameBoard() {
     switch (operation.op) {
       case 'RES':
         Effects.instantResEffect(operation, useData, states, functions);
-        console.log(useData, ' inside of the instant cast');
         break;
 
       case 'DRAW':

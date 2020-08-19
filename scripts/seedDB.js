@@ -160,7 +160,7 @@ const cardSeed = [
     attack: 0,
     health: 0,
     effect: 'Gain +1 resource',
-    effectScript: 'ONPLAY RES 1',
+    effectScript: 'ONPLAY RES SELF 1',
     name: 'Vivifcate',
     img: 'emerald_9.png'
   },

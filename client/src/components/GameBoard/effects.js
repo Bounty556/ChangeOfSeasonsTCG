@@ -82,8 +82,9 @@ export default {
     const { setOpponentBoardData } = functions;
 
     if (param1 === 'SELF') {
-      console.log(parseInt(param1));
-      useData.currentResource = HelperFunctions.clamp(useData.currentResource + parseInt(param1), 0 , 9);
+      let resources = useData.currentResource;
+      resources = HelperFunctions.clamp(resources + parseInt(param2), 0 , 9);
+      useData.currentResource = resources;
     } else if (param1 === 'OPP') {
       let currentResources = opponentBoardData.currentResource;
       currentResources = HelperFunctions.clamp(currentResources + parseInt(param2), 0, 9);
