@@ -117,10 +117,9 @@ function GameBoard() {
 
   useEffect(() => {
     if (playerData.lifeTotal <= 0) {
-      setPlayerData(prevState => ({
-        ...prevState,
-        playerLost: true
-      }));
+      setPlayerData(prevState => ({ ...prevState, playerLost: true }));
+      const userId = JSON.parse(localStorage.getItem('authentication'))._id;
+      axios.put(`/api/user/${userId}/loss`);
     }
   }, [playerData.lifeTotal]);
 
@@ -286,14 +285,9 @@ function GameBoard() {
     });
   };
 
-  const exitGameWin = () => {
-    const userId = JSON.parse(localStorage.getItem('authentication'))._id;
-    axios.put(`/api/user/${userId}/win`).then(() => (window.location = '/profile'));
-  };
-  const exitGameLose = () => {
-    const userId = JSON.parse(localStorage.getItem('authentication'))._id;
-    axios.put(`/api/user/${userId}/loss`).then(() => (window.location = '/profile'));
-  };
+  const exit = () => {
+    window.location = '/Profile';
+  }
 
   return (
     <CardContext.Provider value={{ cardDraggedToPosition, playerDeck }}>
@@ -382,7 +376,7 @@ function GameBoard() {
           </Container>
         </Modal.Body>
         <Modal.Footer className='modalFooter'>
-          <Button variant='danger' className='closeButtonModal' onClick={exitGameWin}>
+          <Button variant='danger' className='closeButtonModal' onClick={exit}>
             {' '}
             Return To Profile{' '}
           </Button>
@@ -397,7 +391,7 @@ function GameBoard() {
           </Container>
         </Modal.Body>
         <Modal.Footer className='modalFooter'>
-          <Button variant='danger' className='closeButtonModal' onClick={exitGameLose}>
+          <Button variant='danger' className='closeButtonModal' onClick={exit}>
             {' '}
             Return To Profile{' '}
           </Button>

@@ -1,5 +1,6 @@
 import HelperFunctions from './helperFunctions';
 import Parser from './cardScript';
+import axios from 'axios';
 
 export default {
   drawCard: deck => {
@@ -273,6 +274,8 @@ export default {
 
       if (oppData.opponentLifeTotal <= 0) {
         oppData.opponentLost = true;
+        const userId = JSON.parse(localStorage.getItem('authentication'))._id;
+        axios.put(`/api/user/${userId}/win`);
       }
     }
   }
