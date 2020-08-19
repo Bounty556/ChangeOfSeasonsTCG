@@ -25,12 +25,11 @@ export const CardContext = createContext({
 //       something similar so the user has some kind of feedback
 // TODO: Make effects work
 // TODO: Be able to attack the opponent when his defense row is down
-// TODO: Show the opponents health
+// TODO: Replace opponents grave with player to attack
 // TODO: Spell cards should only trigger their effect
 // TODO: Players should still be able to use cards if another card has an active effect
-// TODO: Replace opponents grave with player to attack
-// TODO: Make cards 69 and 70 have proactive effects
 
+// TODO: Make cards 69 and 70 have proactive effects
 // TODO: Fix issue with ending turn before 2nd player loads in causing it to be no one's turn
 
 function GameBoard() {
@@ -118,14 +117,40 @@ function GameBoard() {
     const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
     const cardVal = { ...playerDeck[cardIndex] }; // The card we're dragging
 
-    if (!playerData.isPlayersTurn || !cardVal.isCreature) {
+    if (!playerData.isPlayersTurn) {
       return;
     }
 
-    if (effectData) {
+    if (!cardVal.isCreature) {
+      castSpell(destinationPosition, cardId);
+    } else if (effectData) {
       castEffect(destinationPosition, cardId);
     } else {
       moveCard(destinationPosition, cardVal);
+    }
+  };
+
+  const castSpell = (destinationPosition, cardId) => {
+    // Make sure we're targeting the right position
+    const deck = HelperFunctions.copyDeck(playerDeck);
+    const card = HelperFunctions.getCardWithId(cardId, deck);
+    const effect = card.onPlayEffect;
+    const positions = Parser.getScriptTargets(effect.operations[0]);
+    const data = { ...playerData };
+
+    console.log(positions);
+
+    if (positions.includes(destinationPosition) && data.currentResource >= card.resourceCost) {
+      for (let i = 0; i < effect.operations.length; i++) {
+        instantCastOperation(cardId, effect.operations[i], deck);
+      }
+
+      card.position = 'userGrave';
+      data.currentResource -= card.resourceCost;
+
+      setPlayerData(data);
+      setPlayerDeck(deck);
+      setUpdateSwitch(!updateSwitch);
     }
   };
 
