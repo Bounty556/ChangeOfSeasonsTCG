@@ -368,8 +368,8 @@ function GameBoard() {
               </button>
             </div>
           ) : (
-              <div></div>
-            )}
+            <p style={{textAlign: 'center'}}>Waiting for Opponent to Finish their turn.</p>
+          )}
           <div id='userAttRow'>
             <CardHolder id='userAtt1' />
             <CardHolder id='userAtt2' />
