@@ -93,6 +93,7 @@ export default {
       card.onDeathEffect = null;
       card.onAttackEffect = null;
       card.hasAttacked = false;
+      card.hasEffect = false;
 
       // Parse the effect on this card if applicable
       const tokens = Parser.tokenize(card.effectScript);

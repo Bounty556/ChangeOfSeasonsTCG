@@ -30,6 +30,8 @@ export const CardContext = createContext({
 // TODO: Make cards 69 and 70 have proactive effects
 // TODO: Fix issue with ending turn before 2nd player loads in causing it to be no one's turn
 
+// TODO: Reimplement card 15
+
 function GameBoard() {
   const { socket, gameId, deck, playerNumber } = useContext(GameContext);
 
@@ -44,8 +46,6 @@ function GameBoard() {
 
   const [updateSwitch, setUpdateSwitch] = useState(false); // This swings between true and false every time we need to update
 
-  const [effectData, setEffectData] = useState(null);
-
   const [opponentBoardData, setOpponentBoardData] = useState({
     opponentPlayAreaCount: 5,
     opponentHasDeck: true,
@@ -54,7 +54,7 @@ function GameBoard() {
     userAtt1: null,
     userAtt2: null,
     userAtt3: null,
-    userGameInofr: null,
+    userGameInformation: null,
     currentResource: 2,
     opponentLifeTotal: 25
   });
@@ -151,52 +151,22 @@ function GameBoard() {
     }
   };
 
-  const castEffect = (destinationPosition, cardId) => {
-    if (cardId !== effectData.cardId || destinationPosition === 'userPlayArea') {
-      return;
-    }
-
-    // Check to make sure our destination is a possible target for this effect
-    const operation = effectData.effect.operations[effectData.currentOperation];
-    const availablePositions = Parser.getScriptTargets(operation);
-    const states = { effectData, opponentBoardData, playerDeck, updateSwitch };
-    const functions = {
-      setOpponentBoardData,
-      setPlayerDeck,
-      increaseEffectOperation,
-      setUpdateSwitch,
-      instantCastOperation
-    };
-    if (availablePositions.includes(destinationPosition)) {
-      switch (operation.op) {
-        case 'HEAL':
-          Effects.manualHealEffect(destinationPosition, states, functions);
-          break;
-
-        case 'DMG':
-          Effects.manualDmgEffect(destinationPosition, states, functions);
-          break;
-
-        default:
-          break;
-      }
-    }
-  };
-
-  const instantCastOperation = (cardId, operation, useDeck, useData) => {
-    const states = { playerDeck, playerData, opponentBoardData };
-    const functions = { setPlayerDeck, setPlayerData, setOpponentBoardData, instantCastOperation };
+  const castOperation = (casterId, target, operation, tempStates) => {
     switch (operation.op) {
       case 'RES':
-        Effects.instantResEffect(operation, useData, states, functions);
+        Effects.instantResEffect(operation, tempStates);
         break;
 
       case 'DRAW':
-        Effects.instantDrawEffect(operation, useDeck, states, functions);
+        Effects.instantDrawEffect(operation, tempStates);
         break;
 
       case 'HEAL':
-        Effects.instantHealEffect(cardId, operation, useDeck, states, functions);
+        if (operation.param1 === 'SINGLE') {
+          Effects.manualHealEffect(target, operation, tempStates);
+        } else {
+          Effects.instantHealEffect(casterId, operation, tempStates);
+        }
         break;
 
       case 'RAISEATK':
@@ -204,41 +174,28 @@ function GameBoard() {
         break;
 
       case 'TOPDECK':
-        Effects.instantTopDeckEffect(cardId, useDeck, states, functions);
+        Effects.instantTopDeckEffect(casterId, tempStates);
         break;
 
       case 'DMG':
-        Effects.instantDmgEffect(operation, useDeck, states, functions);
+        if (operation.param1 === 'ALL') {
+          Effects.instantDmgEffect(operation, tempStates, castOperation);
+        } else {
+          Effects.manualDmgEffect(target, tempStates, castOperation);
+        }
         break;
 
       case 'KILL':
-        Effects.instantKillEffect(operation, useDeck, states, functions);
+        if (operation.param1 === 'SELF') {
+          Effects.manualKillEffect(target, operation, tempStates, castOperation);
+        } else {
+          Effects.instantKillEffect(tempStates);
+        }
         break;
 
       default:
         break;
     }
-  };
-
-  const increaseEffectOperation = (effectParam, deck, data) => {
-    if (!effectParam) {
-      effectParam = { ...effectData };
-    }
-
-    for (let i = effectParam.currentOperation + 1; i < effectParam.effect.operations.length; i++) {
-      if (Parser.canInstaCast(effectParam.effect.operations[i])) {
-        instantCastOperation(effectParam.cardId, effectParam.effect.operations[i], deck, data);
-      } else {
-        setEffectData({
-          cardId: effectParam.cardId,
-          effect: effectParam.effect,
-          currentOperation: i
-        });
-        return;
-      }
-    }
-
-    setEffectData(null);
   };
 
   const moveCard = (destinationPosition, cardVal) => {
@@ -302,7 +259,7 @@ function GameBoard() {
               cardCount={opponentBoardData.opponentPlayAreaCount}
             />
             <UserGameInformation
-              id='opponentGamein'
+              id='opponentGameInformation'
               lifeState={opponentBoardData.opponentLifeTotal}
             />
           </div>
