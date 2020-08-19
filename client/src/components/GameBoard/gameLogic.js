@@ -33,12 +33,16 @@ export default {
     } = functions;
 
     if(attackedPosition === 'opponentGameInformation' && HelperFunctions.opponentHasDef(opponentBoardData) === false){
-      console.log('has def: ' + HelperFunctions.opponentHasDef(opponentBoardData))
+
      const card =  HelperFunctions.getCardInPosition(attackingCardPosition, playerDeck);
      const boardData = { ...opponentBoardData };
 
      boardData.opponentLifeTotal -= card.attack;
      card.hasAttacked = true;
+
+     if(boardData.opponentLifeTotal <= 0) { 
+       //need to use this later
+     }
 
      setOpponentBoardData(boardData);
      setUpdateSwitch(!updateSwitch);
