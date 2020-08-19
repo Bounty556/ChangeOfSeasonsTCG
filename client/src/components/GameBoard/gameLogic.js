@@ -44,6 +44,11 @@ export default {
     ) {
       oppData.opponentLifeTotal -= card.attack;
       card.hasAttacked = true;
+
+      if(oppData.opponentLifeTotal <= 24) { 
+        oppData.opponentLost = true;
+      }
+
     } else if (HelperFunctions.isOpponentPositionFilled(attackedPosition, oppData)) {
       attackedPosition = attackedPosition.replace('opponent', 'user');
       

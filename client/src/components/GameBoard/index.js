@@ -18,6 +18,7 @@ import Container from '../../components/Container/index';
 
 
 import './gameboard.css';
+import { set } from 'mongoose';
 
 // Give this function to the children of this component so they can tell us when
 // A card was dropped on them
@@ -43,7 +44,7 @@ function GameBoard() {
     isPlayersTurn: true,
     hasInitiated: false,
     currentResource: 2,
-    lifeTotal: 25
+    lifeTotal: 25,
   });
 
   const [updateSwitch, setUpdateSwitch] = useState(false); // This swings between true and false every time we need to update
@@ -58,7 +59,8 @@ function GameBoard() {
     userAtt3: null,
     userGameInformation: null,
     currentResource: 2,
-    opponentLifeTotal: 25
+    opponentLifeTotal: 25,
+    opponentLost: false
   });
 
   useEffect(() => {
@@ -112,7 +114,7 @@ function GameBoard() {
     setUpdateSwitch(!updateSwitch);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  
   // Called by CardHolder components whenever a card is dragged on to one of them
   const cardDraggedToPosition = (cardId, destinationPosition) => {
     const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
@@ -271,18 +273,26 @@ function GameBoard() {
   //WIN
   const [showModalWin, setShowModalWin] = useState(false);
 
-  const handleCloseModalWin = () => {
-    setShowModalWin(false);
-  }
   //Lose
   const [showModalLose, setShowModalLose] = useState(false);
 
-  const handleCloseModalLose = () => {
-    setShowModalLose(false);
-  }
+  //redirect 
+  const exitGameWin  = () => {
+    window.location = '/profile';
+    //need to update user db information 
+  };
+  const exitGameLose  = () => {
+    window.location = '/profile';
+        //need to update user db information 
+  };
+
+   
+  // if(opponentBoardData.opponentLost === true) { 
+  // setShowModalWin(true);
+  // }
 
   //TESTING 
-  // if(opponentBoardData.opponentLifeTotal <= 24) { 
+  // if(playerData.lifeTotal <= 24) { 
   //   setShowModal(true)
   // }
 
@@ -367,26 +377,26 @@ function GameBoard() {
         </div>
       </DndProvider>
       {/* MODAL FOR WINNING  */}
-      <Modal className='avatarModal' show={showModalWin} onHide={handleCloseModalWin}>
+      <Modal className='avatarModal' show={opponentBoardData.opponentLost === true}>
         <Modal.Body className='modalBody'>
           <Container className='modalContainer'>
             <p>YOU WIN</p>
           </Container>
         </Modal.Body>
         <Modal.Footer className='modalFooter'>
-          <Button variant='danger' className='closeButtonModal' onClick={handleCloseModalWin}> Return To Profile </Button>
+          <Button variant='danger' className='closeButtonModal' onClick={exitGameWin}> Return To Profile </Button>
         </Modal.Footer>
       </Modal>
 
       {/* MODAL FOR LOSING  */}
-      <Modal className='avatarModal' show={showModalLose} onHide={handleCloseModalLose}>
+      <Modal className='avatarModal' show={showModalLose}>
         <Modal.Body className='modalBody'>
           <Container className='modalContainer'>
             <p>YOU LOOSE</p>
           </Container>
         </Modal.Body>
         <Modal.Footer className='modalFooter'>
-          <Button variant='danger' className='closeButtonModal' onClick={handleCloseModalLose}> Return To Profile </Button>
+          <Button variant='danger' className='closeButtonModal' onClick={exitGameLose}> Return To Profile </Button>
         </Modal.Footer>
       </Modal>
     </CardContext.Provider>
