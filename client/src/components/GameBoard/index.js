@@ -230,7 +230,7 @@ function GameBoard() {
         if (operation.param1 === 'ALL') {
           Effects.instantDmgEffect(operation, tempStates, castOperation);
         } else {
-          Effects.manualDmgEffect(target, tempStates, castOperation);
+          Effects.manualDmgEffect(target, operation, tempStates, castOperation);
         }
         break;
 
