@@ -45,6 +45,7 @@ function GameBoard() {
     hasInitiated: false,
     currentResource: 2,
     lifeTotal: 25,
+    playerLost: false
   });
 
   const [updateSwitch, setUpdateSwitch] = useState(false); // This swings between true and false every time we need to update
@@ -115,6 +116,15 @@ function GameBoard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
+useEffect(() => {
+  if(playerData.lifeTotal <= 0) { 
+    setPlayerData(prevState => ({ 
+      ...prevState, 
+      playerLost: true
+    }))
+  }
+}, [playerData.lifeTotal])
+
   // Called by CardHolder components whenever a card is dragged on to one of them
   const cardDraggedToPosition = (cardId, destinationPosition) => {
     const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
@@ -389,7 +399,7 @@ function GameBoard() {
       </Modal>
 
       {/* MODAL FOR LOSING  */}
-      <Modal className='avatarModal' show={showModalLose}>
+      <Modal className='avatarModal' show={playerData.playerLost === true}>
         <Modal.Body className='modalBody'>
           <Container className='modalContainer'>
             <p>YOU LOOSE</p>
