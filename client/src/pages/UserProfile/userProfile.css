@@ -79,6 +79,11 @@ button {
 
 .stats-div {
     margin-left: 5px;
+    text-shadow: 
+        2px 1px 10px black, 
+        2px 1px 12px black, 
+        2px 1px 11px black, 
+        2px 1px 1px black;
 }
 
 .avatarUserProfile { 
@@ -100,6 +105,11 @@ button {
     font-weight: bolder;
     margin: 10px 0;
     text-align: left;
+    text-shadow: 
+        2px 1px 10px black, 
+        2px 1px 12px black, 
+        2px 1px 11px black, 
+        2px 1px 1px black;
 }
 
 .chooseAvatar:hover { 
