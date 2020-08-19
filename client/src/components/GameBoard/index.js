@@ -136,13 +136,14 @@ function GameBoard() {
     const card = HelperFunctions.getCardWithId(cardId, deck);
     const effect = card.onPlayEffect;
     const positions = Parser.getScriptTargets(effect.operations[0]);
+    console.log(playerData, ' this is the player data');
     const data = { ...playerData };
 
-    console.log(positions);
-
     if (positions.includes(destinationPosition) && data.currentResource >= card.resourceCost) {
+      console.log(data, ' before the cast');
       for (let i = 0; i < effect.operations.length; i++) {
-        instantCastOperation(cardId, effect.operations[i], deck);
+        instantCastOperation(cardId, effect.operations[i], deck, data);
+        console.log(data, ' right after the cast');
       }
 
       card.position = 'userGrave';
@@ -186,12 +187,13 @@ function GameBoard() {
     }
   };
 
-  const instantCastOperation = (cardId, operation, useDeck) => {
+  const instantCastOperation = (cardId, operation, useDeck, useData) => {
     const states = { playerDeck, playerData, opponentBoardData };
     const functions = { setPlayerDeck, setPlayerData, setOpponentBoardData };
     switch (operation.op) {
       case 'RES':
-        Effects.instantResEffect(operation, states, functions);
+        Effects.instantResEffect(operation, useData, states, functions);
+        console.log(useData, ' inside of the instant cast');
         break;
 
       case 'DRAW':
@@ -219,18 +221,14 @@ function GameBoard() {
     }
   };
 
-  const increaseEffectOperation = (effectParam, deck) => {
+  const increaseEffectOperation = (effectParam, deck, data) => {
     if (!effectParam) {
       effectParam = { ...effectData };
     }
 
     for (let i = effectParam.currentOperation + 1; i < effectParam.effect.operations.length; i++) {
       if (Parser.canInstaCast(effectParam.effect.operations[i])) {
-        if (deck) {
-          instantCastOperation(effectParam.cardId, effectParam.effect.operations[i], deck);
-        } else {
-          instantCastOperation(effectParam.cardId, effectParam.effect.operations[i]);
-        }
+        instantCastOperation(effectParam.cardId, effectParam.effect.operations[i], deck, data);
       } else {
         setEffectData({
           cardId: effectParam.cardId,
