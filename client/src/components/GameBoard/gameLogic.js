@@ -24,63 +24,48 @@ export default {
   },
 
   attackCard: function (attackingCardPosition, attackedPosition, states, functions) {
-    const { opponentBoardData, playerDeck, updateSwitch } = states;
+    const { playerDeck, playerData, opponentBoardData, updateSwitch } = states;
     const {
-      instantCastOperation,
+      castEffect,
       setPlayerDeck,
+      setPlayerData,
       setOpponentBoardData,
       setUpdateSwitch
     } = functions;
 
-    if(attackedPosition === 'opponentGameInformation' && HelperFunctions.opponentHasDef(opponentBoardData) === false){
-      console.log('has def: ' + HelperFunctions.opponentHasDef(opponentBoardData))
-     const card =  HelperFunctions.getCardInPosition(attackingCardPosition, playerDeck);
-     const boardData = { ...opponentBoardData };
+    const ourDeck = HelperFunctions.copyDeck(playerDeck);
+    const ourData = { ...playerData };
+    const oppData = { ...opponentBoardData };
+    const card = HelperFunctions.getCardInPosition(attackingCardPosition, ourDeck);
 
-     boardData.opponentLifeTotal -= card.attack;
-     card.hasAttacked = true;
+    if (
+      attackedPosition === 'opponentGameInformation' &&
+      !HelperFunctions.opponentHasDef(oppData)
+    ) {
+      oppData.opponentLifeTotal -= card.attack;
+      card.hasAttacked = true;
+    } else if (HelperFunctions.isOpponentPositionFilled(attackedPosition, oppData)) {
+      card.health -= oppData[attackedPosition].attack;
+      if (card.health <= 0) {
+        this.handleCardDeath(card, ourDeck, castEffect);
+      }
 
-     setOpponentBoardData(boardData);
-     setUpdateSwitch(!updateSwitch);
+      const attackEffect = card.onAttackEffect;
+      if (attackEffect) {
+        castEffect(card.uId, null, attackEffect, { ourDeck, ourData, oppData });
+      }
 
-     return;
-
-    } 
-
-    // See if this is a valid attack
-    if (!HelperFunctions.isOpponentPositionFilled(attackedPosition, opponentBoardData)) {
-      return;
-    }
-
-    const deck = HelperFunctions.copyDeck(playerDeck);
-    const attackingCard = HelperFunctions.getCardInPosition(attackingCardPosition, deck);
-
-    // Need to replace opponent with user here to match the opponentBoardData object
-    attackedPosition = attackedPosition.replace('opponent', 'user');
-    const boardData = { ...opponentBoardData };
-    boardData[attackedPosition].health -= attackingCard.attack;
-    attackingCard.hasAttacked = true;
-
-    // Start the on attack effect
-    const attackEffect = attackingCard.onAttackEffect;
-    if (attackEffect) {
-      for (let i = 0; i < attackEffect.operations.length; i++) {
-        instantCastOperation(attackingCard.uId, attackEffect.operations[i], deck);
+      attackedPosition = attackedPosition.replace('opponent', 'user');
+      oppData[attackedPosition].health -= card.attack;
+      card.hasAttacked = true;
+      if (oppData[attackedPosition].health <= 0) {
+        oppData[attackedPosition] = null;
       }
     }
 
-    // Retaliation
-    attackingCard.health -= boardData[attackedPosition].attack;
-    if (attackingCard.health <= 0) {
-      this.handleCardDeath(attackingCard, deck, instantCastOperation);
-    }
-
-    if (boardData[attackedPosition].health <= 0) {
-      boardData[attackedPosition] = null;
-    }
-
-    setPlayerDeck(deck);
-    setOpponentBoardData(boardData);
+    setPlayerDeck(ourDeck);
+    setPlayerData(ourData);
+    setOpponentBoardData(oppData);
     setUpdateSwitch(!updateSwitch);
   },
 
@@ -118,14 +103,22 @@ export default {
   },
 
   playCard: (cardVal, destinationPosition, states, functions) => {
-    const { playerDeck, playerData, updateSwitch } = states;
-    const { increaseEffectOperation, setPlayerDeck, setPlayerData, setUpdateSwitch } = functions;
+    const { playerDeck, playerData, opponentBoardData, updateSwitch } = states;
+    const {
+      castEffect,
+      setPlayerDeck,
+      setPlayerData,
+      setOpponentBoardData,
+      setUpdateSwitch
+    } = functions;
 
-    const deck = HelperFunctions.copyDeck(playerDeck);
-    const data = { ...playerData };
+    const ourDeck = HelperFunctions.copyDeck(playerDeck);
+    const ourData = { ...playerData };
+    const oppData = { ...opponentBoardData };
     const card = HelperFunctions.getCardWithId(cardVal.uId, deck);
-    if (data.currentResource >= card.resourceCost) {
-      data.currentResource -= card.resourceCost;
+
+    if (ourData.currentResource >= card.resourceCost) {
+      ourData.currentResource -= card.resourceCost;
       card.position = destinationPosition;
     } else {
       return;
@@ -134,15 +127,16 @@ export default {
     // Set that we're now starting an effect if this card has one
     const effect = card.onPlayEffect;
     if (effect) {
-      increaseEffectOperation(
-        { cardId: cardVal.uId, effect: effect, currentOperation: -1 },
-        deck,
-        data
-      );
+      if (Parser.canInstaCast(effect.operations[0])) {
+        castEffect(card.uId, null, effect, { ourDeck, ourData, oppData });
+      } else {
+        card.hasEffect = true;
+      }
     }
 
-    setPlayerData(data);
-    setPlayerDeck(deck);
+    setPlayerData(ourData);
+    setPlayerDeck(ourDeck);
+    setOpponentBoardData(oppData);
     setUpdateSwitch(!updateSwitch);
   },
 
@@ -163,13 +157,13 @@ export default {
       this.drawCard(deck);
     }
 
-    // Reset attacked flag for all cards
+    // Reset attacked and effects flags for all cards
     for (let i = 0; i < deck.length; i++) {
       deck[i].hasAttacked = false;
+      deck[i].hasEffect = false;
     }
 
     setPlayerDeck(deck);
-    setEffectData(null); // They may have wasted any spells they could've cast
     setUpdateSwitch(!updateSwitch);
   },
 
@@ -180,14 +174,9 @@ export default {
       setPlayerData,
       setUpdateSwitch,
       setOpponentBoardData,
-      instantCastOperation
+      castEffect
     } = functions;
 
-    if (player === playerNumber) {
-      return;
-    }
-
-    // Update our opponent board data
     const boardData = {
       ...opponentBoardData,
       userDef1: null,
@@ -197,6 +186,12 @@ export default {
       userAtt3: null,
       currentResource: otherData.currentResource
     };
+    const newPlayerDeck = HelperFunctions.copyDeck(playerDeck);
+    const newPlayerData = { ...playerData };
+
+    if (player === playerNumber) {
+      return;
+    }
 
     const opponentCards = HelperFunctions.getPlayedCards(otherDeck);
     for (let i = 0; i < opponentCards.length; i++) {
@@ -209,19 +204,37 @@ export default {
       otherDeck
     );
 
-    setOpponentBoardData(boardData);
-
     if (playerData.hasInitiated) {
       // Update our board data
-      setPlayerData(prevState => ({ ...prevState, currentResource: ourData.currentResource, lifeTotal: ourData.opponentLifeTotal}));
+      newPlayerData.currentResource = ourData.currentResource;
+      newPlayerData.lifeTotal = ourData.opponentLifeTotal;
 
-      let ourDeck = HelperFunctions.copyDeck(playerDeck);
       let deadCards = [null, null, null, null, null];
-      [deadCards[0], ourDeck] = HelperFunctions.compareCards('userDef1', ourData, ourDeck);
-      [deadCards[1], ourDeck] = HelperFunctions.compareCards('userDef2', ourData, ourDeck);
-      [deadCards[2], ourDeck] = HelperFunctions.compareCards('userAtt1', ourData, ourDeck);
-      [deadCards[3], ourDeck] = HelperFunctions.compareCards('userAtt2', ourData, ourDeck);
-      [deadCards[4], ourDeck] = HelperFunctions.compareCards('userAtt3', ourData, ourDeck);
+      [deadCards[0], newPlayerDeck] = HelperFunctions.compareCards(
+        'userDef1',
+        ourData,
+        newPlayerDeck
+      );
+      [deadCards[1], newPlayerDeck] = HelperFunctions.compareCards(
+        'userDef2',
+        ourData,
+        newPlayerDeck
+      );
+      [deadCards[2], newPlayerDeck] = HelperFunctions.compareCards(
+        'userAtt1',
+        ourData,
+        newPlayerDeck
+      );
+      [deadCards[3], newPlayerDeck] = HelperFunctions.compareCards(
+        'userAtt2',
+        ourData,
+        newPlayerDeck
+      );
+      [deadCards[4], newPlayerDeck] = HelperFunctions.compareCards(
+        'userAtt3',
+        ourData,
+        newPlayerDeck
+      );
 
       let deadCard;
       for (let i = 0; i < deadCards.length; i++) {
@@ -235,14 +248,20 @@ export default {
         // Trigger that card's on death effect
         const effect = deadCard.onDeathEffect;
         if (effect) {
-          for (let i = 0; i < effect.operations.length; i++) {
-            instantCastOperation(deadCard.uId, effect.operations[i], ourDeck);
-          }
+          castEffect(deadCard.uId, null, effect, {
+            ourDeck: newPlayerDeck,
+            ourData: newPlayerData,
+            oppData: boardData
+          });
         }
-        setPlayerDeck(ourDeck);
+        setPlayerDeck(newPlayerDeck);
+        setPlayerData(newPlayerData);
+        setOpponentBoardData(boardData);
         setUpdateSwitch(!updateSwitch);
       } else {
-        setPlayerDeck(ourDeck);
+        setPlayerDeck(newPlayerDeck);
+        setPlayerData(newPlayerData);
+        setOpponentBoardData(boardData);
       }
     }
   }
