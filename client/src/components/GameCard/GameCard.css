@@ -99,6 +99,8 @@
 }
 
 /* Effect styling */
+
+/* Spring */
 .gainOne {
     font-size: 14.5px;
     margin-right: 3px;
@@ -158,6 +160,69 @@
     margin-right: 25px;
     margin-left: 22px;
     top: 9px;
+}
+
+/* Summer */
+.dealFive {
+    font-size: 13.5px;
+    margin-right: 25px;
+    margin-left: 20px;
+    top: 6px;
+}
+
+.dealSix {
+    font-size: 13.5px;
+    margin-right: 9px;
+    margin-left: 4px;
+    top: 5px;
+}
+
+.dealTen {
+    font-size: 13.5px;
+    margin-right: 8px;
+    margin-left: 3px;
+    top: 42px;
+}
+
+.giveAtt {
+    font-size: 14.5px;
+    margin-right: 31px;
+    margin-left: 30px;
+    top: 43px;
+}
+
+.giveFifteen {
+    font-size: 12.5px;
+    margin-right: 16px;
+    margin-left: 15px;
+    top: 38px;
+}
+
+.whenPlayedDeal {
+    font-size: 11px;
+    margin-right: 8px;
+    margin-left: 3px;
+    top: 2px;
+}
+
+.whenPlayedGiveYour {
+    margin-right: 36px;
+    margin-left: 35px;
+    top: 13px;
+}
+
+.drawTwo {
+    font-size: 16.5px;
+    margin-right: 2px;
+    margin-left: 32px;
+    top: -6px;
+}
+
+.whileThisIs {
+    font-size: 10.5px;
+    margin-right: 27px;
+    margin-left: 24px;
+    top: 11px;
 }
 
 @media (max-width: 1300px) {

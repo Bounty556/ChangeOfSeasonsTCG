@@ -38,8 +38,36 @@ function GameCard(props) {
       case 'Draw 3 cards':
         return <p className='effect drawThree'>{props.effect}</p>
       
-        case 'While this is in play give all your creatures +2 ATK +4 health':
+      case 'While this is in play give all your creatures +2 ATK +4 health':
         return <p className='effect whileThis'>{props.effect}</p>
+
+      // Effects for Summer
+      case 'Deal 5 damage to a minion or player':
+        return <p className='effect dealFive'>{props.effect}</p>
+      
+      case 'Deal 6 damage to a minion or player':
+        return <p className='effect dealSix'>{props.effect}</p>
+      
+      case 'Deal 10 damage to a minion or player':
+        return <p className='effect dealTen'>{props.effect}</p>
+      
+      case 'Give attack row +1 ATK':
+        return <p className='effect giveAtt'>{props.effect}</p>
+      
+      case 'Give +15 health to all your creatures':
+        return <p className='effect giveFifteen'>{props.effect}</p>
+      
+      case 'When played, deal 3 damage to a minion or player':
+        return <p className='effect whenPlayedDeal'>{props.effect}</p>
+      
+      case 'When played, give your attack row +1 ATK +1 DEF':
+        return <p className='effect whenPlayedGiveYour'>{props.effect}</p>
+      
+      case 'While this is in play give all your creatures +3 ATK +3 health':
+        return <p className='effect whileThisIs'>{props.effect}</p>
+
+      case 'Draw 2 cards':
+        return <p className='effect drawTwo'>{props.effect}</p>
 
       default:
         return <p className='effect'>{props.effect}</p>
