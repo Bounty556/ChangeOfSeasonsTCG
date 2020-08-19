@@ -37,6 +37,8 @@ export default {
      const boardData = { ...opponentBoardData };
 
      boardData.opponentLifeTotal -= card.attack;
+     card.hasAttacked = true;
+
      setOpponentBoardData(boardData);
      setUpdateSwitch(!updateSwitch);
 
