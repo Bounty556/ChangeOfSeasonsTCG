@@ -52,11 +52,12 @@ export default {
     let currentToken = -1;
     let currentOperator = -1;
     let currentParameter = 0;
+    let isInQuotes = false;
     for (let i = 0; i < splitString.length; i++) {
       let word = splitString[i];
 
       // Check to see if this is a new token
-      if (this.triggers.includes(word)) {
+      if (this.triggers.includes(word) && !isInQuotes) {
         tokens.push({
           trigger: word,
           operations: []
@@ -64,7 +65,7 @@ export default {
         currentToken++;
         currentOperator = -1;
         currentParameter = 0;
-      } else if (this.operators.includes(word)) {
+      } else if (this.operators.includes(word) && !isInQuotes) {
         // Check to see if this is an operator
         tokens[currentToken].operations.push({
           op: word
@@ -73,8 +74,23 @@ export default {
         currentParameter = 0;
       } else {
         // This is a parameter
-        currentParameter++;
-        tokens[currentToken].operations[currentOperator]['param' + currentParameter] = word;
+        if (isInQuotes) {
+          tokens[currentToken].operations[currentOperator]['param' + currentParameter] +=
+            ' ' + word;
+        } else {
+          currentParameter++;
+          tokens[currentToken].operations[currentOperator]['param' + currentParameter] = word;
+        }
+
+        if (word.includes('"')) {
+          isInQuotes = !isInQuotes;
+
+          if (!isInQuotes) {
+            tokens[currentToken].operations[currentOperator]['param' + currentParameter] = tokens[
+              currentToken
+            ].operations[currentOperator]['param' + currentParameter].replace(/"/g, '');
+          }
+        }
       }
     }
 
@@ -83,27 +99,27 @@ export default {
 
   getScriptTargets: function (operation) {
     // The targetting parameter should be the first param, make sure it exists
-    if (!operation || !operation.param1) {
+    const { op, param1 } = operation;
+
+    if (!param1) {
       return [];
     }
 
-    const target = operation.param1;
-
-    if (operation.op === 'DMG') {
+    if (op === 'DMG') {
       return [...this.positions, 'opponentGameInformation'];
-    } else if (target === 'SELF') {
+    } else if (param1 === 'SELF') {
       return this.positions.slice(0, 5);
-    } else if (target === 'OPP') {
+    } else if (param1 === 'OPP') {
       return this.positions.slice(5);
-    } else if (target === 'ALL' || target === 'SINGLE' || operation.op === 'RES') {
+    } else if (param1 === 'ALL' || param1 === 'SINGLE' || op === 'RES' || op === 'ADDEFFECT') {
       return this.positions;
-    } else if (target === 'DEFROW') {
+    } else if (param1 === 'DEFROW') {
       return this.positions.slice(3, 5);
-    } else if (target === 'ATKROW') {
+    } else if (param1 === 'ATKROW') {
       return this.positions.slice(0, 3);
-    } else if (target === 'OPPATKROW') {
+    } else if (param1 === 'OPPATKROW') {
       return this.positions.slice(5, 8);
-    } else if (target === 'OPPDEFROW') {
+    } else if (param1 === 'OPPDEFROW') {
       return this.positions.slice(8);
     }
 

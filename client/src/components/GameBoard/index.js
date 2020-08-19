@@ -32,9 +32,7 @@ export const CardContext = createContext({
 // TODO: Make cards 69 and 70 have proactive effects
 // TODO: Fix issue with ending turn before 2nd player loads in causing it to be no one's turn
 
-// TODO: Implement SETATK and ADDEFFECT
-
-// TODO: DMG should be able to target enemy player
+// TODO: Implement ADDEFFECT
 
 function GameBoard() {
   const { socket, gameId, deck, playerNumber } = useContext(GameContext);
@@ -50,7 +48,7 @@ function GameBoard() {
   });
 
   // This swings between true and false every time we need to update
-  const [updateSwitch, setUpdateSwitch] = useState(false); 
+  const [updateSwitch, setUpdateSwitch] = useState(false);
 
   const [opponentBoardData, setOpponentBoardData] = useState({
     opponentPlayAreaCount: 5,
@@ -123,9 +121,9 @@ function GameBoard() {
       setPlayerData(prevState => ({
         ...prevState,
         playerLost: true
-      }))
+      }));
     }
-  }, [playerData.lifeTotal])
+  }, [playerData.lifeTotal]);
 
   // Called by CardHolder components whenever a card is dragged on to one of them
   const cardDraggedToPosition = (cardId, destinationPosition) => {
@@ -224,6 +222,10 @@ function GameBoard() {
         Effects.instantRaiseAtkEffect(operation, tempStates);
         break;
 
+      case 'SETATK':
+        Effects.instantSetAtkEffect(operation, tempStates);
+        break;
+
       case 'TOPDECK':
         Effects.instantTopDeckEffect(casterId, tempStates);
         break;
@@ -242,6 +244,10 @@ function GameBoard() {
         } else {
           Effects.instantKillEffect(tempStates);
         }
+        break;
+
+      case 'ADDEFFECT':
+        Effects.manualAddEffect(target, operation, tempStates);
         break;
 
       default:
@@ -281,20 +287,13 @@ function GameBoard() {
     });
   };
 
-
   const exitGameWin = () => {
     const userId = JSON.parse(localStorage.getItem('authentication'))._id;
-    axios.put(`/api/user/${userId}/win`)
-      .then(() =>
-        window.location = '/profile'
-      );
+    axios.put(`/api/user/${userId}/win`).then(() => (window.location = '/profile'));
   };
   const exitGameLose = () => {
     const userId = JSON.parse(localStorage.getItem('authentication'))._id;
-    axios.put(`/api/user/${userId}/loss`)
-      .then(() =>
-        window.location = '/profile'
-      );
+    axios.put(`/api/user/${userId}/loss`).then(() => (window.location = '/profile'));
   };
 
   return (
@@ -344,8 +343,8 @@ function GameBoard() {
               </button>
             </div>
           ) : (
-              <p style={{ textAlign: 'center' }}>Waiting for Opponent to Finish their turn.</p>
-            )}
+            <p style={{ textAlign: 'center' }}>Waiting for Opponent to Finish their turn.</p>
+          )}
           <div id='userAttRow'>
             <CardHolder id='userAtt1' />
             <CardHolder id='userAtt2' />
@@ -384,7 +383,10 @@ function GameBoard() {
           </Container>
         </Modal.Body>
         <Modal.Footer className='modalFooter'>
-          <Button variant='danger' className='closeButtonModal' onClick={exitGameWin}> Return To Profile </Button>
+          <Button variant='danger' className='closeButtonModal' onClick={exitGameWin}>
+            {' '}
+            Return To Profile{' '}
+          </Button>
         </Modal.Footer>
       </Modal>
 
@@ -396,7 +398,10 @@ function GameBoard() {
           </Container>
         </Modal.Body>
         <Modal.Footer className='modalFooter'>
-          <Button variant='danger' className='closeButtonModal' onClick={exitGameLose}> Return To Profile </Button>
+          <Button variant='danger' className='closeButtonModal' onClick={exitGameLose}>
+            {' '}
+            Return To Profile{' '}
+          </Button>
         </Modal.Footer>
       </Modal>
     </CardContext.Provider>
