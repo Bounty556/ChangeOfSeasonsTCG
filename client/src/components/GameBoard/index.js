@@ -114,14 +114,14 @@ function GameBoard() {
   }, []);
 
   // Called by CardHolder components whenever a card is dragged on to one of them
-  const cardDraggedToPosition = (cardId, destinationPosition) => {
+  const cardDraggedToPosition = (cardId, destinationPosition) =>
+  {
     const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
     const cardVal = { ...playerDeck[cardIndex] }; // The card we're dragging
 
     if (!playerData.isPlayersTurn) {
       return;
     }
-
     if (!cardVal.isCreature) {
       castSpell(destinationPosition, cardId);
     } else if (effectData) {
