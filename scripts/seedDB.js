@@ -183,7 +183,7 @@ const cardSeed = [
     resourceCost: 3,
     attack: 0,
     health: 0,
-    effect: 'Destroy 1 of your own minions - give the rest +1 ATK',
+    effect: 'Randomly destroy 1 of your minions - give the rest +1 ATK',
     effectScript: 'ONPLAY KILL SELF RAISEATK ALL 1',
     name: 'indignity',
     img: 'violet_3.png'

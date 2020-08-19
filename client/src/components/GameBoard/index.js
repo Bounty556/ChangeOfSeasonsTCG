@@ -24,10 +24,8 @@ export const CardContext = createContext({
 // TODO: When we drag a card and hover it over a card slot, it should make the slot go grey or
 //       something similar so the user has some kind of feedback
 // TODO: Make effects work
-// TODO: Be able to attack the opponent when his defense row is down
-// TODO: Replace opponents grave with player to attack
-// TODO: Spell cards should only trigger their effect
 // TODO: Players should still be able to use cards if another card has an active effect
+// TODO: Add endgame
 
 // TODO: Make cards 69 and 70 have proactive effects
 // TODO: Fix issue with ending turn before 2nd player loads in causing it to be no one's turn
@@ -56,7 +54,7 @@ function GameBoard() {
     userAtt1: null,
     userAtt2: null,
     userAtt3: null,
-    userGameInformation: null,
+    userGameInofr: null,
     currentResource: 2,
     opponentLifeTotal: 25
   });
@@ -114,14 +112,14 @@ function GameBoard() {
   }, []);
 
   // Called by CardHolder components whenever a card is dragged on to one of them
-  const cardDraggedToPosition = (cardId, destinationPosition) =>
-  {
+  const cardDraggedToPosition = (cardId, destinationPosition) => {
     const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
     const cardVal = { ...playerDeck[cardIndex] }; // The card we're dragging
 
     if (!playerData.isPlayersTurn) {
       return;
     }
+
     if (!cardVal.isCreature) {
       castSpell(destinationPosition, cardId);
     } else if (effectData) {
@@ -187,7 +185,7 @@ function GameBoard() {
 
   const instantCastOperation = (cardId, operation, useDeck, useData) => {
     const states = { playerDeck, playerData, opponentBoardData };
-    const functions = { setPlayerDeck, setPlayerData, setOpponentBoardData };
+    const functions = { setPlayerDeck, setPlayerData, setOpponentBoardData, instantCastOperation };
     switch (operation.op) {
       case 'RES':
         Effects.instantResEffect(operation, useData, states, functions);
@@ -211,6 +209,10 @@ function GameBoard() {
 
       case 'DMG':
         Effects.instantDmgEffect(operation, useDeck, states, functions);
+        break;
+
+      case 'KILL':
+        Effects.instantKillEffect(operation, useDeck, states, functions);
         break;
 
       default:
@@ -299,10 +301,10 @@ function GameBoard() {
               id='opponentPlayArea'
               cardCount={opponentBoardData.opponentPlayAreaCount}
             />
-            <UserGameInformation 
-            id ='opponentGameInformation'
-            lifeState ={opponentBoardData.opponentLifeTotal}
-            /> 
+            <UserGameInformation
+              id='opponentGamein'
+              lifeState={opponentBoardData.opponentLifeTotal}
+            />
           </div>
 
           <div id='opponentDefRow'>

@@ -217,5 +217,34 @@ export default {
     if (!useDeck) {
       setPlayerDeck(deck);
     }
+  },
+
+  instantKillEffect: (operation, useDeck, states, functions) => {
+    const { playerDeck, opponentBoardData } = states;
+    const { setPlayerDeck, setOpponentBoardData, instantCastOperation } = functions;
+
+    const deck = useDeck || GameLogic.copyDeck(playerDeck);
+
+    if (operation.param1 === 'SELF') {
+      // Choose a random one of our minions to kill
+      const cards = HelperFunctions.getPlayedCards(deck);
+
+      if (cards.length > 0) {
+        const cardToKill = Math.floor(Math.random() * cards.length);
+        GameLogic.handleCardDeath(cards[cardToKill], deck, instantCastOperation);
+        if (!useDeck) {
+          setPlayerDeck(deck);
+        }
+      }
+    } else if (operation.param2 === 'OPPDEFROW') {
+      const oppDefRow = HelperFunctions.userDefRows;
+      const boardData = { ...opponentBoardData };
+
+      for (let i = 0; i < oppDefRow.length; i++) {
+        boardData[oppDefRow[i]] = null;
+      }
+
+      setOpponentBoardData(boardData);
+    }
   }
 };
