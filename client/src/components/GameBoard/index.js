@@ -40,7 +40,8 @@ function GameBoard() {
   const [playerData, setPlayerData] = useState({
     isPlayersTurn: true,
     hasInitiated: false,
-    currentResource: 2,
+    currentResources: 2,
+    resourceTurnCounter: 2,
     lifeTotal: 25,
     playerLost: false
   });
@@ -57,7 +58,7 @@ function GameBoard() {
     userAtt2: null,
     userAtt3: null,
     userGameInformation: null,
-    currentResource: 2,
+    currentResources: 2,
     opponentLifeTotal: 25,
     opponentLost: false
   });
@@ -185,11 +186,11 @@ function GameBoard() {
     const card = HelperFunctions.getCardWithId(cardId, ourDeck);
     const operations = card.onPlayEffect.operations;
     const positions = Parser.getScriptTargets(operations[0]);
-    if (positions.includes(target) && ourData.currentResource >= card.resourceCost) {
+    if (positions.includes(target) && ourData.currentResources >= card.resourceCost) {
       castEffect(cardId, target, card.onPlayEffect, { ourDeck, ourData, oppData });
 
       card.position = 'userGrave';
-      ourData.currentResource -= card.resourceCost;
+      ourData.currentResources -= card.resourceCost;
 
       setPlayerDeck(ourDeck);
       setPlayerData(ourData);
@@ -299,7 +300,7 @@ function GameBoard() {
       <DndProvider backend={HTML5Backend}>
         <div className='wrapper animate__animated animate__bounceIn'>
           <div className='userResourceRow'>
-            {[...Array(opponentBoardData.currentResource)].map((resource, i) => (
+            {[...Array(opponentBoardData.currentResources)].map((resource, i) => (
               <span className='resourceCircle activeResource' key={'resourceOpponent' + i}></span>
             ))}
           </div>
@@ -367,7 +368,7 @@ function GameBoard() {
             <CardHolder id='userPlayArea' />
           </div>
           <div className='userResourceRow'>
-            {[...Array(playerData.currentResource)].map((resource, i) => (
+            {[...Array(playerData.currentResources)].map((resource, i) => (
               <span className='resourceCircle activeResource' key={'resourcePlayer' + i}></span>
             ))}
           </div>

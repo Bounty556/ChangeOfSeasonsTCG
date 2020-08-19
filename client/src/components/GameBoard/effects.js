@@ -100,9 +100,7 @@ export default {
     const { ourData, oppData } = tempStates;
 
     let data = param1 === 'SELF' ? ourData : oppData;
-    let resources = data.currentResource;
-    resources = HelperFunctions.clamp(resources + parseInt(param2), 0, 9);
-    data.currentResource = resources;
+    data.currentResources += parseInt(param2);
   },
 
   instantDrawEffect: (operation, tempStates) => {

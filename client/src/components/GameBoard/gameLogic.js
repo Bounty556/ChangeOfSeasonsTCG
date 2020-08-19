@@ -113,8 +113,8 @@ export default {
     const oppData = { ...opponentBoardData };
     const card = HelperFunctions.getCardWithId(cardVal.uId, ourDeck);
 
-    if (ourData.currentResource >= card.resourceCost) {
-      ourData.currentResource -= card.resourceCost;
+    if (ourData.currentResources >= card.resourceCost) {
+      ourData.currentResources -= card.resourceCost;
       card.position = destinationPosition;
     } else {
       return;
@@ -144,9 +144,13 @@ export default {
     const ourDeck = HelperFunctions.copyDeck(playerDeck);
 
     ourData.isPlayersTurn = false;
-    if (ourData.currentResource <= 8) {
-      ourData.currentResource += 1;
+    if (ourData.resourceTurnCounter < 9) {
+      ourData.resourceTurnCounter += 1;
     }
+    if (ourData.currentResources < ourData.resourceTurnCounter) {
+      ourData.currentResources = ourData.resourceTurnCounter;
+    }
+
     // Check to see the amount of cards in the players hands and draws a card if able
     const handCount = HelperFunctions.countAllCardsInPosition('userPlayArea', ourDeck);
     if (handCount < 5) {
@@ -181,7 +185,7 @@ export default {
       userAtt1: null,
       userAtt2: null,
       userAtt3: null,
-      currentResource: otherData.currentResource
+      currentResources: otherData.currentResources
     };
     let newPlayerDeck = HelperFunctions.copyDeck(playerDeck);
     const newPlayerData = { ...playerData };
@@ -203,7 +207,7 @@ export default {
 
     if (playerData.hasInitiated) {
       // Update our board data
-      newPlayerData.currentResource = ourData.currentResource;
+      newPlayerData.currentResources = ourData.currentResources;
       newPlayerData.lifeTotal = ourData.opponentLifeTotal;
 
       let deadCards = [null, null, null, null, null];
