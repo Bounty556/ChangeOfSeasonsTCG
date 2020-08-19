@@ -6,7 +6,6 @@ import { useHistory } from 'react-router-dom';
 import Container from '../../components/Container/index';
 import Navbar from '../../components/Navbar/index';
 import ModalColumn from '../../components/ModalColumn/index'
-// import button from './Images/woodsign.png';
 
 //reactstrap 
 import Button from 'react-bootstrap/Button';
@@ -19,6 +18,7 @@ function UserProfile() {
     //used to grab the current chosen avatar from the db 
 
     const [avatar, setAvatar] = useState('');
+    const [choosenDeck, setChoosenDeck] = useState('No Deck Choosen.')
 
     //used for when a user is selecting a new avatar 
     const [selectAvatar, setSelectAvatar] = useState('');
@@ -57,6 +57,23 @@ function UserProfile() {
                 localStorage.setItem('avatar', res.data.avatar);
                 localStorage.setItem('username', res.data.username);
                 setAvatar(localStorage.getItem('avatar'));
+
+                switch (res.data.cardIds[0]) {
+                    case 1:
+                        return setChoosenDeck('🌱 Spring 🌱');
+                    
+                    case 2:
+                        return setChoosenDeck('☀️ Summer ☀️');
+                    
+                    case 3:
+                        return setChoosenDeck('🍂 Fall 🍂');
+                    
+                    case 4:
+                        return setChoosenDeck('❄️ Winter ❄️');
+
+                    default:
+                        return;
+                }
             });
     }, []);
 
@@ -80,26 +97,38 @@ function UserProfile() {
             .catch(err => console.log(err));
     }
 
-    function selectSpring() {
+    function selectDeck(event) {
+        const userChoice = event.target.classList[1];
         const userId = JSON.parse(localStorage.getItem('authentication'))._id;
-        axios.put(`/api/user/${userId}/deck/Spring`);
+        let pickedDeck;
+
+        switch (userChoice) {
+            case 'springButton':
+                pickedDeck = 'Spring'
+                setChoosenDeck('🌱 Spring 🌱');
+                break;
+
+            case 'summerButton':
+                pickedDeck = 'Summer'
+                setChoosenDeck('☀️ Summer ☀️');
+                break;
+
+            case 'fallButton':
+                pickedDeck = 'Fall'
+                setChoosenDeck('🍂 Fall 🍂');
+                break;
+
+            case 'winterButton':
+                pickedDeck = 'Winter'
+                setChoosenDeck('❄️ Winter ❄️');
+                break;
+
+            default:
+        }
+
+        axios.put(`/api/user/${userId}/deck/${pickedDeck}`);
         handleCloseDeck();
-    };
-    function selectSummer() {
-        const userId = JSON.parse(localStorage.getItem('authentication'))._id;
-        axios.put(`/api/user/${userId}/deck/Summer`);
-        handleCloseDeck();
-    };
-    function selectFall() {
-        const userId = JSON.parse(localStorage.getItem('authentication'))._id;
-        axios.put(`/api/user/${userId}/deck/Fall`);
-        handleCloseDeck();
-    };
-    function selectWinter() {
-        const userId = JSON.parse(localStorage.getItem('authentication'))._id;
-        axios.put(`/api/user/${userId}/deck/Winter`);
-        handleCloseDeck();
-    };
+    }
 
     function goToLobby() {
         history.push('/Lobby');
@@ -120,8 +149,11 @@ function UserProfile() {
                             </div>
                             {/* open the modal to select an Avatar */}
                            
-                            <div >
+                            <div>
                                 <p className='stats-div'>Wins: {wins} Losses: {losses} </p>
+                            </div>
+                            <div>
+                                <p className='stats-div'>Current Deck: {choosenDeck}</p>
                             </div>
                         </div>
 
@@ -196,10 +228,10 @@ function UserProfile() {
 
                     <Modal.Body className='modalBody'>
                         <Container className='modalContainer'>
-                            <button  className='wood springButton' onClick={selectSpring}><span role='img' aria-label='Spring emoji'>🌱</span> Spring <span role='img' aria-label='Spring emoji'>🌱</span></button>
-                            <button  className='wood summerButton' onClick={selectSummer}><span role='img' aria-label='Sun emoji'>☀️</span> Summer <span role='img' aria-label='☀️'></span></button>
-                            <button  className='wood fallButton' onClick={selectFall}><span role='img' aria-label='Leaf emoji'>🍂</span> Fall <span role='img' aria-label='Leaf emoji'>🍂</span></button>
-                            <button  className='wood winterButton' onClick={selectWinter}><span role='img' aria-label='Snowflake emoji'>❄️</span> Winter <span role='img' aria-label='Snowflake emoji'>❄️</span></button>
+                            <button  className='wood springButton' onClick={selectDeck}><span role='img' aria-label='Spring emoji'>🌱</span> Spring <span role='img' aria-label='Spring emoji'>🌱</span></button>
+                            <button  className='wood summerButton' onClick={selectDeck}><span role='img' aria-label='Sun emoji'>☀️</span> Summer <span role='img' aria-label='☀️'></span></button>
+                            <button  className='wood fallButton' onClick={selectDeck}><span role='img' aria-label='Leaf emoji'>🍂</span> Fall <span role='img' aria-label='Leaf emoji'>🍂</span></button>
+                            <button  className='wood winterButton' onClick={selectDeck}><span role='img' aria-label='Snowflake emoji'>❄️</span> Winter <span role='img' aria-label='Snowflake emoji'>❄️</span></button>
                         </Container>
                     </Modal.Body>
 
