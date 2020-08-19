@@ -18,7 +18,7 @@ function UserProfile() {
     //used to grab the current chosen avatar from the db 
 
     const [avatar, setAvatar] = useState('');
-    const [choosenDeck, setChoosenDeck] = useState('No Deck Choosen.')
+    const [choosenDeck, setChoosenDeck] = useState('No Deck Choosen.');
 
     //used for when a user is selecting a new avatar 
     const [selectAvatar, setSelectAvatar] = useState('');
