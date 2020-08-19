@@ -32,6 +32,18 @@ export default {
       setUpdateSwitch
     } = functions;
 
+    if(attackedPosition === 'opponentGameInformation' && !HelperFunctions.opponentHasDef(opponentBoardData)){
+     const card =  HelperFunctions.getCardInPosition(attackingCardPosition, playerDeck);
+     const boardData = { ...opponentBoardData };
+
+     boardData.opponentLifeTotal -= card.attack;
+     setOpponentBoardData(boardData);
+     setUpdateSwitch(!updateSwitch);
+
+     return;
+
+    } 
+
     // See if this is a valid attack
     if (!HelperFunctions.isOpponentPositionFilled(attackedPosition, opponentBoardData)) {
       return;
@@ -118,7 +130,11 @@ export default {
     // Set that we're now starting an effect if this card has one
     const effect = card.onPlayEffect;
     if (effect) {
-      increaseEffectOperation({ cardId: cardVal.uId, effect: effect, currentOperation: -1 }, deck);
+      increaseEffectOperation(
+        { cardId: cardVal.uId, effect: effect, currentOperation: -1 },
+        deck,
+        data
+      );
     }
 
     setPlayerData(data);
@@ -193,7 +209,7 @@ export default {
 
     if (playerData.hasInitiated) {
       // Update our board data
-      setPlayerData(prevState => ({ ...prevState, currentResource: ourData.currentResource }));
+      setPlayerData(prevState => ({ ...prevState, currentResource: ourData.currentResource, lifeTotal: ourData.opponentLifeTotal}));
 
       let ourDeck = HelperFunctions.copyDeck(playerDeck);
       let deadCards = [null, null, null, null, null];

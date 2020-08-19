@@ -4,7 +4,8 @@ export default {
   userAtkRows: ['userAtt1', 'userAtt2', 'userAtt3'],
   userDefRows: ['userDef1', 'userDef2'],
   // prettier-ignore
-  springDeck: [1, 1, 5, 9, 9, 13, 17, 17, 21, 21, 25, 25, 29, 29, 33, 33, 37, 37, 41, 41, 45, 45, 49, 49, 53, 53, 57, 61, 65, 69],
+  //springDeck: [1, 1, 5, 9, 9, 13, 17, 17, 21, 21, 25, 25, 29, 29, 33, 33, 37, 37, 41, 41, 45, 45, 49, 49, 53, 53, 57, 61, 65, 69],
+  springDeck: [1, 1, 1, 4, 9, 13, 1],
   // prettier-ignore
   summerDeck: [2, 2, 6, 6, 10, 14, 18, 18, 22, 22, 26, 26, 30, 30, 34, 34, 38, 38, 42, 42, 46, 46, 50, 50, 54, 54, 58, 62, 66, 70],
   // prettier-ignore
@@ -85,7 +86,7 @@ export default {
   },
 
   inOpponentRows: function (position) {
-    return this.enemyAtkRows.includes(position) || this.enemyDefRows.includes(position);
+    return this.enemyAtkRows.includes(position) || this.enemyDefRows.includes(position) || position === 'opponentGameInformation';
   },
 
   isPositionFilled: function (position, deck) {
@@ -137,6 +138,15 @@ export default {
 
   isInDefenseRow: function (position) {
     return this.userDefRows.includes(position);
+  },
+
+  opponentHasDef: function (opponentBoardData) { 
+    for (let i = 0; i < this.userDefRows; i++) { 
+      if (opponentBoardData[this.userDefRows[i]]) { 
+        return true;
+      }
+    }
+    return false;
   },
 
   getCardInPosition: function (position, deck) {

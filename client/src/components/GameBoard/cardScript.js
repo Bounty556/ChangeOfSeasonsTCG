@@ -95,7 +95,12 @@ export default {
       return this.positions.slice(0, 5);
     } else if (target === 'OPP') {
       return this.positions.slice(5);
-    } else if (target === 'ALL' || target === 'SINGLE' || operation.op === 'DMG') {
+    } else if (
+      target === 'ALL' ||
+      target === 'SINGLE' ||
+      operation.op === 'DMG' ||
+      operation.op === 'RES'
+    ) {
       return this.positions.slice(0);
     } else if (target === 'DEFROW') {
       return this.positions.slice(3, 5);

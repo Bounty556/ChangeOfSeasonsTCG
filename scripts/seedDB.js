@@ -138,7 +138,7 @@ const cardSeed = [
     attack: 3,
     health: 3,
     name: 'Consus',
-    img: 'dragon_03.png'
+    img: 'demon_07.png'
   },
   {
     season: 'Winter',
@@ -156,11 +156,11 @@ const cardSeed = [
     season: 'Spring',
     cardId: 13,
     isCreature: false,
-    resourceCost: 5,
+    resourceCost: 0,
     attack: 0,
     health: 0,
-    effect: 'Gain 2 resources',
-    effectScript: 'ONPLAY RES 2',
+    effect: 'Gain +1 resource',
+    effectScript: 'ONPLAY RES SELF 1',
     name: 'Vivifcate',
     img: 'emerald_9.png'
   },
