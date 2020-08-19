@@ -10,16 +10,14 @@ export default {
     }
   },
 
-  handleCardDeath: (deadCard, deck, effectCallback) => {
+  handleCardDeath: (deadCard, tempStates, effectCallback) => {
     deadCard.health = 0;
     deadCard.position = 'userGrave';
 
     // Trigger that card's on death effect
     const effect = deadCard.onDeathEffect;
     if (effect) {
-      for (let i = 0; i < effect.operations.length; i++) {
-        effectCallback(deadCard.uId, effect.operations[i], deck);
-      }
+      effectCallback(deadCard.uId, null, effect, tempStates);
     }
   },
 
@@ -38,23 +36,15 @@ export default {
     const oppData = { ...opponentBoardData };
     const card = HelperFunctions.getCardInPosition(attackingCardPosition, ourDeck);
 
-    if (
-      attackedPosition === 'opponentGameInformation' &&
-      !HelperFunctions.opponentHasDef(oppData)
-    ) {
-      oppData.opponentLifeTotal -= card.attack;
+    if (attackedPosition === 'opponentGameInformation') {
+      this.attackEnemyPlayer(oppData, card.attack);
       card.hasAttacked = true;
-
-      if(oppData.opponentLifeTotal <= 0) { 
-        oppData.opponentLost = true;
-      }
-
     } else if (HelperFunctions.isOpponentPositionFilled(attackedPosition, oppData)) {
       attackedPosition = attackedPosition.replace('opponent', 'user');
-      
+
       card.health -= oppData[attackedPosition].attack;
       if (card.health <= 0) {
-        this.handleCardDeath(card, ourDeck, castEffect);
+        this.handleCardDeath(card, { ourDeck, ourData, oppData }, castEffect);
       }
 
       const attackEffect = card.onAttackEffect;
@@ -162,13 +152,13 @@ export default {
     if (handCount < 5) {
       this.drawCard(ourDeck);
     }
-    
+
     // Reset attacked and effects flags for all cards
     for (let i = 0; i < ourDeck.length; i++) {
       ourDeck[i].hasAttacked = false;
       ourDeck[i].hasEffect = false;
     }
-    
+
     setPlayerDeck(ourDeck);
     setPlayerData(ourData);
     setUpdateSwitch(!updateSwitch);
@@ -269,6 +259,16 @@ export default {
         setPlayerDeck(newPlayerDeck);
         setPlayerData(newPlayerData);
         setOpponentBoardData(boardData);
+      }
+    }
+  },
+
+  attackEnemyPlayer: (oppData, damage) => {
+    if (!HelperFunctions.opponentHasDef(oppData)) {
+      oppData.opponentLifeTotal -= damage;
+
+      if (oppData.opponentLifeTotal <= 0) {
+        oppData.opponentLost = true;
       }
     }
   }

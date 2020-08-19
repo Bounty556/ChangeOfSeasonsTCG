@@ -16,10 +16,9 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Container from '../../components/Container/index';
 
+import axios from 'axios';
 
 import './gameboard.css';
-import { set } from 'mongoose';
-import axios from 'axios';
 
 // Give this function to the children of this component so they can tell us when
 // A card was dropped on them
@@ -30,9 +29,6 @@ export const CardContext = createContext({
 
 // TODO: When we drag a card and hover it over a card slot, it should make the slot go grey or
 //       something similar so the user has some kind of feedback
-// TODO: Add endgame
-// TODO: Test all effects
-
 // TODO: Make cards 69 and 70 have proactive effects
 // TODO: Fix issue with ending turn before 2nd player loads in causing it to be no one's turn
 
@@ -49,7 +45,8 @@ function GameBoard() {
     playerLost: false
   });
 
-  const [updateSwitch, setUpdateSwitch] = useState(false); // This swings between true and false every time we need to update
+  // This swings between true and false every time we need to update
+  const [updateSwitch, setUpdateSwitch] = useState(false);
 
   const [opponentBoardData, setOpponentBoardData] = useState({
     opponentPlayAreaCount: 5,
@@ -122,9 +119,9 @@ function GameBoard() {
       setPlayerData(prevState => ({
         ...prevState,
         playerLost: true
-      }))
+      }));
     }
-  }, [playerData.lifeTotal])
+  }, [playerData.lifeTotal]);
 
   // Called by CardHolder components whenever a card is dragged on to one of them
   const cardDraggedToPosition = (cardId, destinationPosition) => {
@@ -223,6 +220,10 @@ function GameBoard() {
         Effects.instantRaiseAtkEffect(operation, tempStates);
         break;
 
+      case 'SETATK':
+        Effects.instantSetAtkEffect(operation, tempStates);
+        break;
+
       case 'TOPDECK':
         Effects.instantTopDeckEffect(casterId, tempStates);
         break;
@@ -231,7 +232,7 @@ function GameBoard() {
         if (operation.param1 === 'ALL') {
           Effects.instantDmgEffect(operation, tempStates, castOperation);
         } else {
-          Effects.manualDmgEffect(target, tempStates, castOperation);
+          Effects.manualDmgEffect(target, operation, tempStates, castOperation);
         }
         break;
 
@@ -241,6 +242,10 @@ function GameBoard() {
         } else {
           Effects.instantKillEffect(tempStates);
         }
+        break;
+
+      case 'ADDEFFECT':
+        Effects.manualAddEffect(target, operation, tempStates);
         break;
 
       default:
@@ -280,20 +285,13 @@ function GameBoard() {
     });
   };
 
-
   const exitGameWin = () => {
     const userId = JSON.parse(localStorage.getItem('authentication'))._id;
-    axios.put(`/api/user/${userId}/win`)
-      .then(() =>
-        window.location = '/profile'
-      );
+    axios.put(`/api/user/${userId}/win`).then(() => (window.location = '/profile'));
   };
   const exitGameLose = () => {
     const userId = JSON.parse(localStorage.getItem('authentication'))._id;
-    axios.put(`/api/user/${userId}/loss`)
-      .then(() =>
-        window.location = '/profile'
-      );
+    axios.put(`/api/user/${userId}/loss`).then(() => (window.location = '/profile'));
   };
 
   return (
@@ -343,8 +341,8 @@ function GameBoard() {
               </button>
             </div>
           ) : (
-              <p style={{ textAlign: 'center' }}>Waiting for Opponent to Finish their turn.</p>
-            )}
+            <p style={{ textAlign: 'center' }}>Waiting for Opponent to Finish their turn.</p>
+          )}
           <div id='userAttRow'>
             <CardHolder id='userAtt1' />
             <CardHolder id='userAtt2' />
@@ -383,7 +381,10 @@ function GameBoard() {
           </Container>
         </Modal.Body>
         <Modal.Footer className='modalFooter'>
-          <Button variant='danger' className='closeButtonModal' onClick={exitGameWin}> Return To Profile </Button>
+          <Button variant='danger' className='closeButtonModal' onClick={exitGameWin}>
+            {' '}
+            Return To Profile{' '}
+          </Button>
         </Modal.Footer>
       </Modal>
 
@@ -395,7 +396,10 @@ function GameBoard() {
           </Container>
         </Modal.Body>
         <Modal.Footer className='modalFooter'>
-          <Button variant='danger' className='closeButtonModal' onClick={exitGameLose}> Return To Profile </Button>
+          <Button variant='danger' className='closeButtonModal' onClick={exitGameLose}>
+            {' '}
+            Return To Profile{' '}
+          </Button>
         </Modal.Footer>
       </Modal>
     </CardContext.Provider>

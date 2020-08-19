@@ -1,5 +1,6 @@
 import HelperFunctions from './helperFunctions';
 import GameLogic from './gameLogic';
+import Parser from './cardScript';
 
 export default {
   manualHealEffect: (target, operation, tempStates) => {
@@ -25,8 +26,9 @@ export default {
     const { param1 } = operation;
     const { oppData, ourDeck } = tempStates;
 
-    // We need different behavior for if we're hurting an enemy
-    if (HelperFunctions.inOpponentRows(target)) {
+    if (target === 'opponentGameInformation') {
+      GameLogic.attackEnemyPlayer(oppData, parseInt(param1));
+    } else if (HelperFunctions.inOpponentRows(target)) {
       target = target.replace('opponent', 'user');
       const damagedCard = oppData[target];
       if (damagedCard) {
@@ -41,7 +43,7 @@ export default {
       if (damagedCard) {
         damagedCard.health -= parseInt(param1);
         if (damagedCard.health <= 0) {
-          GameLogic.handleCardDeath(damagedCard, ourDeck, castCallback);
+          GameLogic.handleCardDeath(damagedCard, tempStates, castCallback);
         }
       }
     }
@@ -54,13 +56,39 @@ export default {
     const killedCard = HelperFunctions.getCardInPosition(target, ourDeck);
 
     if (killedCard) {
-      GameLogic.handleCardDeath(killedCard, ourDeck, castCallback);
+      GameLogic.handleCardDeath(killedCard, tempStates, castCallback);
     } else {
       const ourRows = [...HelperFunctions.userAtkRows, ...HelperFunctions.userDefRows];
       for (let i = 0; i < ourRows.length; i++) {
         const foundCard = HelperFunctions.getCardInPosition(ourRows[i], ourDeck);
         if (foundCard) {
-          GameLogic.handleCardDeath(foundCard, ourDeck, castCallback);
+          GameLogic.handleCardDeath(foundCard, tempStates, castCallback);
+          return;
+        }
+      }
+    }
+  },
+
+  manualAddEffect: (target, operation, tempStates) => {
+    const { ourDeck } = tempStates;
+    const { param1 } = operation;
+
+    const parsedTokens = Parser.tokenize(param1);
+
+    const affectedCard = HelperFunctions.getCardInPosition(target, ourDeck);
+
+    if (affectedCard) {
+      for (let i = 0; i < parsedTokens.length; i++) {
+        HelperFunctions.addEffectToCard(affectedCard, parsedTokens[i]);
+      }
+    } else {
+      const ourRows = [...HelperFunctions.userAtkRows, ...HelperFunctions.userDefRows];
+      for (let i = 0; i < ourRows.length; i++) {
+        const foundCard = HelperFunctions.getCardInPosition(ourRows[i], ourDeck);
+        if (foundCard) {
+          for (let j = 0; j < parsedTokens.length; j++) {
+            HelperFunctions.addEffectToCard(foundCard, parsedTokens[j]);
+          }
           return;
         }
       }
@@ -120,6 +148,23 @@ export default {
     }
   },
 
+  instantSetAtkEffect: (operation, tempStates) => {
+    const { param1, param2 } = operation;
+    const { oppData } = tempStates;
+
+    let positions;
+    if (param1 === 'OPPATKROW') {
+      positions = HelperFunctions.userAtkRows;
+    }
+
+    // Increase the attack of all of our cards
+    for (let i = 0; i < positions.length; i++) {
+      if (oppData[positions[i]]) {
+        oppData[positions[i]].attack = parseInt(param2);
+      }
+    }
+  },
+
   instantRaiseAtkEffect: (operation, tempStates) => {
     const { param1, param2 } = operation;
     const { ourDeck } = tempStates;
@@ -151,7 +196,7 @@ export default {
     for (let i = 0; i < ourDeck.length; i++) {
       if (ourDeck[i].uId === card.uId) {
         ourDeck[i] = ourDeck[0];
-        return;
+        break;
       }
     }
     ourDeck[0] = card;
@@ -170,13 +215,13 @@ export default {
         card.health -= parseInt(param2);
 
         if (card.health <= 0) {
-          GameLogic.handleCardDeath(card, ourDeck, castCallback);
+          GameLogic.handleCardDeath(card, tempStates, castCallback);
         }
       }
     }
   },
 
-  instantKillEffect: (tempStates) => {
+  instantKillEffect: tempStates => {
     const { oppData } = tempStates;
 
     const oppDefRow = HelperFunctions.userDefRows;
