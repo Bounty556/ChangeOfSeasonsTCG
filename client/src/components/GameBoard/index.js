@@ -19,6 +19,7 @@ import Container from '../../components/Container/index';
 
 import './gameboard.css';
 import { set } from 'mongoose';
+import axios from 'axios';
 
 // Give this function to the children of this component so they can tell us when
 // A card was dropped on them
@@ -115,15 +116,15 @@ function GameBoard() {
     setUpdateSwitch(!updateSwitch);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
-useEffect(() => {
-  if(playerData.lifeTotal <= 0) { 
-    setPlayerData(prevState => ({ 
-      ...prevState, 
-      playerLost: true
-    }))
-  }
-}, [playerData.lifeTotal])
+
+  useEffect(() => {
+    if (playerData.lifeTotal <= 0) {
+      setPlayerData(prevState => ({
+        ...prevState,
+        playerLost: true
+      }))
+    }
+  }, [playerData.lifeTotal])
 
   // Called by CardHolder components whenever a card is dragged on to one of them
   const cardDraggedToPosition = (cardId, destinationPosition) => {
@@ -279,33 +280,21 @@ useEffect(() => {
     });
   };
 
-  //modal code 
-  //WIN
-  const [showModalWin, setShowModalWin] = useState(false);
 
-  //Lose
-  const [showModalLose, setShowModalLose] = useState(false);
-
-  //redirect 
-  const exitGameWin  = () => {
-    window.location = '/profile';
-    //need to update user db information 
+  const exitGameWin = () => {
+    const userId = JSON.parse(localStorage.getItem('authentication'))._id;
+    axios.put(`/api/user/${userId}/win`)
+      .then(() =>
+        window.location = '/profile'
+      );
   };
-  const exitGameLose  = () => {
-    window.location = '/profile';
-        //need to update user db information 
+  const exitGameLose = () => {
+    const userId = JSON.parse(localStorage.getItem('authentication'))._id;
+    axios.put(`/api/user/${userId}/loss`)
+      .then(() =>
+        window.location = '/profile'
+      );
   };
-
-   
-  // if(opponentBoardData.opponentLost === true) { 
-  // setShowModalWin(true);
-  // }
-
-  //TESTING 
-  // if(playerData.lifeTotal <= 24) { 
-  //   setShowModal(true)
-  // }
-
 
   return (
     <CardContext.Provider value={{ cardDraggedToPosition, playerDeck }}>
@@ -354,8 +343,8 @@ useEffect(() => {
               </button>
             </div>
           ) : (
-            <p style={{textAlign: 'center'}}>Waiting for Opponent to Finish their turn.</p>
-          )}
+              <p style={{ textAlign: 'center' }}>Waiting for Opponent to Finish their turn.</p>
+            )}
           <div id='userAttRow'>
             <CardHolder id='userAtt1' />
             <CardHolder id='userAtt2' />
@@ -390,7 +379,7 @@ useEffect(() => {
       <Modal className='avatarModal' show={opponentBoardData.opponentLost === true}>
         <Modal.Body className='modalBody'>
           <Container className='modalContainer'>
-            <p>YOU WIN</p>
+            <p>YOU WON</p>
           </Container>
         </Modal.Body>
         <Modal.Footer className='modalFooter'>
@@ -402,7 +391,7 @@ useEffect(() => {
       <Modal className='avatarModal' show={playerData.playerLost === true}>
         <Modal.Body className='modalBody'>
           <Container className='modalContainer'>
-            <p>YOU LOOSE</p>
+            <p>YOU LOST</p>
           </Container>
         </Modal.Body>
         <Modal.Footer className='modalFooter'>
