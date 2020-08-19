@@ -34,6 +34,12 @@ function Homepage() {
                         )}
                     </div>
                </div>
+
+                <div className='howToRow animate__animated animate__bounceIn animate__delay-1s'>
+                    <Link to='/HowToPlay'>
+                        <button className='wood howToBtn'>How to Play</button>
+                    </Link>
+                </div>
             </Container>
         </div>
     )

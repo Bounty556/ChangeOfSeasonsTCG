@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 //Will be used to go to card lists and deck builder ~possibly friends list if implimented
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import Container from '../../components/Container/index';
 import Navbar from '../../components/Navbar/index';
@@ -110,9 +110,9 @@ function UserProfile() {
             <Navbar />
             <Container>
                 <div className='card animate__animated animate__slideInDown profileCard '>
-                    <div className='card-body row'>
+                    <div className='card-body row profileCardCol'>
 
-                        <div className='user-avatar col-4'>
+                        <div className='user-avatar col-5'>
                             <h2 className='profileUserName'>{username}</h2>
                             <div className='avatarContainer'>
                                 <img src={`./images/cardImg/${avatar}`} alt="Player's Chosen Avatar" className='avatarUserProfile' />
@@ -125,11 +125,14 @@ function UserProfile() {
                             </div>
                         </div>
 
-                        <div className='user-links col-4 my-auto'>
+                        <div className='user-links col-5'>
                             <div className='button-col'>
                                 <button className='woodProfileButton' onClick={handleShowDeck}>Choose Deck</button>
-                                <br></br>
-                                <br></br>
+                                <br />
+                                <Link to='/HowToPlay'>
+                                    <button className='woodProfileButton'>How to Play</button>
+                                </Link>
+                                <br />
                                 <button className='woodProfileButton' onClick={goToLobby}>Play Match</button>
                             </div>
                         </div>
