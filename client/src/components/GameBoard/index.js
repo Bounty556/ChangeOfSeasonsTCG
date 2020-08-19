@@ -18,6 +18,7 @@ import Container from '../../components/Container/index';
 
 
 import './gameboard.css';
+import { set } from 'mongoose';
 
 // Give this function to the children of this component so they can tell us when
 // A card was dropped on them
@@ -63,7 +64,8 @@ function GameBoard() {
     userAtt3: null,
     userGameInformation: null,
     currentResource: 2,
-    opponentLifeTotal: 25
+    opponentLifeTotal: 25,
+    opponentLost: false
   });
 
   useEffect(() => {
@@ -298,8 +300,23 @@ function GameBoard() {
     setShowModalLose(false);
   }
 
+  //redirect 
+  const exitGameWin  = () => {
+    window.location = '/profile';
+    //need to update user db information 
+  };
+  const exitGameLose  = () => {
+    window.location = '/profile';
+        //need to update user db information 
+  };
+
+   
+  if(opponentBoardData.opponentLost === true) { 
+  setShowModalWin(true);
+  }
+
   //TESTING 
-  // if(opponentBoardData.opponentLifeTotal <= 24) { 
+  // if(playerData.lifeTotal <= 24) { 
   //   setShowModal(true)
   // }
 
@@ -391,7 +408,7 @@ function GameBoard() {
           </Container>
         </Modal.Body>
         <Modal.Footer className='modalFooter'>
-          <Button variant='danger' className='closeButtonModal' onClick={handleCloseModalWin}> Return To Profile </Button>
+          <Button variant='danger' className='closeButtonModal' onClick={exitGameWin}> Return To Profile </Button>
         </Modal.Footer>
       </Modal>
 
@@ -403,7 +420,7 @@ function GameBoard() {
           </Container>
         </Modal.Body>
         <Modal.Footer className='modalFooter'>
-          <Button variant='danger' className='closeButtonModal' onClick={handleCloseModalLose}> Return To Profile </Button>
+          <Button variant='danger' className='closeButtonModal' onClick={exitGameLose}> Return To Profile </Button>
         </Modal.Footer>
       </Modal>
     </CardContext.Provider>

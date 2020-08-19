@@ -36,12 +36,15 @@ export default {
 
      const card =  HelperFunctions.getCardInPosition(attackingCardPosition, playerDeck);
      const boardData = { ...opponentBoardData };
+     let lost = boardData.opponentLost
 
      boardData.opponentLifeTotal -= card.attack;
      card.hasAttacked = true;
 
-     if(boardData.opponentLifeTotal <= 0) { 
-       //need to use this later
+     if(boardData.opponentLifeTotal <= 24) { 
+       console.log(boardData.opponentLifeTotal)
+       lost = true
+       console.log(lost)
      }
 
      setOpponentBoardData(boardData);
