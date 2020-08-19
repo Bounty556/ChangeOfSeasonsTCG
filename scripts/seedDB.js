@@ -196,7 +196,7 @@ const cardSeed = [
     attack: 0,
     health: 0,
     effect: 'Give defense row +2 health ',
-    effectScript: 'ONPLAY HEAL ALL 2',
+    effectScript: 'ONPLAY HEAL DEFROW 2',
     name: 'Dark Shell',
     img: 'violet_11.png'
   },

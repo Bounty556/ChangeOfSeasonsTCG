@@ -45,6 +45,8 @@ export default {
       oppData.opponentLifeTotal -= card.attack;
       card.hasAttacked = true;
     } else if (HelperFunctions.isOpponentPositionFilled(attackedPosition, oppData)) {
+      attackedPosition = attackedPosition.replace('opponent', 'user');
+      
       card.health -= oppData[attackedPosition].attack;
       if (card.health <= 0) {
         this.handleCardDeath(card, ourDeck, castEffect);
@@ -55,7 +57,6 @@ export default {
         castEffect(card.uId, null, attackEffect, { ourDeck, ourData, oppData });
       }
 
-      attackedPosition = attackedPosition.replace('opponent', 'user');
       oppData[attackedPosition].health -= card.attack;
       card.hasAttacked = true;
       if (oppData[attackedPosition].health <= 0) {
@@ -115,7 +116,7 @@ export default {
     const ourDeck = HelperFunctions.copyDeck(playerDeck);
     const ourData = { ...playerData };
     const oppData = { ...opponentBoardData };
-    const card = HelperFunctions.getCardWithId(cardVal.uId, deck);
+    const card = HelperFunctions.getCardWithId(cardVal.uId, ourDeck);
 
     if (ourData.currentResource >= card.resourceCost) {
       ourData.currentResource -= card.resourceCost;
@@ -142,28 +143,29 @@ export default {
 
   endTurn: function (states, functions) {
     const { playerData, updateSwitch, playerDeck } = states;
-    const { setPlayerData, setUpdateSwitch, setPlayerDeck, setEffectData } = functions;
+    const { setPlayerData, setUpdateSwitch, setPlayerDeck } = functions;
 
-    const tempData = { ...playerData };
-    tempData.isPlayersTurn = false;
-    if (tempData.currentResource <= 8) {
-      tempData.currentResource += 1;
+    const ourData = { ...playerData };
+    const ourDeck = HelperFunctions.copyDeck(playerDeck);
+
+    ourData.isPlayersTurn = false;
+    if (ourData.currentResource <= 8) {
+      ourData.currentResource += 1;
     }
-    setPlayerData(tempData);
     // Check to see the amount of cards in the players hands and draws a card if able
-    const deck = HelperFunctions.copyDeck(playerDeck);
-    const handCount = HelperFunctions.countAllCardsInPosition('userPlayArea', playerDeck);
+    const handCount = HelperFunctions.countAllCardsInPosition('userPlayArea', ourDeck);
     if (handCount < 5) {
-      this.drawCard(deck);
+      this.drawCard(ourDeck);
     }
-
+    
     // Reset attacked and effects flags for all cards
-    for (let i = 0; i < deck.length; i++) {
-      deck[i].hasAttacked = false;
-      deck[i].hasEffect = false;
+    for (let i = 0; i < ourDeck.length; i++) {
+      ourDeck[i].hasAttacked = false;
+      ourDeck[i].hasEffect = false;
     }
-
-    setPlayerDeck(deck);
+    
+    setPlayerDeck(ourDeck);
+    setPlayerData(ourData);
     setUpdateSwitch(!updateSwitch);
   },
 
@@ -186,7 +188,7 @@ export default {
       userAtt3: null,
       currentResource: otherData.currentResource
     };
-    const newPlayerDeck = HelperFunctions.copyDeck(playerDeck);
+    let newPlayerDeck = HelperFunctions.copyDeck(playerDeck);
     const newPlayerData = { ...playerData };
 
     if (player === playerNumber) {

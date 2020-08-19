@@ -88,7 +88,7 @@ function GameBoard() {
         setPlayerData(prevState => ({ ...prevState, isPlayersTurn: true }));
       } else {
         const states = { playerData, updateSwitch, playerDeck };
-        const functions = { setPlayerData, setUpdateSwitch, setPlayerDeck, setEffectData };
+        const functions = { setPlayerData, setUpdateSwitch, setPlayerDeck };
         GameLogic.endTurn(states, functions);
       }
     });
@@ -131,16 +131,16 @@ function GameBoard() {
   };
 
   const castEffect = (cardId, target, effect, tempStates) => {
-    const ourDeck;
-    const ourData;
-    const oppData;
+    let ourDeck;
+    let ourData;
+    let oppData;
 
     if (tempStates) {
       ourDeck = tempStates.ourDeck;
       ourData = tempStates.ourData;
       oppData = tempStates.oppData;
     } else {
-      ourDeck = GameLogic.copyDeck(playerDeck);
+      ourDeck = HelperFunctions.copyDeck(playerDeck);
       ourData = { ...playerData };
       oppData = { ...opponentBoardData };
     }
@@ -163,7 +163,7 @@ function GameBoard() {
   };
 
   const castSpell = (cardId, target) => {
-    const ourDeck = GameLogic.copyDeck(playerDeck);
+    const ourDeck = HelperFunctions.copyDeck(playerDeck);
     const ourData = { ...playerData };
     const oppData = { ...opponentBoardData };
 
@@ -174,7 +174,7 @@ function GameBoard() {
       castEffect(cardId, target, card.onPlayEffect, { ourDeck, ourData, oppData });
 
       card.position = 'userGrave';
-      data.currentResource -= card.resourceCost;
+      ourData.currentResource -= card.resourceCost;
 
       setPlayerDeck(ourDeck);
       setPlayerData(ourData);
@@ -202,7 +202,7 @@ function GameBoard() {
         break;
 
       case 'RAISEATK':
-        Effects.instantRaiseAtkEffect(operation, useDeck, states, functions);
+        Effects.instantRaiseAtkEffect(operation, tempStates);
         break;
 
       case 'TOPDECK':
@@ -219,7 +219,7 @@ function GameBoard() {
 
       case 'KILL':
         if (operation.param1 === 'SELF') {
-          Effects.manualKillEffect(target, operation, tempStates, castOperation);
+          Effects.manualKillEffect(target, tempStates, castOperation);
         } else {
           Effects.instantKillEffect(tempStates);
         }
@@ -241,20 +241,16 @@ function GameBoard() {
     };
 
     if (
-      destinationPosition !== 'userPlayArea' ||
-      HelperFunctions.isInDefenseRow(cardVal.position) ||
-      HelperFunctions.isPositionFilled(destinationPosition, playerDeck)
+      destinationPosition !== 'userPlayArea' &&
+      !HelperFunctions.isInDefenseRow(cardVal.position) &&
+      !HelperFunctions.isPositionFilled(destinationPosition, playerDeck)
     ) {
       if (HelperFunctions.inOpponentRows(destinationPosition)) {
         // Attack card
         if (cardVal.position !== 'userPlayArea' && cardVal.attack > 0 && !cardVal.hasAttacked) {
-          return GameLogic.attackCard(cardVal.position, destinationPosition, states, functions);
-        } else {
-          return;
+          GameLogic.attackCard(cardVal.position, destinationPosition, states, functions);
         }
-      }
-
-      if (cardVal.position === 'userPlayArea') {
+      } else if (cardVal.position === 'userPlayArea') {
         GameLogic.playCard(cardVal, destinationPosition, states, functions);
       }
     }
