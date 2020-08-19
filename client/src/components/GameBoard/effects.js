@@ -73,18 +73,22 @@ export default {
     const { ourDeck } = tempStates;
     const { param1 } = operation;
 
-    const parsedToken = Parser.tokenize(param1);
+    const parsedTokens = Parser.tokenize(param1);
 
     const affectedCard = HelperFunctions.getCardInPosition(target, ourDeck);
 
     if (affectedCard) {
-      HelperFunctions.addEffectToCard(affectedCard, parsedToken);
+      for (let i = 0; i < parsedTokens.length; i++) {
+        HelperFunctions.addEffectToCard(affectedCard, parsedTokens[i]);
+      }
     } else {
       const ourRows = [...HelperFunctions.userAtkRows, ...HelperFunctions.userDefRows];
       for (let i = 0; i < ourRows.length; i++) {
         const foundCard = HelperFunctions.getCardInPosition(ourRows[i], ourDeck);
         if (foundCard) {
-          HelperFunctions.addEffectToCard(foundCard, parsedToken);
+          for (let j = 0; j < parsedTokens.length; j++) {
+            HelperFunctions.addEffectToCard(foundCard, parsedTokens[j]);
+          }
           return;
         }
       }
@@ -192,7 +196,7 @@ export default {
     for (let i = 0; i < ourDeck.length; i++) {
       if (ourDeck[i].uId === card.uId) {
         ourDeck[i] = ourDeck[0];
-        return;
+        break;
       }
     }
     ourDeck[0] = card;

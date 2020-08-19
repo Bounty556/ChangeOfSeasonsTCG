@@ -32,8 +32,6 @@ export const CardContext = createContext({
 // TODO: Make cards 69 and 70 have proactive effects
 // TODO: Fix issue with ending turn before 2nd player loads in causing it to be no one's turn
 
-// TODO: Implement ADDEFFECT
-
 function GameBoard() {
   const { socket, gameId, deck, playerNumber } = useContext(GameContext);
 
