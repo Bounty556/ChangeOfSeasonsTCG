@@ -34,6 +34,12 @@ function Homepage() {
                         )}
                     </div>
                </div>
+
+                <div className='howToRow animate__animated animate__bounceIn'>
+                    <Link to='/HowToPlay'>
+                        <button className='wood howToBtn'>How to Play</button>
+                    </Link>
+                </div>
             </Container>
         </div>
     )

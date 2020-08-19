@@ -6,7 +6,7 @@ export default {
     'DMG',
     'HEAL',
     'KILL',
-    'RTNHND',
+    'TOPDECK',
     'RAISEATK',
     'RAISEDEF',
     'SETATK',
@@ -95,7 +95,12 @@ export default {
       return this.positions.slice(0, 5);
     } else if (target === 'OPP') {
       return this.positions.slice(5);
-    } else if (target === 'ALL' || target === 'SINGLE') {
+    } else if (
+      target === 'ALL' ||
+      target === 'SINGLE' ||
+      operation.op === 'DMG' ||
+      operation.op === 'RES'
+    ) {
       return this.positions.slice(0);
     } else if (target === 'DEFROW') {
       return this.positions.slice(3, 5);
@@ -115,12 +120,14 @@ export default {
     return (
       operator === 'DRAW' ||
       operator === 'RES' ||
-      operator === 'RTNHAND' ||
+      operator === 'TOPDECK' ||
       operator === 'RAISEATK' ||
       operator === 'RAISEDEF' ||
       operator === 'SETATK' ||
       (operator === 'HEAL' && operation.param1 === 'ALL') ||
-      (operator === 'HEAL' && operation.param1 === 'DEFROW')
-    )
+      (operator === 'HEAL' && operation.param1 === 'DEFROW') ||
+      (operator === 'HEAL' && operation.param1 === 'ATKROW') ||
+      (operator === 'DMG' && operation.param1 === 'ALL')
+    );
   }
 };

@@ -11,7 +11,7 @@ import Modal from 'react-bootstrap/Modal';
 
 import './lobby.css';
 
-const ENDPOINT = 'http://localhost:3001/';
+const ENDPOINT = (process.env.NODE_ENV === 'development') ? 'http://localhost:3001' : '';
 
 export const GameContext = createContext({
   socket: null,
@@ -194,7 +194,36 @@ class Lobby extends Component {
     if (this.state.playerNumber === 1) {
       this.socket.emit('room', this.state.gameId, 'startGame');
     }
-    this.setState({ playGame: true });
+
+    const startBtnRow = document.getElementById('startRow');
+    const gameIdRow = document.getElementById('gameIdRow');
+    const mainCard = document.getElementById('profileCard');
+    const avatar1 = document.getElementById('avatar1');
+    const avatar2 = document.getElementById('loadingID');
+    
+    startBtnRow.classList.add('animate__animated', 'animate__bounceOut');
+    gameIdRow.classList.add('animate__animated', 'animate__bounceOut');
+
+    startBtnRow.addEventListener('animationend', () => {
+      startBtnRow.style.display = 'none';
+      gameIdRow.style.display = 'none';
+
+      setTimeout(() => {
+        avatar1.classList.add('animate__animated', 'animate__heartBeat');
+
+        avatar1.addEventListener('animationend', () => {
+          avatar2.classList.add('animate__animated', 'animate__heartBeat');
+
+          avatar2.addEventListener('animationend', () => {
+            mainCard.classList.replace('animate__slideInDown', 'animate__bounceOut');
+
+            setTimeout(() => {
+              this.setState({ playGame: true });
+            }, 1000);
+          });
+        });
+      }, 500);
+    });
   };
 
   // Duplicate user check
@@ -241,7 +270,7 @@ class Lobby extends Component {
           <div>
             <Navbar />
             <Container>
-              <div className='card animate__animated animate__slideInDown profileCard'>
+              <div className='card animate__animated animate__slideInDown profileCard' id='profileCard'>
                 <div className='card-body'>
                   {/* row displaying users */}
                   <div className='players row'>
@@ -251,6 +280,7 @@ class Lobby extends Component {
                         src={'./images/cardImg/' + this.state.avatar1}
                         alt='Player`s Chosen Avatar'
                         className='avatar'
+                        id='avatar1'
                       ></img>
                     </div>
 
@@ -271,7 +301,7 @@ class Lobby extends Component {
                       </div>
                     )}
                   </div>
-                  <div className='row'>
+                  <div className='row' id='gameIdRow'>
                     {!this.state.joinedLobby ? (
                       <input
                         className='game-input hide'
@@ -280,14 +310,14 @@ class Lobby extends Component {
                         onChange={this.handleChangeJoinId}
                       ></input>
                     ) : (
-                      <p className='gameIdText' onChange={this.inputFunc}>{this.state.gameId}</p>
+                      <p className='gameIdText'>{this.state.gameId}</p>
                     )}
                   </div>
-                  <div className='row'>
+                  <div className='row' id='startRow'>
                     {!this.state.joinedLobby ? (
                       <div className='button-col'>
                         {this.state.showJoin ? (
-                          <button className='wood' onClick={this.joinLobby}>
+                          <button className='wood animate__animated animate__bounceIn' onClick={this.joinLobby}>
                             Join Match
                           </button>
                         ) : (
@@ -298,7 +328,7 @@ class Lobby extends Component {
                         </button>
                       </div>
                     ) : (
-                      <div className='button=col'>
+                      <div className='button-col'>
                         {this.state.playerNumber === 1 && this.state.allJoined ? (
                           <button className='wood animate__animated animate__bounceIn' onClick={this.startMatch}>
                             Start Match

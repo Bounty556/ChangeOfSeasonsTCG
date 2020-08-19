@@ -29,7 +29,7 @@ function Navbar() {
     }, []);
 
     function logoutFunc() {
-        axios.post('/api/logout').then(res => {
+        axios.post('/api/logout').then(() => {
             localStorage.removeItem('authentication');
             localStorage.removeItem('avatar');
             localStorage.removeItem('username');

@@ -5,7 +5,7 @@
     background-size: cover;
 }
 
-.col-4 {
+.col-6 {
     justify-content: center;
 }
 
@@ -79,6 +79,11 @@ button {
 
 .stats-div {
     margin-left: 5px;
+    text-shadow: 
+        2px 1px 10px black, 
+        2px 1px 12px black, 
+        2px 1px 11px black, 
+        2px 1px 1px black;
 }
 
 .avatarUserProfile { 
@@ -100,6 +105,11 @@ button {
     font-weight: bolder;
     margin: 10px 0;
     text-align: left;
+    text-shadow: 
+        2px 1px 10px black, 
+        2px 1px 12px black, 
+        2px 1px 11px black, 
+        2px 1px 1px black;
 }
 
 .chooseAvatar:hover { 
@@ -114,6 +124,7 @@ button {
     0 0 100px rgb(220, 20, 60),
     0 0 120px rgb(220, 20, 60);  
 }
+
 .springButton:hover { 
     text-shadow:
     0 0 1px #fff,
@@ -125,6 +136,7 @@ button {
     0 0 100px rgb(20, 220, 37),
     0 0 120px rgb(20, 220, 37);   
 }
+
 .summerButton:hover { 
     text-shadow:
     0 0 1px #fff,
@@ -136,6 +148,7 @@ button {
     0 0 100px rgb(238, 255, 1),
     0 0 120px rgb(238, 255, 1);   
 }
+
 .fallButton:hover { 
     text-shadow:
     0 0 1px #fff,
@@ -147,6 +160,7 @@ button {
     0 0 100px rgb(255, 94, 0),
     0 0 120px rgb(255, 94, 0);   
 }
+
 .winterButton:hover { 
     text-shadow:
     0 0 1px #fff,
@@ -210,4 +224,19 @@ button {
     border-color: black;
     margin: 2px;
     color: black
+}
+
+.user-avatar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+@media (max-width: 1000px) {
+    .profileCardCol {
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        margin-right: 130px;
+    }
 }
