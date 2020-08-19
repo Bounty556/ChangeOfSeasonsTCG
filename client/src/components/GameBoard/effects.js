@@ -76,15 +76,15 @@ export default {
     setUpdateSwitch(!updateSwitch);
   },
 
-  instantResEffect: (operation, states, functions) => {
+  instantResEffect: (operation, useData, states, functions) => {
     const { param1, param2 } = operation;
-    const { playerData, opponentBoardData } = states;
-    const { setPlayerData, setOpponentBoardData } = functions;
+    const { opponentBoardData } = states;
+    const { setOpponentBoardData } = functions;
 
     if (param1 === 'SELF') {
-      let currentResources = playerData.currentResource;
-      currentResources = HelperFunctions.clamp(currentResources + parseInt(param2), 0, 9);
-      setPlayerData(prevState => ({ ...prevState, currentResource: currentResources }));
+      let resources = useData.currentResource;
+      resources = HelperFunctions.clamp(resources + parseInt(param2), 0 , 9);
+      useData.currentResource = resources;
     } else if (param1 === 'OPP') {
       let currentResources = opponentBoardData.currentResource;
       currentResources = HelperFunctions.clamp(currentResources + parseInt(param2), 0, 9);
