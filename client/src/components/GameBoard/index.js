@@ -12,6 +12,11 @@ import GameLogic from './gameLogic';
 import Parser from './cardScript';
 import Effects from './effects';
 
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import Container from '../../components/Container/index';
+
+
 import './gameboard.css';
 
 // Give this function to the children of this component so they can tell us when
@@ -114,8 +119,7 @@ function GameBoard() {
   }, []);
 
   // Called by CardHolder components whenever a card is dragged on to one of them
-  const cardDraggedToPosition = (cardId, destinationPosition) =>
-  {
+  const cardDraggedToPosition = (cardId, destinationPosition) => {
     const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
     const cardVal = { ...playerDeck[cardIndex] }; // The card we're dragging
 
@@ -280,6 +284,26 @@ function GameBoard() {
     });
   };
 
+  //modal code 
+  //WIN
+  const [showModalWin, setShowModalWin] = useState(false);
+
+  const handleCloseModalWin = () => {
+    setShowModalWin(false);
+  }
+  //Lose
+  const [showModalLose, setShowModalLose] = useState(false);
+
+  const handleCloseModalLose = () => {
+    setShowModalLose(false);
+  }
+
+  //TESTING 
+  // if(opponentBoardData.opponentLifeTotal <= 24) { 
+  //   setShowModal(true)
+  // }
+
+
   return (
     <CardContext.Provider value={{ cardDraggedToPosition, playerDeck }}>
       <DndProvider backend={HTML5Backend}>
@@ -299,10 +323,10 @@ function GameBoard() {
               id='opponentPlayArea'
               cardCount={opponentBoardData.opponentPlayAreaCount}
             />
-            <UserGameInformation 
-            id ='opponentGameInformation'
-            lifeState ={opponentBoardData.opponentLifeTotal}
-            /> 
+            <UserGameInformation
+              id='opponentGameInformation'
+              lifeState={opponentBoardData.opponentLifeTotal}
+            />
           </div>
 
           <div id='opponentDefRow'>
@@ -327,8 +351,8 @@ function GameBoard() {
               </button>
             </div>
           ) : (
-            <div></div>
-          )}
+              <div></div>
+            )}
           <div id='userAttRow'>
             <CardHolder id='userAtt1' />
             <CardHolder id='userAtt2' />
@@ -359,6 +383,29 @@ function GameBoard() {
           </div>
         </div>
       </DndProvider>
+      {/* MODAL FOR WINNING  */}
+      <Modal className='avatarModal' show={showModalWin} onHide={handleCloseModalWin}>
+        <Modal.Body className='modalBody'>
+          <Container className='modalContainer'>
+            <p>YOU WIN</p>
+          </Container>
+        </Modal.Body>
+        <Modal.Footer className='modalFooter'>
+          <Button variant='danger' className='closeButtonModal' onClick={handleCloseModalWin}> Return To Profile </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* MODAL FOR LOSING  */}
+      <Modal className='avatarModal' show={showModalLose} onHide={handleCloseModalLose}>
+        <Modal.Body className='modalBody'>
+          <Container className='modalContainer'>
+            <p>YOU LOOSE</p>
+          </Container>
+        </Modal.Body>
+        <Modal.Footer className='modalFooter'>
+          <Button variant='danger' className='closeButtonModal' onClick={handleCloseModalLose}> Return To Profile </Button>
+        </Modal.Footer>
+      </Modal>
     </CardContext.Provider>
   );
 }
