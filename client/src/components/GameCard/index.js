@@ -93,6 +93,26 @@ function GameCard(props) {
 
       case "When this dies destroy your opponent's defense row":
         return <p className='effect whenThisDies'>{props.effect}</p>
+
+      // Effect for Winter
+      case 'When played, +5 health to any player or creature':
+        return <p className='effect whenPlayedFive'>{props.effect}</p>
+      
+      case 'When played, give your defense row +3 health':
+        return <p className='effect whenPlayedDef'>{props.effect}</p>
+      
+      case 'When this dies return it to your hand':
+        return <p className='effect whenThisDiesReturn'>{props.effect}</p>
+        
+      case 'Give all your minions +1 ATK +2 health':
+        return <p className='effect giveAllAtt'>{props.effect}</p>
+      
+      case 'Give all your minions +4 ATK':
+        return <p className='effect giveAllMin'>{props.effect}</p>
+
+      case 'Reduce your opponents attack row attack to 0':
+        return <p className='effect reduce'>{props.effect}</p>
+      
       
       default:
         return <p className='effect'>{props.effect}</p>
