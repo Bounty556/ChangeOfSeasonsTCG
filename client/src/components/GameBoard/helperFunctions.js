@@ -86,7 +86,7 @@ export default {
   },
 
   inOpponentRows: function (position) {
-    return this.enemyAtkRows.includes(position) || this.enemyDefRows.includes(position);
+    return this.enemyAtkRows.includes(position) || this.enemyDefRows.includes(position) || position === 'opponentGameInformation';
   },
 
   isPositionFilled: function (position, deck) {
@@ -138,6 +138,15 @@ export default {
 
   isInDefenseRow: function (position) {
     return this.userDefRows.includes(position);
+  },
+
+  opponentHasDef: function (opponentBoardData) { 
+    for (let i = 0; i < this.userDefRows; i++) { 
+      if (opponentBoardData[this.userDefRows[i]]) { 
+        return true;
+      }
+    }
+    return false;
   },
 
   getCardInPosition: function (position, deck) {
