@@ -16,9 +16,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Container from '../../components/Container/index';
 
-
 import './gameboard.css';
-import { set } from 'mongoose';
 
 // Give this function to the children of this component so they can tell us when
 // A card was dropped on them
@@ -29,11 +27,10 @@ export const CardContext = createContext({
 
 // TODO: When we drag a card and hover it over a card slot, it should make the slot go grey or
 //       something similar so the user has some kind of feedback
-// TODO: Add endgame
-// TODO: Test all effects
-
 // TODO: Make cards 69 and 70 have proactive effects
 // TODO: Fix issue with ending turn before 2nd player loads in causing it to be no one's turn
+
+// TODO: Test all effects
 
 function GameBoard() {
   const { socket, gameId, deck, playerNumber } = useContext(GameContext);
@@ -44,10 +41,11 @@ function GameBoard() {
     isPlayersTurn: true,
     hasInitiated: false,
     currentResource: 2,
-    lifeTotal: 25,
+    lifeTotal: 25
   });
 
-  const [updateSwitch, setUpdateSwitch] = useState(false); // This swings between true and false every time we need to update
+  // This swings between true and false every time we need to update
+  const [updateSwitch, setUpdateSwitch] = useState(false); 
 
   const [opponentBoardData, setOpponentBoardData] = useState({
     opponentPlayAreaCount: 5,
