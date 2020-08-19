@@ -188,7 +188,9 @@ class Lobby extends Component {
   };
 
   startMatch = () => {
-    // this.checkUser();
+    if (process.env.NODE_ENV !== 'development') {
+      this.checkUser();
+    }
 
     // If we're hosting we need to let the other player's browser know to start the game too
     if (this.state.playerNumber === 1) {
@@ -229,7 +231,7 @@ class Lobby extends Component {
   // Duplicate user check
   checkUser = () => {
     if (this.state.username1 === this.state.username2) {
-      // this.exitGame();
+      this.exitGame();
     }
   };
 
