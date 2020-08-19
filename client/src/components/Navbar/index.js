@@ -29,7 +29,7 @@ function Navbar() {
     }, []);
 
     function logoutFunc() {
-        axios.post('/api/logout').then(res => {
+        axios.post('/api/logout').then(() => {
             localStorage.removeItem('authentication');
             localStorage.removeItem('avatar');
             localStorage.removeItem('username');
@@ -42,9 +42,6 @@ function Navbar() {
         <nav>
             <Link to='/'>
                 <h3>Change of Seasons</h3>
-            </Link>
-            <Link to='/HowToPlay'>
-                <h3>How to Play?</h3>
             </Link>
                 {auth ? (
                     <div className='dropleft'>
