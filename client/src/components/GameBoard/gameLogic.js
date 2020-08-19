@@ -118,7 +118,11 @@ export default {
     // Set that we're now starting an effect if this card has one
     const effect = card.onPlayEffect;
     if (effect) {
-      increaseEffectOperation({ cardId: cardVal.uId, effect: effect, currentOperation: -1 }, deck);
+      increaseEffectOperation(
+        { cardId: cardVal.uId, effect: effect, currentOperation: -1 },
+        deck,
+        data
+      );
     }
 
     setPlayerData(data);
