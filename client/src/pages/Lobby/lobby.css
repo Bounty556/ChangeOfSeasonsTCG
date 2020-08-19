@@ -33,6 +33,7 @@
     border-radius: 50%;
     box-shadow: 0 0 20px 4px rgb(0, 153, 255);
     margin-top: 10px;
+    margin-left: 36px;
 }
 
 @keyframes rotation {
@@ -92,7 +93,7 @@ button {
     0 0 120px rgb(0, 153, 255);
 
     font-size: 150px;
-    margin: 50px 150px;
+    margin: 75px 78px 0 139px;
 }
 
 .gameIdText { 

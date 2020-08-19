@@ -10,6 +10,41 @@ function GameCard(props) {
   const [, drag, preview] = useDrag({
     item: { type: ItemTypes.CARD, uId: props.uId }
   });
+  
+  function effectFunc(text) {
+    switch (text) {
+      // Effects for Spring
+      case 'Gain +1 resource':
+        return <p className='effect gainOne'>{props.effect}</p>
+
+      case 'Gain 2 resources':
+        return <p className='effect gainTwo'>{props.effect}</p>
+
+      case 'When played, gain +1 resource':
+        return <p className='effect whenPlayed'>{props.effect}</p>
+
+      case 'When played, give your attack row +3 ATK':
+        return <p className='effect whenPlayedGive'>{props.effect}</p>
+      
+      case 'When this attacks, draw a card':
+        return <p className='effect whenThis'>{props.effect}</p>
+
+      case 'Draw a card':
+        return <p className='effect drawCard'>{props.effect}</p>
+      
+        case 'Draw cards until your hand is full':
+        return <p className='effect drawCardUntil'>{props.effect}</p>
+
+      case 'Draw 3 cards':
+        return <p className='effect drawThree'>{props.effect}</p>
+      
+        case 'While this is in play give all your creatures +2 ATK +4 health':
+        return <p className='effect whileThis'>{props.effect}</p>
+
+      default:
+        return <p className='effect'>{props.effect}</p>
+    }
+  }
 
   return (
     <>
@@ -43,21 +78,7 @@ function GameCard(props) {
           </div>
 
           <div className='effect-box'>
-            {props.effect.length > 40 ? (
-              <p
-                className='effect'
-                style={{
-                  marginBottom: '0',
-                  position: 'relative',
-                  top: '4px',
-                  fontSize: '11.5px'
-                }}
-              >
-                {props.effect}
-              </p>
-            ) : (
-              <p className='effect'>{props.effect}</p>
-            )}
+            {effectFunc(props.effect)}
           </div>
 
           {props.isCreature ? (
