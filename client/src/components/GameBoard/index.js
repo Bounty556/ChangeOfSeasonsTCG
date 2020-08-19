@@ -47,7 +47,7 @@ function GameBoard() {
     isPlayersTurn: true,
     hasInitiated: false,
     currentResource: 2,
-    lifeTotal: 25
+    lifeTotal: 25,
   });
 
   const [updateSwitch, setUpdateSwitch] = useState(false); // This swings between true and false every time we need to update
@@ -119,7 +119,7 @@ function GameBoard() {
     setUpdateSwitch(!updateSwitch);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  
   // Called by CardHolder components whenever a card is dragged on to one of them
   const cardDraggedToPosition = (cardId, destinationPosition) => {
     const cardIndex = playerDeck.findIndex(card => card.uId === cardId);
@@ -290,15 +290,8 @@ function GameBoard() {
   //WIN
   const [showModalWin, setShowModalWin] = useState(false);
 
-  const handleCloseModalWin = () => {
-    setShowModalWin(false);
-  }
   //Lose
   const [showModalLose, setShowModalLose] = useState(false);
-
-  const handleCloseModalLose = () => {
-    setShowModalLose(false);
-  }
 
   //redirect 
   const exitGameWin  = () => {
@@ -311,9 +304,9 @@ function GameBoard() {
   };
 
    
-  if(opponentBoardData.opponentLost === true) { 
-  setShowModalWin(true);
-  }
+  // if(opponentBoardData.opponentLost === true) { 
+  // setShowModalWin(true);
+  // }
 
   //TESTING 
   // if(playerData.lifeTotal <= 24) { 
@@ -401,7 +394,7 @@ function GameBoard() {
         </div>
       </DndProvider>
       {/* MODAL FOR WINNING  */}
-      <Modal className='avatarModal' show={showModalWin} onHide={handleCloseModalWin}>
+      <Modal className='avatarModal' show={opponentBoardData.opponentLost === true}>
         <Modal.Body className='modalBody'>
           <Container className='modalContainer'>
             <p>YOU WIN</p>
@@ -413,7 +406,7 @@ function GameBoard() {
       </Modal>
 
       {/* MODAL FOR LOSING  */}
-      <Modal className='avatarModal' show={showModalLose} onHide={handleCloseModalLose}>
+      <Modal className='avatarModal' show={showModalLose}>
         <Modal.Body className='modalBody'>
           <Container className='modalContainer'>
             <p>YOU LOOSE</p>

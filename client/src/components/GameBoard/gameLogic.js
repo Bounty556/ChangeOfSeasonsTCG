@@ -36,15 +36,14 @@ export default {
 
      const card =  HelperFunctions.getCardInPosition(attackingCardPosition, playerDeck);
      const boardData = { ...opponentBoardData };
-     let lost = boardData.opponentLost
 
      boardData.opponentLifeTotal -= card.attack;
      card.hasAttacked = true;
 
      if(boardData.opponentLifeTotal <= 24) { 
-       console.log(boardData.opponentLifeTotal)
-       lost = true
-       console.log(lost)
+       console.log(boardData.opponentLifeTotal);
+       boardData.opponentLost = true;
+       console.log(boardData.opponentLost);
      }
 
      setOpponentBoardData(boardData);
@@ -203,7 +202,6 @@ export default {
       userAtt3: null,
       currentResource: otherData.currentResource
     };
-
     const opponentCards = HelperFunctions.getPlayedCards(otherDeck);
     for (let i = 0; i < opponentCards.length; i++) {
       boardData[opponentCards[i].position] = opponentCards[i];
