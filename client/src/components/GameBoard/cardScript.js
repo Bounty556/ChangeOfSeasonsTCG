@@ -82,8 +82,6 @@ export default {
   },
 
   getScriptTargets: function (operation) {
-    // TODO: We need to be able to target the enemy player/hero
-
     // The targetting parameter should be the first param, make sure it exists
     if (!operation || !operation.param1) {
       return [];

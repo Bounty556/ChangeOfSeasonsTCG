@@ -183,7 +183,7 @@ const cardSeed = [
     resourceCost: 3,
     attack: 0,
     health: 0,
-    effect: 'Destroy 1 of your own minions - give the rest +1 ATK',
+    effect: 'Destroy 1 of your minions - give the rest +1 ATK',
     effectScript: 'ONPLAY KILL SELF RAISEATK ALL 1',
     name: 'indignity',
     img: 'violet_3.png'
@@ -196,7 +196,7 @@ const cardSeed = [
     attack: 0,
     health: 0,
     effect: 'Give defense row +2 health ',
-    effectScript: 'ONPLAY HEAL ALL 2',
+    effectScript: 'ONPLAY HEAL DEFROW 2',
     name: 'Dark Shell',
     img: 'violet_11.png'
   },
@@ -711,7 +711,7 @@ const cardSeed = [
     resourceCost: 9,
     attack: 0,
     health: 0,
-    effect: "Choose a card to have a 'Return to hand on death' effect",
+    effect: "Choose a card to have the 'Return to hand on death' effect",
     effectScript: 'ONPLAY ADDEFFECT "ONDEATH TOPDECK DRAW 1"',
     name: 'Endless Death',
     img: 'emerald_3.png'

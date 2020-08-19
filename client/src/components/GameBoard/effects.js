@@ -2,124 +2,102 @@ import HelperFunctions from './helperFunctions';
 import GameLogic from './gameLogic';
 
 export default {
-  manualHealEffect: (destinationPosition, states, functions) => {
-    const { effectData, opponentBoardData, playerDeck, updateSwitch } = states;
-    const {
-      setOpponentBoardData,
-      setPlayerDeck,
-      increaseEffectOperation,
-      setUpdateSwitch
-    } = functions;
-    const operation = effectData.effect.operations[effectData.currentOperation];
+  manualHealEffect: (target, operation, tempStates) => {
+    const { oppData, ourDeck } = tempStates;
+
     // We need different behavior for if we're healing an enemy
-    if (HelperFunctions.inOpponentRows(destinationPosition)) {
-      destinationPosition = destinationPosition.replace('opponent', 'user');
-      const boardData = { ...opponentBoardData };
-      const destinationCard = boardData[destinationPosition];
-      if (!destinationCard) {
-        return;
+    if (HelperFunctions.inOpponentRows(target)) {
+      target = target.replace('opponent', 'user');
+      const healedCard = oppData[target];
+      if (healedCard) {
+        healedCard.health += parseInt(operation.param2);
       }
-      destinationCard.health += parseInt(operation.param2);
-      setOpponentBoardData(boardData);
     } else {
       // We're healing one of our own
-      const deck = HelperFunctions.copyDeck(playerDeck);
-      const destinationCard = HelperFunctions.getCardInPosition(destinationPosition, deck);
-      if (!destinationCard) {
-        return;
+      const healedCard = HelperFunctions.getCardInPosition(target, ourDeck);
+      if (healedCard) {
+        healedCard.health += parseInt(operation.param2);
       }
-      destinationCard.health += parseInt(operation.param2);
-      setPlayerDeck(deck);
     }
-    increaseEffectOperation();
-    setUpdateSwitch(!updateSwitch);
   },
 
-  manualDmgEffect: (destinationPosition, states, functions) => {
-    const { effectData, opponentBoardData, playerDeck, updateSwitch } = states;
-    const {
-      setOpponentBoardData,
-      setPlayerDeck,
-      increaseEffectOperation,
-      setUpdateSwitch,
-      instantCastOperation
-    } = functions;
-    const operation = effectData.effect.operations[effectData.currentOperation];
+  manualDmgEffect: (target, operation, tempStates, castCallback) => {
+    const { param1 } = operation;
+    const { oppData, ourDeck } = tempStates;
 
     // We need different behavior for if we're hurting an enemy
-    if (HelperFunctions.inOpponentRows(destinationPosition)) {
-      destinationPosition = destinationPosition.replace('opponent', 'user');
-      const boardData = { ...opponentBoardData };
-      const destinationCard = boardData[destinationPosition];
-      if (!destinationCard) {
-        return;
+    if (HelperFunctions.inOpponentRows(target)) {
+      target = target.replace('opponent', 'user');
+      const damagedCard = oppData[target];
+      if (damagedCard) {
+        damagedCard.health -= parseInt(param1);
+        if (damagedCard.health <= 0) {
+          oppData[target] = null;
+        }
       }
-      destinationCard.health -= parseInt(operation.param1);
-      if (destinationCard.health <= 0) {
-        boardData[destinationPosition] = null;
-      }
-      setOpponentBoardData(boardData);
     } else {
       // We're hurting one of our own
-      const ourDeck = HelperFunctions.copyDeck(playerDeck);
-      const destinationCard = HelperFunctions.getCardInPosition(destinationPosition, ourDeck);
-      if (!destinationCard) {
-        return;
+      const damagedCard = HelperFunctions.getCardInPosition(target, ourDeck);
+      if (damagedCard) {
+        damagedCard.health -= parseInt(param1);
+        if (damagedCard.health <= 0) {
+          GameLogic.handleCardDeath(damagedCard, ourDeck, castCallback);
+        }
       }
-      destinationCard.health -= parseInt(operation.param1);
-      if (destinationCard.health <= 0) {
-        GameLogic.handleCardDeath(destinationCard, ourDeck, instantCastOperation);
-      }
-      setPlayerDeck(ourDeck);
     }
-    increaseEffectOperation();
-    setUpdateSwitch(!updateSwitch);
   },
 
-  instantResEffect: (operation, useData, states, functions) => {
+  manualKillEffect: (target, tempStates, castCallback) => {
+    const { ourDeck } = tempStates;
+
+    // If we can't find the target, kill the first card we have
+    const killedCard = HelperFunctions.getCardInPosition(target, ourDeck);
+
+    if (killedCard) {
+      GameLogic.handleCardDeath(killedCard, ourDeck, castCallback);
+    } else {
+      const ourRows = [...HelperFunctions.userAtkRows, ...HelperFunctions.userDefRows];
+      for (let i = 0; i < ourRows.length; i++) {
+        const foundCard = HelperFunctions.getCardInPosition(ourRows[i], ourDeck);
+        if (foundCard) {
+          GameLogic.handleCardDeath(foundCard, ourDeck, castCallback);
+          return;
+        }
+      }
+    }
+  },
+
+  instantResEffect: (operation, tempStates) => {
     const { param1, param2 } = operation;
-    const { opponentBoardData } = states;
-    const { setOpponentBoardData } = functions;
+    const { ourData, oppData } = tempStates;
 
-    if (param1 === 'SELF') {
-      let resources = useData.currentResource;
-      resources = HelperFunctions.clamp(resources + parseInt(param2), 0 , 9);
-      useData.currentResource = resources;
-    } else if (param1 === 'OPP') {
-      let currentResources = opponentBoardData.currentResource;
-      currentResources = HelperFunctions.clamp(currentResources + parseInt(param2), 0, 9);
-      setOpponentBoardData(prevState => ({ ...prevState, currentResource: currentResources }));
-    }
+    let data = param1 === 'SELF' ? ourData : oppData;
+    let resources = data.currentResource;
+    resources = HelperFunctions.clamp(resources + parseInt(param2), 0, 9);
+    data.currentResource = resources;
   },
 
-  instantDrawEffect: (operation, useDeck, states, functions) => {
+  instantDrawEffect: (operation, tempStates) => {
     const { param1 } = operation;
-    const { playerDeck } = states;
-    const { setPlayerDeck } = functions;
+    const { ourDeck } = tempStates;
 
-    const deck = useDeck || HelperFunctions.copyDeck(playerDeck);
-    const handCount = HelperFunctions.countAllCardsInPosition('userPlayArea', deck);
+    const handCount = HelperFunctions.countAllCardsInPosition('userPlayArea', ourDeck);
     let canDraw;
     if (param1 === 'FULL') {
       canDraw = HelperFunctions.clamp(5, 0, 5 - handCount);
     } else {
       canDraw = HelperFunctions.clamp(parseInt(param1), 0, 5 - handCount);
     }
-    const indices = HelperFunctions.findFirstAvailableCards(canDraw, deck);
+    const indices = HelperFunctions.findFirstAvailableCards(canDraw, ourDeck);
     for (let i = 0; i < indices.length; i++) {
-      deck[indices[i]].position = 'userPlayArea';
-    }
-    if (!useDeck) {
-      setPlayerDeck(deck);
+      ourDeck[indices[i]].position = 'userPlayArea';
     }
   },
 
-  instantHealEffect: (cardId, operation, useDeck, states, functions) => {
+  instantHealEffect: (casterId, operation, tempStates) => {
     const { param1, param2 } = operation;
-    const { playerDeck } = states;
-    const { setPlayerDeck } = functions;
+    const { ourDeck } = tempStates;
 
-    let deck = useDeck || HelperFunctions.copyDeck(playerDeck);
     let positions;
     if (param1 === 'ALL') {
       positions = [...HelperFunctions.userAtkRows, ...HelperFunctions.userDefRows];
@@ -128,30 +106,24 @@ export default {
     } else if (param1 === 'ATKROW') {
       positions = HelperFunctions.userAtkRows;
     } else if (param1 === 'DEALT') {
-      const card = HelperFunctions.getCardWithId(cardId, deck);
+      const card = HelperFunctions.getCardWithId(casterId, ourDeck);
       card.health += card.attack;
       return;
     }
 
     // Increase the health of the chosen cards
     for (let i = 0; i < positions.length; i++) {
-      const card = HelperFunctions.getCardInPosition(positions[i], deck);
+      const card = HelperFunctions.getCardInPosition(positions[i], ourDeck);
       if (card) {
         card.health += parseInt(param2);
       }
     }
-
-    if (!useDeck) {
-      setPlayerDeck(deck);
-    }
   },
 
-  instantRaiseAtkEffect: (operation, useDeck, states, functions) => {
+  instantRaiseAtkEffect: (operation, tempStates) => {
     const { param1, param2 } = operation;
-    const { playerDeck } = states;
-    const { setPlayerDeck } = functions;
+    const { ourDeck } = tempStates;
 
-    let deck = useDeck || HelperFunctions.copyDeck(playerDeck);
     let positions;
     if (param1 === 'ALL') {
       positions = [...HelperFunctions.userAtkRows, ...HelperFunctions.userDefRows];
@@ -163,59 +135,54 @@ export default {
 
     // Increase the attack of all of our cards
     for (let i = 0; i < positions.length; i++) {
-      const card = HelperFunctions.getCardInPosition(positions[i], deck);
+      const card = HelperFunctions.getCardInPosition(positions[i], ourDeck);
       if (card) {
         card.attack = HelperFunctions.clamp(card.attack + parseInt(param2), 0, 100);
       }
     }
-
-    if (!useDeck) {
-      setPlayerDeck(deck);
-    }
   },
 
-  instantTopDeckEffect: (cardId, useDeck, states, functions) => {
-    const { playerDeck } = states;
-    const { setPlayerDeck } = functions;
+  instantTopDeckEffect: (casterId, tempStates) => {
+    const { ourDeck } = tempStates;
 
-    let deck = useDeck || HelperFunctions.copyDeck(playerDeck);
-    const card = HelperFunctions.getCardWithId(cardId, deck);
+    const card = HelperFunctions.getCardWithId(casterId, ourDeck);
     card.position = '';
 
-    for (let i = 0; i < deck.length; i++) {
-      if (deck[i].uId === card.uId) {
-        deck[i] = deck[0];
+    for (let i = 0; i < ourDeck.length; i++) {
+      if (ourDeck[i].uId === card.uId) {
+        ourDeck[i] = ourDeck[0];
         return;
       }
     }
-    deck[0] = card;
-
-    if (!useDeck) {
-      setPlayerDeck(deck);
-    }
+    ourDeck[0] = card;
   },
 
-  instantDmgEffect: (operation, useDeck, states, functions) => {
+  instantDmgEffect: (operation, tempStates, castCallback) => {
     const { param2 } = operation;
-    const { playerDeck } = states;
-    const { setPlayerDeck, instantCastOperation } = functions;
+    const { ourDeck } = tempStates;
+
     // We're hurting one of our own
-    const deck = useDeck || HelperFunctions.copyDeck(playerDeck);
     const positions = [...HelperFunctions.userAtkRows, ...HelperFunctions.userDefRows];
 
     for (let i = 0; i < positions.length; i++) {
-      const card = HelperFunctions.getCardInPosition(positions[i], deck);
+      const card = HelperFunctions.getCardInPosition(positions[i], ourDeck);
       if (card) {
         card.health -= parseInt(param2);
 
         if (card.health <= 0) {
-          GameLogic.handleCardDeath(card, deck, instantCastOperation);
+          GameLogic.handleCardDeath(card, ourDeck, castCallback);
         }
       }
     }
+  },
 
-    if (!useDeck) {
-      setPlayerDeck(deck);
+  instantKillEffect: (tempStates) => {
+    const { oppData } = tempStates;
+
+    const oppDefRow = HelperFunctions.userDefRows;
+
+    for (let i = 0; i < oppDefRow.length; i++) {
+      oppData[oppDefRow[i]] = null;
     }
   }
 };
