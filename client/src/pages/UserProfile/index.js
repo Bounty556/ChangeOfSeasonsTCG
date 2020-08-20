@@ -18,7 +18,7 @@ function UserProfile() {
     //used to grab the current chosen avatar from the db 
 
     const [avatar, setAvatar] = useState('');
-    const [choosenDeck, setChoosenDeck] = useState('No Deck Choosen.');
+    const [choosenDeck, setChoosenDeck] = useState('No Deck Chosen.');
 
     //used for when a user is selecting a new avatar 
     const [selectAvatar, setSelectAvatar] = useState('');
@@ -58,21 +58,24 @@ function UserProfile() {
                 localStorage.setItem('username', res.data.username);
                 setAvatar(localStorage.getItem('avatar'));
 
-                switch (res.data.cardIds[0]) {
-                    case 1:
-                        return setChoosenDeck('🌱 Spring 🌱');
-                    
-                    case 2:
-                        return setChoosenDeck('☀️ Summer ☀️');
-                    
-                    case 3:
-                        return setChoosenDeck('🍂 Fall 🍂');
-                    
-                    case 4:
-                        return setChoosenDeck('❄️ Winter ❄️');
+                if (res.data.cardIds.includes(1)) {
+                    return setChoosenDeck('🌱 Spring 🌱');
+                }
 
-                    default:
-                        return;
+                else if (res.data.cardIds.includes(2)) {
+                    return setChoosenDeck('☀️ Summer ☀️');
+                }
+
+                else if (res.data.cardIds.includes(3)) {
+                    return setChoosenDeck('🍂 Fall 🍂');
+                }
+
+                else if (res.data.cardIds.includes(4)) {
+                    return setChoosenDeck('❄️ Winter ❄️');
+                }
+
+                else {
+                    return;
                 }
             });
     }, []);
