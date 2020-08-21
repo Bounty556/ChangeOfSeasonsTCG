@@ -51,11 +51,40 @@ class SignUp extends Component {
         }
 
         // Password validation
+
+        // If the password is blank
         if (password === '') {
             this.displayError('password', defaultMessage);
             anyErrors = true;
-        } else if (password.length < 6 || password.length > 128) {
+        }
+        
+        // If the password is less than 6 or greater than 128 characters.
+        else if (password.length < 6 || password.length > 128) {
             this.displayError('password', '* Password must be between 6 and 128 characters');
+            anyErrors = true;
+        } 
+        
+        // If the password does not have any uppercase letters
+        else if (!password.match(/[A-Z]/)) {
+            this.displayError('password', '* Password must contain an Uppercase letter');
+            anyErrors = true;
+        } 
+        
+        // If the password does not have any lowercase letter
+        else if (!password.match(/[a-z]/g)) {
+            this.displayError('password', '* Password must contain a Lowercase letter');
+            anyErrors = true;
+        }
+        
+        // If the password does not contain a number
+        else if (!password.match(/[0-9]/g)) {
+            this.displayError('password', '* Password must contain a Number');
+            anyErrors = true;
+        } 
+        
+        // If the password does not include a special character
+        else if (!password.match(/[!@#$%^&*(),.?":{}|<>]/g)) {
+            this.displayError('password', '* Password must contain a Special Character');
             anyErrors = true;
         }
         
@@ -69,9 +98,9 @@ class SignUp extends Component {
         }
 
         // If there are no errors then run the submit function
-        if (!anyErrors) {
-            this.submitFunc();
-        }
+        // if (!anyErrors) {
+        //     this.submitFunc();
+        // }
     }
 
     submitFunc = () => {
