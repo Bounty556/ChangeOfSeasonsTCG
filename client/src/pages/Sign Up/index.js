@@ -81,9 +81,15 @@ class SignUp extends Component {
             this.displayError('password', '* Password must contain a Number');
             anyErrors = true;
         } 
+
+        // These special characters are omitted for security purposes
+        else if (password.match(/[<>(){}]/g)) {
+            this.displayError('password', '* Password cannot contain < >, ( ), or { }');
+            anyErrors = true;
+        }
         
         // If the password does not include a special character
-        else if (!password.match(/[!@#$%^&*(),.?":{}|<>]/g)) {
+        else if (!password.match(/[!@#$%^&*,.?":|]/g)) {
             this.displayError('password', '* Password must contain a Special Character');
             anyErrors = true;
         }
