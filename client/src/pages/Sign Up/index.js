@@ -98,9 +98,9 @@ class SignUp extends Component {
         }
 
         // If there are no errors then run the submit function
-        // if (!anyErrors) {
-        //     this.submitFunc();
-        // }
+        if (!anyErrors) {
+            this.submitFunc();
+        }
     }
 
     submitFunc = () => {
