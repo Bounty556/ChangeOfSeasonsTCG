@@ -32,6 +32,11 @@ export const CardContext = createContext({
 // TODO: Make cards 69 and 70 have proactive effects
 // TODO: Fix issue with ending turn before 2nd player loads in causing it to be no one's turn
 
+// TODO: Normalize targeting parameters
+// TODO: Add a 'global effect table' that keeps track of all current effects on cards
+// TODO: Make cards check for their effects on the global effect table
+// TODO: Fix ONDEATH effects not triggering if killed by effect
+
 function GameBoard() {
   const { socket, gameId, deck, playerNumber } = useContext(GameContext);
 
